@@ -11,6 +11,8 @@ script:
   - ln -s $PLAYBOOK playbook.yml
   - ln -s molecule-syntaxcheck.yml molecule.yml
   - molecule test
+  # Molecule is only doing a syntax check
+  - ansible-lint playbook.yml
 
 env:
   - PLAYBOOK=nightshade-web.yml
