@@ -1,0 +1,28 @@
+sudo: required
+language: python
+
+services:
+  - docker
+
+install:
+  - pip install ome-ansible-molecule-dependencies
+
+script:
+  - ln -s $PLAYBOOK playbook.yml
+  - ln -s molecule-syntaxcheck.yml molecule.yml
+  - molecule test
+  # Molecule is only doing a syntax check
+  - ansible-lint playbook.yml
+
+env:
+  - PLAYBOOK=nightshade-web.yml
+  - PLAYBOOK=ome-demoserver.yml
+  - PLAYBOOK=ome-dundeeomero.yml
+  - PLAYBOOK=web-proxy/playbook.yml
+
+matrix:
+  allow_failures:
+  - env: PLAYBOOK=nightshade-web.yml
+  - env: PLAYBOOK=ome-demoserver.yml
+  - env: PLAYBOOK=ome-dundeeomero.yml
+  - env: PLAYBOOK=web-proxy/playbook.yml
