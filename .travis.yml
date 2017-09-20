@@ -19,6 +19,7 @@ env:
   - PLAYBOOK=ome-demoserver.yml
   - PLAYBOOK=ome-dundeeomero.yml
   - PLAYBOOK=web-proxy/playbook.yml
+  - PLAYBOOK=www/www.yml
 
 matrix:
   allow_failures:
