@@ -10,8 +10,7 @@ Vagrant.configure("2") do |config|
   [
     "ome-dundeeomero",
     "ome-demoserver",
-    "nightshade-web",
-    "www"
+    "nightshade-web"
   ].each do |server|
     config.vm.define "#{server}" do |node|
       node.vm.box = "centos/7"
