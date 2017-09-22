@@ -1,5 +1,7 @@
 # Install OMERO.web with a public user on localhost
-# Pass the command line 'upgrade_webapps' flag to upgrade webapps
+
+# To allow the OMERO.webapps to upgrade, pass `--extra-vars upgrade_webapps=True`
+# to ansible-playbook on the command line.
 
 - hosts: ns-web.openmicroscopy.org
 
@@ -24,7 +26,7 @@
 
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.3.3
+      omero_web_release: 5.3.4
       no_log: true
 
     # Now OME are using RHEL without Spacewalk, the current best-method of

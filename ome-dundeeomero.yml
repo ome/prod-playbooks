@@ -1,5 +1,8 @@
 # Install OMERO.server and prepare the OME (UoD/SLS) prerequisites
 
+# To allow OMERO to upgrade, change the omero_server_release variable and pass `--extra-vars omero_server_upgrade=True` to the `ansible-playbook` command.
+# To allow OMERO.web to upgrade, change the omero_web_release variable and pass `--extra-vars omero_web_upgrade=True`
+
 - hosts: ome-dundeeomero.openmicroscopy.org
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
@@ -156,7 +159,7 @@
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.3.3
+      omero_server_release: 5.3.4
       # install-mock set for inital provision, then playbook re-run with correct accounts.
       #omero_server_dbuser: install-mock
       #omero_server_dbname:  install-mock
@@ -250,12 +253,11 @@
       omero.jvmcfg.system_memory: 17000
       omero.ldap.base: "{{ omero_server_ldap_base }}"
       omero.ldap.config: true
-      omero.ldap.new_user_group: default
       omero.ldap.urls: "{{ omero_server_ldap_urls }}"
       omero.mail.config: true
       omero.mail.from: "{{ omero_server_mail_from }}"
       omero.mail.host: "{{ omero_server_mail_host }}"
-      omero.new_user_group: "My Data"
+      omero.ldap.new_user_group: "My Data"
       omero.search.batch: 100
       omero.security.password_provider: chainedPasswordProvider431
       omero.throttling.method_time.error: 60000
