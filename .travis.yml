@@ -19,12 +19,12 @@ env:
   - DIRECTORY="" PLAYBOOK=nightshade-web.yml
   - DIRECTORY="" PLAYBOOK=ome-demoserver.yml
   - DIRECTORY="" PLAYBOOK=ome-dundeeomero.yml
-  - DIRECTORY="web-proxy" PLAYBOOK=playbook.yml
-  - DIRECTORY="www" PLAYBOOK=www.yml
+  - DIRECTORY=web-proxy PLAYBOOK=playbook.yml
+  - DIRECTORY=www PLAYBOOK=www.yml
 
 matrix:
   allow_failures:
-  - env: PLAYBOOK=nightshade-web.yml
-  - env: PLAYBOOK=ome-demoserver.yml
-  - env: PLAYBOOK=ome-dundeeomero.yml
-  - env: PLAYBOOK=web-proxy/playbook.yml
+  - env: DIRECTORY="" PLAYBOOK=nightshade-web.yml
+  - env: DIRECTORY="" PLAYBOOK=ome-demoserver.yml
+  - env: DIRECTORY="" PLAYBOOK=ome-dundeeomero.yml
+  - env: DIRECTORY=web-proxy PLAYBOOK=playbook.yml
