@@ -44,7 +44,7 @@
         lv: root
         vg: rhel
         size: "{{ provision_root_lvsize }}"
-        
+
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: yes
       yum:
@@ -64,14 +64,14 @@
         state: present
       with_items:
         # For OMERO.figure
-        - python-reportlab 
-        - python-markdown 
+        - python-reportlab
+        - python-markdown
         # For the 'make movie' script
         - mencoder
         # Current server proxies to a decoupled OMERO.web server
         # Initially replicate this setup, to minimise changes.
         - nginx
-        
+
     - name: NGINX - enable service / start on boot
       become: yes
       systemd:
@@ -102,7 +102,7 @@
         state: directory
         owner: root
         group: root
-        mode: "u=r,go=" 
+        mode: "u=r,go="
 
     - name: NGINX - SSL File Deployment
       become: yes
@@ -116,7 +116,7 @@
       no_log: true
 
     # post 2.3 'destfile' should be renamed 'path'
-    - name: NGINX - Configuration 
+    - name: NGINX - Configuration
       become: yes
       template:
         src: nginx-omero.conf.j2
@@ -129,8 +129,8 @@
     # checking `is server SLS` is checking for the SLS nameservers.
     - role: openmicroscopy.system-monitor-agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
-   
-    # Disk Layout - PostgreSQL | data dir  
+
+    # Disk Layout - PostgreSQL | data dir
     - role: openmicroscopy.lvm-partition
       tags: lvm
       lvm_lvname: pgdata
@@ -139,7 +139,7 @@
       lvm_lvsize: "{{ provision_postgres_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
 
-    # Disk Layout - OMERO | data dir 
+    # Disk Layout - OMERO | data dir
     - role: openmicroscopy.lvm-partition
       tags: lvm
       lvm_lvname: basedir
@@ -147,7 +147,7 @@
       lvm_lvmount: "{{ omero_common_basedir }}"
       lvm_lvsize: "{{ provision_omero_basedir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
-      
+
     #  Mock database user & creds, to allow Playbook to install
     #  OMERO, and allow for a manual PostgresSQL dump/restore.
     - role: openmicroscopy.postgresql
@@ -263,4 +263,4 @@
       omero.throttling.method_time.error: 60000
       omero.Ice.Default.Host: "{{ omero_server_ice_default_host }}"
       Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints }}"
- 
+
