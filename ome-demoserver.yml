@@ -59,7 +59,7 @@
     # Set desired state of webapps (upgrade v.s. install/keep current version)
     - name: OMERO.web plugin upgrade | set default state "installed"
       set_fact:
-        webapps_state: installed
+        webapps_state: present
     - name: OMERO.web plugin upgrade | if --extra-vars upgrade_webapps == True, allow web plugin(s) to upgrade.
       set_fact:
         webapps_state: latest
