@@ -16,7 +16,7 @@
       become: yes
       yum:
         name: open-vm-tools
-        state: latest
+        state: installed
       when: >
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
@@ -31,7 +31,7 @@
         vg: VolGroup00
         size: "{{ provision_root_lvsize }}"
         shrink: no
-        
+
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: yes
       yum:
@@ -44,23 +44,25 @@
         name: mencoder
         state: present
 
-    - name: OMERO.figure server-side prerequisites, script prerequisites 
+    - name: OMERO.figure server-side prerequisites, script prerequisites
       become: yes
       yum:
         name: "{{ item }}"
         state: present
       with_items:
         # For OMERO.figure
-        - python-reportlab 
-        - python-markdown 
+        - python-reportlab
+        - python-markdown
         # For the 'make movie' script
         - mencoder
 
     # Set desired state of webapps (upgrade v.s. install/keep current version)
-    - set_fact:
-        webapps_state: present 
-    - set_fact: 
-        webapps_state: latest 
+    - name: OMERO.web plugin upgrade | set default state "installed"
+      set_fact:
+        webapps_state: installed
+    - name: OMERO.web plugin upgrade | if --extra-vars upgrade_webapps == True, allow web plugin(s) to upgrade.
+      set_fact:
+        webapps_state: latest
       when: upgrade_webapps is defined and upgrade_webapps == "True"
 
   roles:
@@ -69,8 +71,8 @@
     - role: openmicroscopy.system-monitor-agent
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
-   
-    # Disk Layout - PostgreSQL | data dir on separate VG (SSD) 
+
+    # Disk Layout - PostgreSQL | data dir on separate VG (SSD)
     - role: openmicroscopy.lvm-partition
       tags: lvm
       lvm_lvname: pgdata
@@ -90,7 +92,7 @@
       lvm_lvfilesystem: "{{ filesystem }}"
       lvm_shrink: False
 
-    # Disk Layout - OMERO.server | LV for dist & logs 
+    # Disk Layout - OMERO.server | LV for dist & logs
     - role: openmicroscopy.lvm-partition
       tags: lvm
       lvm_lvname: omero_server_basedir
@@ -99,7 +101,7 @@
       lvm_lvsize: "{{ provision_omero_server_basedir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
       lvm_shrink: False
-      
+
     # Disk Layout - OMERO.web | LV for dist & logs
     - role: openmicroscopy.lvm-partition
       tags: lvm
@@ -109,7 +111,7 @@
       lvm_lvsize: "{{ provision_omero_web_basedir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
       lvm_shrink: False
-      
+
     - role: openmicroscopy.postgresql
       no_log: true
       postgresql_users_databases:
@@ -165,7 +167,7 @@
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
       notify:
-        - restart omero-web 
+        - restart omero-web
 
     - name: NGINX - Performance tuning - worker processes
       become: yes
@@ -189,7 +191,7 @@
         state: directory
         owner: root
         group: root
-        mode: "u=r,go=" 
+        mode: "u=r,go="
 
     - name: NGINX - SSL File Deployment
       become: yes
@@ -208,7 +210,7 @@
         path: /etc/nginx/conf.d/omero-web.conf
         insertafter: '    listen 80;'
         line: '    listen 443 ssl;'
-            
+
     - name: NGINX - SSL Configuration - Rest of SSL section to omero-web.conf
       become: yes
       blockinfile:
@@ -219,7 +221,7 @@
               ssl_certificate {{ nginx_ssl_files_path }}/{{ nginx_ssl_cert_filename }};
               ssl_certificate_key {{ nginx_ssl_files_path }}/{{ nginx_ssl_key_filename }};
               ssl_protocols  {{ nginx_ssl_protocols }}
-            
+
               if ($ssl_protocol = "") {
                   rewrite ^/(.*) https://$host/$1 permanent;
               }
@@ -228,16 +230,16 @@
 
     # Config for OMERO.web plugins, loaded into OMERO.web by the
     # omero.web systemd restart.
-    - name: 
+    - name:
       become: yes
       template:
         src: templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
-        owner: "root" 
-        group: "root" 
+        owner: "root"
+        group: "root"
         mode: "u=rw,go=r"
       notify:
-        - restart omero-web 
+        - restart omero-web
 
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
@@ -268,7 +270,7 @@
       stat:
         path: "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
       register: check_mk_logwatch_plugin_conf_st
-      
+
     - name: Check_MK logwatch plugin | copy the default config
       tags: monitoring
       become: yes
@@ -319,13 +321,13 @@
 
     omero_web_config_set:
       # https://www.openmicroscopy.org/site/support/omero5.3/sysadmins/public.html
-      omero.web.public.user: "{{ vault.omero_web_public_user }}" 
+      omero.web.public.user: "{{ vault.omero_web_public_user }}"
       omero.web.public.password: "{{ vault.omero_web_public_password }}"
       omero.web.public.enabled: True
       omero.web.public.server_id: 1
       omero.web.public.url_filter: "^/(webgateway/(?!(archived_files|download_as))|webclient/annotation/([0-9]+)/)"
       omero.web.server_list: [["localhost", 4064, "omero"]]
-      # Advice is (2*cores + 1) from OME docs. 
+      # Advice is (2*cores + 1) from OME docs.
       omero.web.wsgi_workers: "{{ (2 * (ansible_processor_count * ansible_processor_cores)) + 1 }}"
       omero.web.admins:  "{{ omero_web_admins }}"
 
