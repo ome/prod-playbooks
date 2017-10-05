@@ -79,13 +79,6 @@
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
-    - role: openmicroscopy.jekyll-build
-      tags: jekyll
-      jekyll_build_git_repo: "https://github.com/openmicroscopy/www.openmicroscopy.org"
-      jekyll_build_force_rebuild: True
-      jekyll_build_config: ['_config.yml', '_prod.yml']
-      jekyll_build_name: "{{ website_name }}"
-
     - role: openmicroscopy.nginx_proxy
       tags: nginxconf
       nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
@@ -252,3 +245,6 @@
     - location: "/"
       root: "/var/www/{{ website_name }}/html"
       index: index.html
+
+
+- include: www-jekyll.yml

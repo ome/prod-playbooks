@@ -1,0 +1,14 @@
+# Install NGINX, and prepare the OME (UoD/SLS) prerequisites
+
+- hosts: www
+  environment:
+      PATH: /usr/local/bin:{{ ansible_env.PATH }}
+
+  roles:
+
+    - role: openmicroscopy.jekyll-build
+      tags: jekyll
+      jekyll_build_git_repo: "https://github.com/openmicroscopy/www.openmicroscopy.org"
+      jekyll_build_force_rebuild: True
+      jekyll_build_config: ['_config.yml', '_prod.yml']
+      jekyll_build_name: "{{ website_name }}"
