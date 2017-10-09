@@ -94,5 +94,5 @@
     filesystem: "ext4"
 
 
-- include: www-deployment.yml
+- include: www-deploy.yml
 # www-deploy.yml includes www-jekyll.yml
