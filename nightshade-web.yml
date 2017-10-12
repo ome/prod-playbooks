@@ -28,7 +28,7 @@
 
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.3.4
+      omero_web_release: 5.4.0
       no_log: true
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
