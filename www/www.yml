@@ -8,13 +8,13 @@
       become: yes
       yum:
         name: open-vm-tools
-        state: latest
+        state: installed
       when: >
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
 
-    # Two tasks here which could instead ues the role at 
-    # https://github.com/openmicroscopy/ansible-role-lvm-partition/, but that role 
+    # Two tasks here which could instead use the role at
+    # https://github.com/openmicroscopy/ansible-role-lvm-partition/, but that role
     # will change the device name to symlinks rather than existing device ID.
     - name: storage | Resize root LV
       tags: lvm
@@ -59,7 +59,7 @@
         state: directory
         owner: root
         group: root
-        mode: "u=r,go=" 
+        mode: "u=r,go="
 
     - name: NGINX - SSL File Deployment
       become: yes
@@ -115,7 +115,7 @@
         path: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
-            
+
     - name: Check_MK logwatch plugin | check for plugin existence
       tags: monitoring
       stat:
@@ -133,7 +133,7 @@
       stat:
         path: "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
       register: check_mk_logwatch_plugin_conf_st
-      
+
     - name: Check_MK logwatch plugin | copy the default config
       tags: monitoring
       become: yes
@@ -147,7 +147,7 @@
     check_mk_agent_config_path: /etc/check-mk-agent
 
     filesystem: "ext4"
-    
+
     # Vars for role openmicroscopy.nginx_proxy
     nginx_proxy_backends:
       # Proxy for phpBB forums

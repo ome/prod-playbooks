@@ -8,19 +8,23 @@ install:
   - pip install ome-ansible-molecule-dependencies
 
 script:
-  - ln -s $PLAYBOOK playbook.yml
-  - ln -s molecule-syntaxcheck.yml molecule.yml
+  - mv molecule-syntaxcheck.yml $DIRECTORY/molecule.yml
+  - cd $DIRECTORY
+  - mv $PLAYBOOK playbook.yml
   - molecule test
   # Molecule is only doing a syntax check
   - ansible-lint playbook.yml
 
 env:
-  - PLAYBOOK=nightshade-web.yml
-  - PLAYBOOK=ome-demoserver.yml
-  - PLAYBOOK=ome-dundeeomero.yml
-  - PLAYBOOK=web-proxy/playbook.yml
+  - DIRECTORY="" PLAYBOOK=nightshade-web.yml
+  - DIRECTORY="" PLAYBOOK=ome-demoserver.yml
+  - DIRECTORY="" PLAYBOOK=ome-dundeeomero.yml
+  - DIRECTORY=web-proxy PLAYBOOK=playbook.yml
+  - DIRECTORY=www PLAYBOOK=www.yml
 
 matrix:
   allow_failures:
-  - env: PLAYBOOK=web-proxy/playbook.yml
-  - env: PLAYBOOK=ome-dundeeomero.yml
+  - env: DIRECTORY="" PLAYBOOK=nightshade-web.yml
+  - env: DIRECTORY="" PLAYBOOK=ome-demoserver.yml
+  - env: DIRECTORY="" PLAYBOOK=ome-dundeeomero.yml
+  - env: DIRECTORY=web-proxy PLAYBOOK=playbook.yml
