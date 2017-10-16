@@ -4,6 +4,8 @@
   src: https://github.com/openmicroscopy/ansible-role-nginx-proxy.git
   version: 1.5.0
 
+- name: openmicroscopy.nginx-ssl-selfsigned
+
 # dependancy of nginx_proxy
 - name: openmicroscopy.selinux-utils
   src: https://github.com/openmicroscopy/ansible-role-selinux-utils.git
@@ -14,5 +16,3 @@
 
 - name: openmicroscopy.system-monitor-agent
   src: https://github.com/openmicroscopy/ansible-role-system-monitor-agent.git
-
-
