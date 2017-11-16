@@ -29,6 +29,7 @@ env:
   - DIRECTORY="." PLAYBOOK=nightshade-web.yml
   - DIRECTORY="." PLAYBOOK=ome-demoserver.yml
   - DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
+  - DIRECTORY=omedev-base PLAYBOOK=
   - DIRECTORY=web-proxy PLAYBOOK=playbook.yml
   - DIRECTORY=www PLAYBOOK=""
 
