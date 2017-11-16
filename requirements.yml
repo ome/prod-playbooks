@@ -29,4 +29,5 @@
 - name: openmicroscopy.system-monitor-agent
   src: https://github.com/openmicroscopy/ansible-role-system-monitor-agent.git
 
-
+- src: openmicroscopy.sudoers
+  version: 1.0.0
