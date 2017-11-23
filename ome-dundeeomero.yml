@@ -228,6 +228,25 @@
         dest: /etc/cron.daily/nightly-pg_dump-omero.sh
         mode: "u=rwx,go="
 
+    - name: Create a figure scripts directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Download the Figure_To_Pdf.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+
   vars:
     # Check_MK (system monitoring) paths
     check_mk_agent_plugin_path: /usr/share/check-mk-agent/available-plugins
