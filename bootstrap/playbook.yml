@@ -3,7 +3,7 @@
 
 - hosts: omedev
   roles:
-  #- role: network ?
+  - role: openmicroscopy.network
   - role: openmicroscopy.lvm-partition
     lvm_lvname: var_log
     lvm_lvmount: /var/log
