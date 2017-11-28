@@ -120,7 +120,7 @@
         databases: ["{{ vault.omero_server_dbname }}"]
 
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.3.4
+      omero_server_release: 5.4.0
       omero_server_dbuser: "{{ vault.omero_server_db_user }}"
       omero_server_dbname:  "{{ vault.omero_server_dbname }}"
       omero_server_dbpassword: "{{ vault.omero_server_dbpassword }}"
@@ -128,7 +128,7 @@
       omero_server_systemd_limit_nofile: 16384
 
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.3.4
+      omero_web_release: 5.4.0
       no_log: true
 
     # This role only works on OMERO 5.3+
