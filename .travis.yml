@@ -34,6 +34,4 @@ env:
 
 matrix:
   allow_failures:
-  - env: DIRECTORY="." PLAYBOOK=nightshade-web.yml
-  - env: DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
   - env: DIRECTORY=web-proxy PLAYBOOK=playbook.yml
