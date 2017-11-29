@@ -17,7 +17,7 @@
 
 - name: openmicroscopy.omero-web
   src:  https://github.com/openmicroscopy/ansible-role-omero-web.git
-  version: 1.0.0-m1
+  version: 1.0.1
 
 - name: omero-user
   src: https://github.com/openmicroscopy/ansible-role-omero-user

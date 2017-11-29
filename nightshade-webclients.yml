@@ -1,20 +1,24 @@
 # Install OMERO.web with a public user on localhost
-# Pass the command line 'upgrade_webapps' flag to upgrade webapps
+
+# To allow the OMERO.webapps to upgrade, pass `--extra-vars upgrade_webapps=True`
+# to ansible-playbook on the command line.
 
 - hosts: ns-webclients
 
   pre_tasks:
 
     # Set desired state of webapps (upgrade v.s. install/keep current version)
-    - set_fact:
-        webapps_state: present 
-    - set_fact: 
-        webapps_state: latest 
+    - name: OMERO.web plugin upgrade | set default state "installed"
+      set_fact:
+        webapps_state: present
+    - name: OMERO.web plugin upgrade | if --extra-vars upgrade_webapps == True, allow web plugin(s) to upgrade.
+      set_fact:
+        webapps_state: latest
       when: upgrade_webapps is defined and upgrade_webapps == "True"
 
   roles:
 
-    # Root LV Size 
+    # Root LV Size
     - role: openmicroscopy.lvm-partition
       lvm_lvname: "{{ provision_root_lvname }}"
       lvm_vgname: "{{ provision_root_vgname }}"
@@ -49,13 +53,13 @@
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
       notify:
-        - restart omero-web 
+        - restart omero-web
 
     - name: Install open-vm-tools if system is a VMware vm
       become: yes
       yum:
         name: open-vm-tools
-        state: latest
+        state: present
       when: >
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
@@ -85,7 +89,7 @@
         state: directory
         owner: root
         group: root
-        mode: "u=r,go=" 
+        mode: "u=r,go="
 
     - name: NGINX - SSL File Deployment
       become: yes
@@ -105,7 +109,7 @@
         destfile: /etc/nginx/conf.d/omero-web.conf
         insertafter: '    listen 80;'
         line: '    listen 443 ssl;'
-            
+
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - SSL Configuration - Rest of SSL section to omero-web.conf
       become: yes
@@ -117,22 +121,22 @@
               ssl_certificate {{ nginx_ssl_files_path }}/{{ nginx_ssl_cert_filename }};
               ssl_certificate_key {{ nginx_ssl_files_path }}/{{ nginx_ssl_key_filename }};
               ssl_protocols  {{ nginx_ssl_protocols }}
-            
+
               if ($ssl_protocol = "") {
                   rewrite ^/(.*) https://$host/$1 permanent;
               }
       notify:
         - restart nginx
-     
+
     # Config for OMERO.web plugins, loaded into OMERO.web by the
     # omero.web systemd restart.
-    - name: 
+    - name:
       become: yes
       template:
         src: templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
-        owner: "root" 
-        group: "root" 
+        owner: "root"
+        group: "root"
         mode: "u=rw,go=r"
       notify:
-        - restart omero-web 
+        - restart omero-web
