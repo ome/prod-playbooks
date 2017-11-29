@@ -9,7 +9,7 @@
       become: yes
       yum:
         name: open-vm-tools
-        state: latest
+        state: present
       when: >
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
