@@ -3,7 +3,7 @@
 # To allow the OMERO.webapps to upgrade, pass `--extra-vars upgrade_webapps=True`
 # to ansible-playbook on the command line.
 
-- hosts: ns-web.openmicroscopy.org
+- hosts: ns-webclients
 
   pre_tasks:
 

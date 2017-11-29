@@ -8,23 +8,32 @@ install:
   - pip install ome-ansible-molecule-dependencies
 
 script:
-  - mv molecule-syntaxcheck.yml $DIRECTORY/molecule.yml
-  - cd $DIRECTORY
-  - mv $PLAYBOOK playbook.yml
-  - molecule test
-  # Molecule is only doing a syntax check
-  - ansible-lint playbook.yml
+  # If PLAYBOOK is not defined assume that directory has a full
+  # molecule.yml configuration file, otherwise use the default
+  - >
+      if [ -n "$PLAYBOOK" ]; then
+          mv molecule-syntaxcheck.yml $DIRECTORY/molecule.yml;
+          cd $DIRECTORY;
+          mv $PLAYBOOK playbook.yml;
+      else
+          cd $DIRECTORY;
+      fi
+  - molecule test;
+  # molecule-syntaxcheck.yml this doesn't run ansible-lint)
+  - >
+      if [ -n "$PLAYBOOK" ]; then
+          ansible-lint playbook.yml;
+      fi
 
 env:
-  - DIRECTORY="" PLAYBOOK=nightshade-web.yml
-  - DIRECTORY="" PLAYBOOK=ome-demoserver.yml
-  - DIRECTORY="" PLAYBOOK=ome-dundeeomero.yml
+  - DIRECTORY="." PLAYBOOK=nightshade-web.yml
+  - DIRECTORY="." PLAYBOOK=ome-demoserver.yml
+  - DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
   - DIRECTORY=web-proxy PLAYBOOK=playbook.yml
-  - DIRECTORY=www PLAYBOOK=www.yml
+  - DIRECTORY=www PLAYBOOK=""
 
 matrix:
   allow_failures:
-  - env: DIRECTORY="" PLAYBOOK=nightshade-web.yml
-  - env: DIRECTORY="" PLAYBOOK=ome-demoserver.yml
-  - env: DIRECTORY="" PLAYBOOK=ome-dundeeomero.yml
+  - env: DIRECTORY="." PLAYBOOK=nightshade-web.yml
+  - env: DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
   - env: DIRECTORY=web-proxy PLAYBOOK=playbook.yml
