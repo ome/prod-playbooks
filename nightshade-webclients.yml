@@ -140,3 +140,20 @@
         mode: "u=rw,go=r"
       notify:
         - restart omero-web
+
+    - name: NGINX - SSL Configuration - Custom Paper Redirect
+      tags: redirect
+      become: yes
+      blockinfile:
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Custom Redirects"
+        path: /etc/nginx/conf.d/omero-web.conf
+        # Before last line in conf file
+        insertbefore: '^\}$'
+        block: |2+
+              location /pub/schleicher-et-al-2017 {
+                  return 307 /webclient/?show=project-27936;
+              }
+      when: "'ns-web-pub.openmicroscopy.org' in inventory_hostname"
+      notify:
+        - restart nginx
+
