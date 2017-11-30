@@ -113,6 +113,8 @@
       dest: https://www.glencoesoftware.com/team.html
     - match: "~/site/about/publications"
       dest: /citing-ome
+    - match: "~/site/about/(?<link>.*)$"
+      dest: /about
 
     # products
     - match: "~/site/products/?$"
