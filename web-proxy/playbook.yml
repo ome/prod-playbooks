@@ -2,6 +2,7 @@
 # Playbook for maintaining IDR service nodes
 
 - hosts: prod-web-proxies
+  tags: setup
   roles:
   - role: network
   - role: openmicroscopy.lvm-partition
@@ -14,4 +15,8 @@
     lvm_lvmount: /var/log
     lvm_lvsize: "{{ varlog_size }}"
     lvm_lvfilesystem: "{{ root_filesystem }}"
+
+- hosts: prod-web-proxies
+  tags: config
+  roles:
   - role: openmicroscopy.nginx-proxy
