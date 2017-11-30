@@ -3,8 +3,7 @@
 - src: openmicroscopy.postgresql
   version: 2.0.0
 
-- name: openmicroscopy.network
-  src: https://github.com/openmicroscopy/ansible-role-network/archive/1.0.0.tar.gz
+- src: openmicroscopy.network
   version: 1.0.0
 
 - name: openmicroscopy.omero-common
