@@ -4,7 +4,7 @@
 - hosts: prod-web-proxies
   tags: setup
   roles:
-  - role: network
+  - role: openmicroscopy.network
   - role: openmicroscopy.lvm-partition
     lvm_lvname: root
     lvm_lvmount: /
