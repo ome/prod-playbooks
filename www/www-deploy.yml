@@ -99,6 +99,8 @@
     # about
     - match: "~/site/about/?$"
       dest: /about
+    - match: "~/site/about/who-ome"
+      dest: /teams
     - match: "~/site/about/licensing-attribution/?$"
       dest: /licensing
     - match: "~/site/about/ome-contributors/?$"
@@ -107,8 +109,10 @@
       dest: /commercial-partners
     - match: "~/site/about/development-teams/?$"
       dest: /teams
-    - match: "~/site/about/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/about/$link
+    - match: "~/site/about/development-teams/glencoe-software"
+      dest: https://www.glencoesoftware.com/team.html
+    - match: "~/site/about/publications"
+      dest: /citing-ome
 
     # products
     - match: "~/site/products/?$"
