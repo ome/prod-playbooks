@@ -1,6 +1,5 @@
 ---
-# Playbook for initialising new hosts for OME developers
-
+# Playbook which runs the necessary root-level steps so that a host can be managed by others
 - hosts: omedev
   roles:
   - role: openmicroscopy.network
