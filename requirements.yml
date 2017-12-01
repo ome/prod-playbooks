@@ -3,6 +3,9 @@
 - src: openmicroscopy.postgresql
   version: 2.0.0
 
+- src: openmicroscopy.network
+  version: 1.0.0
+
 - name: openmicroscopy.omero-common
   src:  https://github.com/openmicroscopy/ansible-role-omero-common.git
   version: 0.1.0
@@ -29,4 +32,5 @@
 - name: openmicroscopy.system-monitor-agent
   src: https://github.com/openmicroscopy/ansible-role-system-monitor-agent.git
 
-
+- src: openmicroscopy.sudoers
+  version: 1.0.0

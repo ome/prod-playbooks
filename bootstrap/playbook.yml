@@ -1,0 +1,22 @@
+---
+# Playbook which runs the necessary root-level steps so that a host can be managed by others
+- hosts: omedev
+  roles:
+  - role: openmicroscopy.network
+  - role: openmicroscopy.lvm-partition
+    lvm_lvname: var_log
+    lvm_lvmount: /var/log
+    lvm_lvsize: 4g
+    lvm_lvfilesystem: xfs
+    lvm_vgname: VolGroup00
+  - role: openmicroscopy.lvm-partition
+    lvm_lvname: root
+    lvm_lvmount: /
+    lvm_lvsize: 100%FREE
+    lvm_lvfilesystem: xfs
+    lvm_vgname: VolGroup00
+  - role: openmicroscopy.sudoers
+    sudoers_individual_commands:
+    - user: "%omedev"
+      become: ALL
+      command: "NOPASSWD: ALL"
