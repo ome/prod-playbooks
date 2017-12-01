@@ -4,7 +4,7 @@
 # to ansible-playbook on the command line.
 
 - hosts: ns-webclients
-
+  strategy: debug
   pre_tasks:
 
     # Set desired state of webapps (upgrade v.s. install/keep current version)
@@ -29,7 +29,7 @@
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
       omero_web_release: 5.4.1
-      no_log: true
+      #no_log: true
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
@@ -184,3 +184,5 @@
       notify:
         - restart nginx
 
+  vars:
+    omero_web_config_set: "{{ omero_web_config_set_for_host | combine(omero_web_config_set_for_group) }}"
