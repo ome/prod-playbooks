@@ -4,6 +4,7 @@
 # to ansible-playbook on the command line.
 
 - hosts: ns-webclients
+
   pre_tasks:
 
     # Set desired state of webapps (upgrade v.s. install/keep current version)
@@ -184,4 +185,4 @@
         - restart nginx
 
   vars:
-    omero_web_config_set: "{{ omero_web_config_set_for_host | combine(omero_web_config_set_for_group) }}"
+    omero_web_config_set: "{{ omero_web_config_set_for_group | combine(omero_web_config_set_for_host) }}"
