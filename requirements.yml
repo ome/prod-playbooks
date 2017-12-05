@@ -24,7 +24,7 @@
 
 - name: omero-user
   src: https://github.com/openmicroscopy/ansible-role-omero-user
-  version: 0.1.0
+  version: 0.1.1
 
 - name: openmicroscopy.lvm-partition
   src: https://github.com/openmicroscopy/ansible-role-lvm-partition.git
