@@ -163,7 +163,6 @@
         - "omero-webtagging-autotag"
         - "omero-webtagging-tagsearch"
         - "omero-iviewer"
-        - "omero-marshal==0.5.1"
         editable: False
         state: "{{ webapps_state }}"
         # variable comes from role openmicroscopy.omero-web
