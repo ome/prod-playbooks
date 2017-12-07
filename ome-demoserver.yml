@@ -126,9 +126,9 @@
       omero_server_dbpassword: "{{ vault.omero_server_dbpassword }}"
       omero_server_rootpassword: "{{ vault.omero_server_rootpassword }}"
       omero_server_systemd_limit_nofile: 16384
-      # Once omego version bug is fixed, we can remove this hard-coding.
+      # TODO: Once omego version bug is fixed, we can remove this hard-coding.
       # It should be defined in the omero-server role.
-      # See: https://github.com/openmicroscopy/ansible-role-omego/issues/2 
+      # See: https://github.com/openmicroscopy/ansible-role-omego/issues/2
       omero_omego_version: 0.6.4
 
     - role: openmicroscopy.omero-web
