@@ -135,7 +135,7 @@
       omero_web_release: 5.4.1
 
     # This role only works on OMERO 5.3+
-    - role: omero-user
+    - role: openmicroscopy.omero-user
       no_log: true
       omero_user_bin_omero: /opt/omero/server/OMERO.server/bin/omero
       omero_user_system: omero-server
