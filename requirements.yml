@@ -18,7 +18,7 @@
 - name: openmicroscopy.omero-web
   version: 1.0.1
 
-- name: omero-user
+- name: openmicroscopy.omero-user
   version: 0.1.1
 
 - name: openmicroscopy.lvm-partition
