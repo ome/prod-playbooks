@@ -20,6 +20,7 @@
 
     # Root LV Size
     - role: openmicroscopy.lvm-partition
+      tags: lvm
       lvm_lvname: "{{ provision_root_lvname }}"
       lvm_vgname: "{{ provision_root_vgname }}"
       lvm_lvmount: /
