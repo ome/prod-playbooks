@@ -18,5 +18,5 @@
 - name: openmicroscopy.system-monitor-agent
   src: https://github.com/openmicroscopy/ansible-role-system-monitor-agent.git
 
-- name: openmicroscopy.lvm-partition
-  src: https://github.com/openmicroscopy/ansible-role-lvm-partition.git
+- src: openmicroscopy.lvm-partition
+  version: 1.1.0
