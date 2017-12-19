@@ -17,7 +17,7 @@
 
   roles:
 
-    - role: openmicroscopy.nginx_proxy
+    - role: openmicroscopy.nginx-proxy
       tags: nginxconf
       nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
       nginx_proxy_ssl: True
@@ -50,7 +50,7 @@
 
   vars:
 
-    # Vars for role openmicroscopy.nginx_proxy
+    # Vars for role openmicroscopy.nginx-proxy
     nginx_proxy_backends:
       # Proxy for phpBB forums
       - location: /community
