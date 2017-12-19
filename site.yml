@@ -4,3 +4,4 @@
 - include: nightshade-web.yml
 - include: ome-demoserver.yml
 - include: ome-dundeeomero.yml
+- include: training-server.yml

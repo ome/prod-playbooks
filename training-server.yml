@@ -1,93 +1,156 @@
-# Production tuning of server limits.conf, Postgres and NGINX required, but this will install a minimal OMERO server,
-# OMERO.web with NGINX and systemd configuration controlling both.
+# Install OMERO.server and OMERO.web with a public user on localhost
 
-# Install the latest release, including PostgreSQL on the same server
+- hosts: ome-training-outreach.openmicroscopy.org
+  pre_tasks:
 
-# users-to-be-added to come from host_vars
+    - name: Install Make Movie script Prerequisite | MEncoder - Repo
+      become: yes
+      yum:
+        name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+        state: present
 
-- hosts: training-server
+    - name: Install Make Movie script Prerequisite | MEncoder - Package
+      become: yes
+      yum:
+        name: mencoder
+        state: present
+
+    - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        # For OMERO.figure
+        - python-reportlab
+        - python-markdown
+        # For the 'make movie' script
+        - mencoder
+        - scipy
+
   roles:
-  - role: omero-server
-    # Taking this from the openstack playbook os-omero.yml, to install the systemd config.
-    omero_systemd_setup: True
+
+    - role: openmicroscopy.postgresql
+      postgresql_databases:
+      - name: omero
+      postgresql_users:
+      - user: omero
+        password: omero
+        databases: [omero]
+      postgresql_version: "9.6"
+
+    - role: openmicroscopy.omero-server
+      omero_server_release: 5.4.1
+
+    - role: openmicroscopy.omero-web
+      omero_web_release: 5.4.1
+      # omero_web_config_set:
+
+  post_tasks:
+    - name: Omero.web plugins | plugin install via pip & pypi
+      become: yes
+      pip:
+        name:
+        - "omero-figure==3.1.2"
+        - "omero-fpbioimage==0.2.0"
+        - "omero-webtagging-autotag==3.0.2"
+        - "omero-webtagging-tagsearch==3.0.3"
+        - "omero-iviewer==0.4.1"
+        editable: False
+        state: present
+        # variable comes from role openmicroscopy.omero-web
+        virtualenv: "{{ omero_web_basedir }}/venv"
+        virtualenv_site_packages: yes
+      notify:
+        - restart omero-web
+
+    - name: Create a figure scripts directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Download the Figure_To_Pdf.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Create a cambridge_scripts directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Download the Scipy_Gaussian_Filter.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/jburel/omero-example-scripts/cambridge-training/cambridge-training-2017-12/Scipy_Gaussian_Filter.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Add DropBox folder for trainer-1
+      become: yes
+      file:
+        path: /OMERO/DropBox/trainer-1
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Add DropBox folders for user-1 to user-40
+      become: true
+      file:
+        path: /OMERO/DropBox/{{ item }}
+        state: directory
+        mode: 0775
+        owner: "omero-server"
+        group: "omero-server"
+      with_sequence: start=1 end=40 format=user-%d
+
+    # Config for OMERO.web plugins, loaded into OMERO.web by the
+    # omero.web systemd restart.
+    - name: Config for OMERO.web plugins
+      become: yes
+      template:
+        src: omero-web-config-for-webapps.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+      - restart omero-web
+
+    - name: Set default viewer in OMERO.web
+      become: yes
+      template:
+        src: omero-web-config-default-viewer.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+      - restart omero-web
 
   vars:
-  - postgresql_users_databases:
-    - user: omero
-      password: omero
-      databases: [omero]
-  - users_to_control_omero:
-      - "centos"
-  - users_to_be_added:
-      - "fm1"
-      - "fm2"
-  - users_password: "invalid"
-  - fm_groupname: "facility-managers"
-
-  tasks:
-  - name: training-server | add operating system group for trainers
-    become: true
-    group:
-      name: trainers
-      state: present
-
-  - name: training-server | add sample images folder
-    become: true
-    file:
-      path: /var/sample-images
-      owner: root
-      group: trainers
-      mode: 0775
-      state: directory
-
-  - name: training-server | add operating system group for facility managers
-    become: true
-    group:
-      name: facility-managers
-      state: present
-
-  - name: training-server | add facility manager operating system users
-    become: true
-    user:
-     name: "{{item}}"
-     state: present
-     groups: users,{{ fm_groupname }}
-     password: "{{ users_password  }}"
-    with_items: "{{ users_to_be_added }}"
-
-  - name: training-server | add symlinks to sample images in fm users homedirs
-    become: true
-    file:
-      path: ~{{ item }}/sample-images
-      owner: root
-      src: /var/sample-images
-      state: link
-    with_items: "{{ users_to_be_added }}"
-
-  - name: training-server | add OMERO.DropBox folders
-    become: true
-    file:
-      path: /OMERO/DropBox/{{ item }}
-      owner: omero
-      group: "{{ fm_groupname  }}"
-      mode: 0775
-      state: directory
-    with_items: "{{ users_to_be_added }}"
-
-  - name: training-server | allow OMERO user sudo by list of users in variable
-    become: true
-    lineinfile:
-      dest: /etc/sudoers
-      state: present
-      line: '{{ item }} ALL=(omero:omero) NOPASSWD:ALL'
-      validate: 'visudo -cf %s'
-    with_items: "{{ users_to_control_omero }}"
-
-  - name: training-server | allow OMERO service control by list of users in variable
-    become: true
-    lineinfile:
-      dest: /etc/sudoers
-      state: present
-      line: '{{ item }} ALL=(root) NOPASSWD:/usr/bin/systemctl ?* omero.service, /usr/bin/systemctl ?* omero-web.service'
-      validate: 'visudo -cf %s'
-    with_items: "{{ users_to_control_omero }}"
+    omero_web_public_password: public
+    omero_server_config_set:
+      omero.db.poolsize: 50
+      omero.jvmcfg.percent.blitz: 50
+      omero.jvmcfg.percent.indexer: 20
+      omero.jvmcfg.percent.pixeldata: 20
