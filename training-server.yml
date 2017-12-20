@@ -21,11 +21,9 @@
         name: "{{ item }}"
         state: present
       with_items:
-        # For OMERO.figure
-        - python-reportlab
-        - python-markdown
-        # For the 'make movie' script
-        - mencoder
+        - python-reportlab # For OMERO.figure
+        - python-markdown # For OMERO.figure
+        - mencoder # For the 'make movie' script
         - scipy
 
   roles:
