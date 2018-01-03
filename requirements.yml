@@ -6,6 +6,9 @@
 - src: openmicroscopy.network
   version: 1.0.0
 
+- src: openmicroscopy.nginx-proxy
+  version: 1.6.0
+
 - src: openmicroscopy.omero-common
   version: 0.1.0
 
