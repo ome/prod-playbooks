@@ -246,6 +246,7 @@
         mode: 0755
         owner: "{{ vault.omero_server_os_user }}"
         group: "{{ vault.omero_server_os_user }}"
+        force: yes
 
   vars:
     # Check_MK (system monitoring) paths
