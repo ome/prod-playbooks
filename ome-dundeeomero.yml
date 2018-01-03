@@ -235,8 +235,8 @@
         state: directory
         mode: 0755
         recurse: yes
-        owner: "omero-server"
-        group: "omero-server"
+        owner: "{{ vault.omero_server_os_user }}"
+        group: "{{ vault.omero_server_os_user }}"
 
     - name: Download the Figure_To_Pdf.py script
       become: yes
@@ -244,8 +244,8 @@
         url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0755
-        owner: "omero-server"
-        group: "omero-server"
+        owner: "{{ vault.omero_server_os_user }}"
+        group: "{{ vault.omero_server_os_user }}"
 
   vars:
     # Check_MK (system monitoring) paths
