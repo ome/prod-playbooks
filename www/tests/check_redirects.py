@@ -22,6 +22,12 @@ redirect_uris = [
     ('/site/about/ome-contributors', '/contributors'),
     ('/site/about/partners', '/commercial-partners'),
     ('/site/about/development-teams', '/teams'),
+    ('/site/about/development-teams/glencoe-software', 'https://www.glencoesoftware.com/team.html'),
+    ('/site/about/publications', '/citing-ome'),
+    ('/site/about/who-ome', '/teams'),
+    ('/site/about/what-omero/overview', '/omero'),
+    ('/site/about/roadmap', '/about'),
+    ('/site/about/project-history', '/about'),
 
     ('/site/community', '/support'),
     ('/site/community/mailing-lists', '/support'),
@@ -46,11 +52,6 @@ redirect_uris = [
 ]
 blog_uris = ('/omero-blog', 'http://blog.openmicroscopy.org')
 legacy_uris = [
-    '/site/about/publications',
-    '/site/about/who-ome',
-    '/site/about/what-omero/overview',
-    '/site/about/roadmap',
-    '/site/about/project-history',
     '/site/community/scripts',
     '/site/community/minutes',
     '/site/community/minutes/conference-calls/2017',
