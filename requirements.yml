@@ -1,13 +1,23 @@
 ---
 
-- src: openmicroscopy.postgresql
-  version: 2.0.0
+- src: openmicroscopy.jekyll-build
+  version: 1.2.1
+
+- src: openmicroscopy.lvm-partition
+  version: 1.1.0
 
 - src: openmicroscopy.network
   version: 1.0.0
 
 - src: openmicroscopy.nginx-proxy
+  version: 1.5.2
+
+- name: openmicroscopy.nginx-proxy-1.6.0
+  src: openmicroscopy.nginx-proxy
   version: 1.6.0
+
+- src: openmicroscopy.nginx-ssl-selfsigned
+  version: 1.0.0
 
 - src: openmicroscopy.omero-common
   version: 0.1.0
@@ -26,6 +36,12 @@
 
 - src: openmicroscopy.lvm-partition
   version: 1.1.0
+
+- src: openmicroscopy.postgresql
+  version: 2.0.0
+
+- name: openmicroscopy.selinux-utils
+  version: 1.0.3
 
 - src: openmicroscopy.system-monitor-agent
   version: 0.1.0
