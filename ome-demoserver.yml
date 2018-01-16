@@ -159,6 +159,7 @@
         - "omero-webtagging-autotag"
         - "omero-webtagging-tagsearch"
         - "omero-iviewer"
+        - "django-cors-headers"
         editable: False
         state: "{{ webapps_state }}"
         # variable comes from role openmicroscopy.omero-web
