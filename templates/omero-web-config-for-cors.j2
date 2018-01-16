@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+# Add web-extension OMERO.web configuration
+# after web already installed and running via role
+
+# CORS
+config append -- omero.web.apps '"corsheaders"'
+config append omero.web.middleware '{"index": 0.5, "class": "corsheaders.middleware.CorsMiddleware"}'
+config append omero.web.middleware '{"index": 10, "class": "corsheaders.middleware.CorsPostCsrfMiddleware"}'
+config set omero.web.cors_origin_allow_all True

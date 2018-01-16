@@ -240,6 +240,18 @@
       notify:
         - restart omero-web
 
+    # OMERO.web config for CORS
+    - name:
+      become: yes
+      template:
+        src: templates/omero-web-config-for-cors.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+        - restart omero-web
+
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
       stat:
