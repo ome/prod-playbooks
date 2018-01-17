@@ -66,8 +66,7 @@
         # For OMERO.figure
         - python-reportlab
         - python-markdown
-        # For the 'make movie' script
-        - mencoder
+        - mencoder # For the 'make movie' script
         # Current server proxies to a decoupled OMERO.web server
         # Initially replicate this setup, to minimise changes.
         - nginx

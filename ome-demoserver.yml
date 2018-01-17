@@ -53,8 +53,7 @@
         # For OMERO.figure
         - python-reportlab
         - python-markdown
-        # For the 'make movie' script
-        - mencoder
+        - mencoder # For the 'make movie' script
 
     # Set desired state of webapps (upgrade v.s. install/keep current version)
     - name: OMERO.web plugin upgrade | set default state "installed"
