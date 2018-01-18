@@ -113,9 +113,9 @@ def test_redirect_with_slash(host, uri, expect, suffix):
 
 
 @pytest.mark.parametrize('host', hosts)
+@pytest.mark.parametrize('uri,expect', external_uris)
 @pytest.mark.parametrize("suffix", suffixes)
-def test_redirect_external(host, suffix):
-    uri, expect = external_uris
+def test_redirect_external(host, uri, expect, suffix):
     r = requests.head('%s%s%s' % (host, uri, suffix))
     assert r.is_redirect
     assert r.headers['Location'] == expect
