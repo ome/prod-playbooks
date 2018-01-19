@@ -22,6 +22,11 @@ redirect_uris = [
     ('/site/about/ome-contributors', '/contributors'),
     ('/site/about/partners', '/commercial-partners'),
     ('/site/about/development-teams', '/teams'),
+    ('/site/about/publications', '/citing-ome'),
+    ('/site/about/who-ome', '/teams'),
+    ('/site/about/what-omero/overview', '/omero'),
+    ('/site/about/roadmap', '/about'),
+    ('/site/about/project-history', '/about'),
 
     ('/site/community', '/support'),
     ('/site/community/mailing-lists', '/support'),
@@ -44,13 +49,11 @@ redirect_uris = [
     ('/info/vulnerabilities/2014-SV3-csrf',
      '/security/advisories/2014-SV3-csrf/'),
 ]
-blog_uris = ('/omero-blog', 'http://blog.openmicroscopy.org')
+external_uris = [
+    ('/omero-blog', 'http://blog.openmicroscopy.org'),
+    ('/site/about/development-teams/glencoe-software', 'https://www.glencoesoftware.com/team.html'),
+]
 legacy_uris = [
-    '/site/about/publications',
-    '/site/about/who-ome',
-    '/site/about/what-omero/overview',
-    '/site/about/roadmap',
-    '/site/about/project-history',
     '/site/community/scripts',
     '/site/community/minutes',
     '/site/community/minutes/conference-calls/2017',
@@ -110,9 +113,9 @@ def test_redirect_with_slash(host, uri, expect, suffix):
 
 
 @pytest.mark.parametrize('host', hosts)
+@pytest.mark.parametrize('uri,expect', external_uris)
 @pytest.mark.parametrize("suffix", suffixes)
-def test_redirect_blog(host, suffix):
-    uri, expect = blog_uris
+def test_redirect_external(host, uri, expect, suffix):
     r = requests.head('%s%s%s' % (host, uri, suffix))
     assert r.is_redirect
     assert r.headers['Location'] == expect
