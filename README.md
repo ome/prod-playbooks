@@ -19,3 +19,17 @@ Details
 - to install e.g. OMERO, or OMERO.web, and configure
   the server, depending on the requirements of that system,
     ansible-playbook playbook.yml
+
+Playbooks
+---------
+
+ - [nightshade-webclients.yml](nightshade-webclients.yml):
+   deployment of two OMERO.web instances for hosting Dundee's
+   production OMERO. One of the two instances is for
+   publication data ("ns-web-pub").
+ - [ome-dundeeomero.yml](ome-dundeeomero.yml):
+   deployment of the OMERO.server in Dundee
+ - [ome-demoserver.yml](ome-demoserver.yml):
+   deployment of https://demo.openmicroscopy.org
+ - [training-server.yml](training-server.yml)
+   deployment of https://outreach.openmicroscopy.org
