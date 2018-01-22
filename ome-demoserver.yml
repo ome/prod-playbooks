@@ -158,6 +158,7 @@
         - "omero-webtagging-autotag"
         - "omero-webtagging-tagsearch"
         - "omero-iviewer"
+        - "django-cors-headers"
         editable: False
         state: "{{ webapps_state }}"
         # variable comes from role openmicroscopy.omero-web
@@ -232,6 +233,18 @@
       template:
         src: templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+        - restart omero-web
+
+    # OMERO.web config for CORS
+    - name:
+      become: yes
+      template:
+        src: templates/omero-web-config-for-cors.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
         owner: "root"
         group: "root"
         mode: "u=rw,go=r"
