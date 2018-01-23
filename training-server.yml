@@ -38,10 +38,10 @@
       postgresql_version: "9.6"
 
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.1
+      omero_server_release: 5.4.2
 
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.4.1
+      omero_web_release: 5.4.2
       # omero_web_config_set:
 
   post_tasks:
