@@ -44,6 +44,8 @@
       omero_web_release: 5.4.2
       # omero_web_config_set:
 
+    - role: openmicroscopy.docker
+
   post_tasks:
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
@@ -61,6 +63,15 @@
         virtualenv_site_packages: yes
       notify:
         - restart omero-web
+
+    - name: Omero.cli plugins | plugin install via pip & pypi
+      become: yes
+      pip:
+        name:
+        - "omero-cli-duplicate==0.2.0"
+        - "omero-cli-render==0.1.0"
+        - "docker-py"
+        state: present
 
     - name: Create a figure scripts directory
       become: yes
@@ -104,22 +115,12 @@
     - name: Add DropBox folder for trainer-1
       become: yes
       file:
-        path: /OMERO/DropBox/trainer-1
+        path: /home/DropBox/trainer-1
         state: directory
         mode: 0755
         recurse: yes
         owner: "omero-server"
         group: "omero-server"
-
-    - name: Add DropBox folders for user-1 to user-40
-      become: true
-      file:
-        path: /OMERO/DropBox/{{ item }}
-        state: directory
-        mode: 0775
-        owner: "omero-server"
-        group: "omero-server"
-      with_sequence: start=1 end=40 format=user-%d
 
     # Config for OMERO.web plugins, loaded into OMERO.web by the
     # omero.web systemd restart.
@@ -145,10 +146,59 @@
       notify:
       - restart omero-web
 
+    - name: Add facility manager operating system users
+      become: true
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "{{ omero_server_system_managedrepo_group }}"
+       password: "{{ os_system_users_password }}"
+      with_sequence: start=1 end=40 format=fm%d
+
+    - name: Add DropBox folders for fm1 through fm40
+      become: true
+      file:
+        path: /home/DropBox/{{ item }}
+        state: directory
+        mode: 0755
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      with_sequence: start=1 end=40 format=fm%d
+
+    - name: Allow managed repo group to login
+      become: yes
+      lineinfile:
+        path: /etc/security/access.conf
+        regexp: "{{ omero_server_system_managedrepo_group }}"
+        insertbefore: BOF
+        line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
+
+    - name: Run docker for ldap
+      become: yes
+      docker_container:
+        image: openmicroscopy/apacheds
+        name: ldap
+        published_ports:
+        - "10389:10389"
+        state: started
+        restart_policy: always
+
+
   vars:
-    omero_web_public_password: public
     omero_server_config_set:
+      #omero.fs.importUsers: "fm1"
+      omero.fs.watchDir: "/home/DropBox"
+      omero.fs.importArgs: "-T Dataset:@name:from-Dropbox"
       omero.db.poolsize: 50
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
+    #omero_server_datadir_chown: True
+    omero_server_system_managedrepo_group: managed_repo_group
+    omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
+    omero_server_datadir_chown: True
+    os_system_users_password: "$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/"
+    os_system_users_to_be_added:
+    - fm1
+    - fm2
+
