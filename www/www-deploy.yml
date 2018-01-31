@@ -30,15 +30,6 @@
         - "client_max_body_size 2g"
 
   tasks:
-
-    - name: NGINX - Performance tuning - worker processes
-      tags: nginxconf
-      become: yes
-      replace:
-        path: "/etc/nginx/nginx.conf"
-        regexp: '^worker_processes\s+\d+;'
-        replace: "worker_processes {{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }};"
-
     # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
       tags: nginxconf
