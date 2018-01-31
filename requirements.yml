@@ -10,10 +10,6 @@
   version: 1.0.0
 
 - src: openmicroscopy.nginx-proxy
-  version: 1.5.2
-
-- name: openmicroscopy.nginx-proxy-1.6.0
-  src: openmicroscopy.nginx-proxy
   version: 1.6.0
 
 - src: openmicroscopy.nginx-ssl-selfsigned
