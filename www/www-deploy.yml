@@ -20,6 +20,7 @@
     - role: openmicroscopy.nginx-proxy
       tags: nginxconf
       nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
+      nginx_proxy_worker_connections: 65000
       nginx_proxy_ssl: True
       nginx_proxy_ssl_certificate: "{{ nginx_ssl_files_path }}/{{ nginx_ssl_cert_filename }}"
       nginx_proxy_ssl_certificate_key: "{{ nginx_ssl_files_path }}/{{ nginx_ssl_key_filename }}"
@@ -28,16 +29,6 @@
       nginx_proxy_404: "/404.html"
       nginx_proxy_conf_http:
         - "client_max_body_size 2g"
-
-  tasks:
-    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
-    - name: NGINX - Performance tuning - worker connections
-      tags: nginxconf
-      become: yes
-      replace:
-        path: "/etc/nginx/nginx.conf"
-        regexp: 'worker_connections\s+\d+;'
-        replace: "worker_connections 65000;"
 
   vars:
 
