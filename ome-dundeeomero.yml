@@ -284,4 +284,4 @@
       omero.throttling.method_time.error: 60000
       omero.Ice.Default.Host: "{{ omero_server_ice_default_host }}"
       Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints }}"
-
+      omero.data.dir: "{{ omero_server_datadir  }}"
