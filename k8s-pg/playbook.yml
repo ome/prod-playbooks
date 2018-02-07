@@ -1,0 +1,5 @@
+---
+- hosts: ome-k8s-pg-01.openmicroscopy.org
+  roles:
+  - role: openmicroscopy.network
+  - role: openmicroscopy.postgresql-3
