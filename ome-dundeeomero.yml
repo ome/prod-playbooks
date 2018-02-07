@@ -243,11 +243,11 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_tag }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0644
         owner: root
-        force: yes
+        checksum: "{{ omero_figure_pdfscript_checksum | default(omit) }}"
 
   vars:
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
