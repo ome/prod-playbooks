@@ -42,7 +42,7 @@
       become: yes
       pip:
         name:
-        - "omero-figure{{ omero_figure_version_req }}"
+        - "omero-figure{{ omero_figure_version_req | default('') }}"
         - "omero-webtagging-autotag"
         - "omero-webtagging-tagsearch"
         editable: False
