@@ -9,8 +9,7 @@
 - src: openmicroscopy.network
   version: 1.0.0
 
-- name: openmicroscopy.nginx-proxy
-  src: https://github.com/sbesson/ansible-role-nginx-proxy/archive/worker_connections.tar.gz
+- src: openmicroscopy.nginx-proxy
   version: 1.7.0
 
 - src: openmicroscopy.nginx-ssl-selfsigned
