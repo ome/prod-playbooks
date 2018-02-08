@@ -6,8 +6,9 @@
 - src: openmicroscopy.lvm-partition
   version: 1.1.0
 
-- src: openmicroscopy.network
-  version: 1.0.0
+- name: openmicroscopy.network
+  src: https://github.com/kennethgillen/ansible-role-network/archive/additional_parameters.tar.gz
+  version: additional_parameters
 
 - src: openmicroscopy.nginx-proxy
   version: 1.5.2
