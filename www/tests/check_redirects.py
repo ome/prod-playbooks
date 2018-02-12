@@ -37,11 +37,21 @@ redirect_uris = [
     ('/site/products/bio-formats/downloads', '/bio-formats/downloads/'),
     ('/site/products/omero', '/omero'),
     ('/site/products/omero/downloads', '/omero/downloads/'),
-    ('/site/products/omero/feature-list', '/omero/new'),
+    ('/site/products/omero/feature-list', '/omero/features/'),
     ('/site/products/omero/secvuln', '/security/advisories/'),
     ('/site/products/omero/secvuln/2014-SV3-csrf',
      '/security/advisories/2014-SV3-csrf/'),
 
+    ('/omero/new/', '/omero/features/'),
+    ('/omero/import/', '/omero/features/import/'),
+    ('/omero/organize/', '/omero/features/organize/'),
+    ('/omero/view/', '/omero/features/view/'),
+    ('/omero/analyze/', '/omero/features/analyze/'),
+    ('/omero/publish/', '/omero/features/publish/'),
+    ('/omero/export/', '/omero/features/export/'),
+    ('/omero/learning/', '/omero/features/learning/'),
+    ('/omero/utility/', '/omero/features/utility/'),
+    
     ('/site/support', '/docs'),
     ('/site/news', '/announcements'),
 
