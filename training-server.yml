@@ -1,6 +1,6 @@
 # Install OMERO.server and OMERO.web with a public user on localhost
 
-- hosts: all
+- hosts: outreach.openmicroscopy.org
   pre_tasks:
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
