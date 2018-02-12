@@ -126,7 +126,7 @@
     - match: "~/site/products/omero/downloads/?$"
       dest: /omero/downloads/
     - match: "~/site/products/omero/feature-list/?$"
-      dest: /omero/new
+      dest: /omero/features/
     - match: "~/site/products/omero/big-images-support/?$"
       dest: /omero/view/
     - match: "~/site/products/omero/secvuln/?$"
@@ -141,6 +141,26 @@
       dest: /ome-files
     - match: "~/site/products/(?<link>.*)$"
       dest: https://www-legacy.openmicroscopy.org/site/products/$link
+
+    # OMERO features
+    - match: "~/omero/new/"
+      dest: /omero/features/
+    - match: "~/omero/import/"
+      dest: /omero/features/import/
+    - match: "~/omero/organize/"
+      dest: /omero/features/organize/
+    - match: "~/omero/view/"
+      dest: /omero/features/view/
+    - match: "~/omero/analyze/"
+      dest: /omero/features/analyze/
+    - match: "~/omero/publish/
+      dest: /omero/features/publish/
+    - match: "~/omero/export/"
+      dest: /omero/features/export/
+    - match: "~/omero/learning/"
+      dest: /omero/features/learning/
+    - match: "~/omero/utility/"
+      dest: /omero/features/utility/
 
     # community
     - match: "~/site/community/?$"
