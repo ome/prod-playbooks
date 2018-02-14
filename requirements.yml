@@ -7,7 +7,7 @@
   version: 1.1.0
 
 - name: openmicroscopy.network
-  src: https://github.com/kennethgillen/ansible-role-network/archive/additional_parameters.tar.gz
+  src: 1.1.0
   version: additional_parameters
 
 - src: openmicroscopy.nginx-proxy
