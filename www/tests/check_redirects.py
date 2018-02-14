@@ -51,7 +51,7 @@ redirect_uris = [
     ('/omero/export/', '/omero/features/export/'),
     ('/omero/learning/', '/omero/features/learning/'),
     ('/omero/utility/', '/omero/features/utility/'),
-    
+
     ('/site/support', '/docs'),
     ('/site/news', '/announcements'),
 
