@@ -3,9 +3,7 @@
 - hosts: www
   environment:
       PATH: /usr/local/bin:{{ ansible_env.PATH }}
-
   roles:
-
     - role: openmicroscopy.jekyll-build
       tags: jekyll
       jekyll_build_git_repo: "https://github.com/openmicroscopy/www.openmicroscopy.org"

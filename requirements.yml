@@ -1,7 +1,10 @@
 ---
 
+- src: rvm_io.ruby
+  version: v2.0.1
+
 - src: openmicroscopy.jekyll-build
-  version: 1.2.1
+  version: 1.3.0
 
 - src: openmicroscopy.lvm-partition
   version: 1.1.0
@@ -10,11 +13,7 @@
   version: 1.0.0
 
 - src: openmicroscopy.nginx-proxy
-  version: 1.5.2
-
-- name: openmicroscopy.nginx-proxy-1.6.0
-  src: openmicroscopy.nginx-proxy
-  version: 1.6.0
+  version: 1.7.0
 
 - src: openmicroscopy.nginx-ssl-selfsigned
   version: 1.0.0
