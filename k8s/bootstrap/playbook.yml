@@ -1,0 +1,4 @@
+---
+- hosts: kubernetes-lochy
+  roles:
+  - role: openmicroscopy.network
