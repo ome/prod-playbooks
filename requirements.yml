@@ -1,8 +1,11 @@
 ---
 
+- src: rvm_io.ruby
+  version: 2.0.1
+
 - name: openmicroscopy.jekyll-build
   src: https://github.com/sbesson/ansible-role-jekyll-build/archive/rvm_dependency.tar.gz
-  version: 2.0.0
+  version: 1.3.0
 
 - src: openmicroscopy.lvm-partition
   version: 1.1.0
