@@ -3,19 +3,7 @@
 - hosts: www
   environment:
       PATH: /usr/local/bin:{{ ansible_env.PATH }}
-
-  pre_tasks:
-  - name: install which
-    become: yes
-    package:
-      name: "{{item}}"
-      state: present
-    with_items:
-      - which
-    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-
   roles:
-
     - role: openmicroscopy.jekyll-build
       tags: jekyll
       jekyll_build_git_repo: "https://github.com/openmicroscopy/www.openmicroscopy.org"
