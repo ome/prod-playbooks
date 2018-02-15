@@ -142,26 +142,6 @@
     - match: "~/site/products/(?<link>.*)$"
       dest: https://www-legacy.openmicroscopy.org/site/products/$link
 
-    # OMERO features
-    - match: "~/omero/new/?$"
-      dest: /omero/features/
-    - match: "~/omero/import/?$"
-      dest: /omero/features/import/
-    - match: "~/omero/organize/?$"
-      dest: /omero/features/organize/
-    - match: "~/omero/view/?$"
-      dest: /omero/features/view/
-    - match: "~/omero/analyze/?$"
-      dest: /omero/features/analyze/
-    - match: "~/omero/publish/?$"
-      dest: /omero/features/publish/
-    - match: "~/omero/export/?$"
-      dest: /omero/features/export/
-    - match: "~/omero/learning/?$"
-      dest: /omero/features/learning/
-    - match: "~/omero/utility/?$"
-      dest: /omero/features/utility/
-
     # community
     - match: "~/site/community/?$"
       dest: /support
