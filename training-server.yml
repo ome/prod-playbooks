@@ -135,7 +135,7 @@
     - name: Download the ldap scripts
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/master/bin/ldapmanager
+        url: https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{ apache_docker_release }}/bin/ldapmanager
         dest: /home/ldap/ldapmanager
         mode: 0755
         force: yes
@@ -204,7 +204,7 @@
     - name: Run docker for ldap
       become: yes
       docker_container:
-        image: openmicroscopy/apacheds
+        image: openmicroscopy/apacheds:{{ apache_docker_release }}
         name: ldap
         published_ports:
         - "10389:10389"
@@ -228,7 +228,7 @@
       omero.ldap.group_mapping: "name=cn"
       omero.ldap.new_user_group: "MyData"
       omero.ldap.new_user_group_owner: "(owner=@{dn})"
-      omero.ldap.password: "{{ ldap_password | default(secret)}}"
+      omero.ldap.password: "{{ ldap_password | default('secret')}}"
       omero.ldap.sync_on_login: "true"
       omero.ldap.user_filter: "(objectClass=person)"
       omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
