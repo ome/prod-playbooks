@@ -237,3 +237,5 @@
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: True
+    os_system_users_password: $6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/
+    apache_docker_release: 0.3.0
