@@ -2,3 +2,5 @@
 - hosts: ome-k8s-pg-01.openmicroscopy.org
   roles:
   - role: openmicroscopy.postgresql-3
+    postgresql_version: "9.6"
+    postgresql_server_listen: "'*'"
