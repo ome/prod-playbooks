@@ -33,6 +33,7 @@ env:
   - DIRECTORY=bootstrap PLAYBOOK=
   - DIRECTORY=web-proxy PLAYBOOK=playbook.yml
   - DIRECTORY=www PLAYBOOK=""
+  - DIRECTORY=k8s/postgres PLAYBOOK=
 
 matrix:
   allow_failures:

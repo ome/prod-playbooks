@@ -2,3 +2,18 @@
 - hosts: ome-k8s-pg-01.openmicroscopy.org
   roles:
   - role: openmicroscopy.postgresql-3
+    postgresql_version: "9.6"
+    postgresql_server_listen: "'*'"
+    postgresql_databases:
+    - name: idr-redmine
+      owner: idr-redmine
+      restrict: True
+    postgresql_users:
+    - user: idr-redmine
+      password: "{{ idr_redmine_postgres_password | default('idr-redmine') }}"
+      databases:
+      - idr-redmine
+    postgresql_server_auth:
+    - database: idr-redmine
+      user: idr-redmine
+      address: "{{ idr_redmine_postgres_auth_ip | default('0.0.0.0/0') }}"
