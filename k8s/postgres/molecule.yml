@@ -1,0 +1,18 @@
+# Syntax check only
+---
+dependency:
+  name: galaxy
+  requirements_file: ../../requirements.yml
+
+driver:
+  name: docker
+
+docker:
+  containers:
+  - name: ome-k8s-pg-01.openmicroscopy.org
+    image: centos/systemd
+    image_version: latest
+    privileged: True
+
+verifier:
+  name: testinfra
