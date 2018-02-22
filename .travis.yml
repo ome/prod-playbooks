@@ -31,7 +31,7 @@ env:
   - DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
   - DIRECTORY="." PLAYBOOK=training-server.yml
   - DIRECTORY=bootstrap PLAYBOOK=
-  - DIRECTORY=web-proxy PLAYBOOK=playbook.yml
+  - DIRECTORY=web-proxy PLAYBOOK=
   - DIRECTORY=www PLAYBOOK=""
   - DIRECTORY=k8s/postgres PLAYBOOK=
 
