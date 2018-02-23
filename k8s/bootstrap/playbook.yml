@@ -1,0 +1,4 @@
+---
+- hosts: vlan-10ge-servers
+  roles:
+  - role: openmicroscopy.network

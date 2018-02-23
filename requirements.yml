@@ -9,13 +9,16 @@
 - src: openmicroscopy.lvm-partition
   version: 1.1.0
 
-- src: openmicroscopy.network
-  version: 1.0.0
+- name: openmicroscopy.network
+  version: 1.1.0
 
 - src: openmicroscopy.nginx-proxy
   version: 1.7.0
 
 - src: openmicroscopy.nginx-ssl-selfsigned
+  version: 1.0.0
+
+- src: openmicroscopy.nfs-mount
   version: 1.0.0
 
 - src: openmicroscopy.omero-common
@@ -41,6 +44,10 @@
 
 - src: openmicroscopy.postgresql
   version: 2.0.0
+
+- name: openmicroscopy.postgresql-3
+  src: openmicroscopy.postgresql
+  version: 3.0.1
 
 - name: openmicroscopy.selinux-utils
   version: 1.0.3
