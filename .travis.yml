@@ -32,9 +32,5 @@ env:
   - DIRECTORY="." PLAYBOOK=training-server.yml
   - DIRECTORY=bootstrap PLAYBOOK=
   - DIRECTORY=web-proxy PLAYBOOK=
-  - DIRECTORY=www PLAYBOOK=""
+  - DIRECTORY=www PLAYBOOK=
   - DIRECTORY=k8s/postgres PLAYBOOK=
-
-matrix:
-  allow_failures:
-  - env: DIRECTORY=web-proxy PLAYBOOK=playbook.yml
