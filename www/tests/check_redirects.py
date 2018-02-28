@@ -102,7 +102,7 @@ content_uris_no_slash = [
 
 
 # Based on
-# https://github.com/openmicroscopy/infrastructure/blob/master/ansible/server-state-playbooks/www/www.yml
+# https://github.com/openmicroscopy/prod-playbooks/blob/master/www/playbook.yml
 @pytest.mark.parametrize('host', hosts)
 @pytest.mark.parametrize('uri,expect', redirect_uris)
 @pytest.mark.parametrize("suffix", suffixes)
