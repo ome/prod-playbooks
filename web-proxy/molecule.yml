@@ -9,7 +9,7 @@ driver:
 
 docker:
   containers:
-  - name: host-populate
+  - name: prod-web-proxies
     image: centos
     image_version: 7
 
