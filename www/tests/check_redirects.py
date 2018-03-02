@@ -43,7 +43,7 @@ redirect_uris = [
      '/security/advisories/2014-SV3-csrf/'),
 
     ('/site/support', '/docs'),
-    ('/site/support/ome-artwork/', '/artwork'),
+    ('/site/support/ome-artwork', '/artwork'),
     ('/site/news', '/announcements'),
 
     ('/info/vulnerabilities', '/security/advisories/'),
