@@ -153,7 +153,7 @@
       become: yes
       pip:
         name:
-        - "omero-figure"
+        - "omero-figure{{ omero_figure_version_req | default('') }}"
         - "omero-fpbioimage"
         - "omero-webtagging-autotag"
         - "omero-webtagging-tagsearch"
@@ -315,11 +315,11 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_tag | default("master") }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0644
         owner: root
-        force: yes
+        checksum: "{{ omero_figure_pdfscript_checksum | default(omit) }}"
 
   vars:
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
@@ -361,4 +361,3 @@
       # Advice is (2*cores + 1) from OME docs.
       omero.web.wsgi_workers: "{{ (2 * (ansible_processor_count * ansible_processor_cores)) + 1 }}"
       omero.web.admins:  "{{ omero_web_admins }}"
-
