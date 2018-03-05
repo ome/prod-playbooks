@@ -10,4 +10,3 @@
       jekyll_build_force_rebuild: True
       jekyll_build_config: ['_config.yml', '_prod.yml']
       jekyll_build_name: "{{ website_name }}"
-      jekyll_build_git_branch: "master"
