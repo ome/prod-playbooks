@@ -137,7 +137,7 @@
     # support
     - match: "~/site/support/?$"
       dest: /docs
-    - match: "~/site/support/ome-artwork/?$"
+    - match: "~/site/support/ome-artwork/(?<link>.*)$"
       dest: /artwork
     - match: "~/site/support/(?<link>.*)$"
       dest: https://www-legacy.openmicroscopy.org/site/support/$link
