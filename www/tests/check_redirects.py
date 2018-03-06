@@ -44,6 +44,7 @@ redirect_uris = [
 
     ('/site/support', '/docs'),
     ('/site/support/ome-artwork', '/artwork'),
+    ('/site/support/ome-artwork/artwork-usage', '/artwork'),
     ('/site/news', '/announcements'),
 
     ('/info/vulnerabilities', '/security/advisories/'),
