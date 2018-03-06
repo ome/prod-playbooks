@@ -125,7 +125,6 @@
       omero_server_dbpassword: "{{ vault.omero_server_dbpassword }}"
       omero_server_rootpassword: "{{ vault.omero_server_rootpassword }}"
       omero_server_systemd_limit_nofile: 16384
-      omero_server_system_user_manage: False
 
     - role: openmicroscopy.omero-web
       omero_web_release: 5.4.4
