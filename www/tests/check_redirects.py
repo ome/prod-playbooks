@@ -56,7 +56,6 @@ external_uris = [
     ('/site/community/scripts', 'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),
 ]
 legacy_uris = [
-    '/site/community/scripts',
     '/site/community/minutes',
     '/site/community/minutes/conference-calls/2017',
     '/site/products/ome-tiff',
