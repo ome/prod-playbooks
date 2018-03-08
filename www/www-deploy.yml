@@ -129,6 +129,8 @@
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
       dest: /support
+    - match: "~/site/community/minutes/meetings/(?<link>.*)$"
+      dest: /events/$link
     - match: "~/site/community/jobs/?$"
       dest: /careers
     - match: "~/site/community/scripts/?$"
