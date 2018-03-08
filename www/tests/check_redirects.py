@@ -30,6 +30,7 @@ redirect_uris = [
 
     ('/site/community', '/support'),
     ('/site/community/mailing-lists', '/support'),
+    ('/site/community/minutes/meetings', '/events/'),
     ('/site/community/jobs', '/careers'),
 
     ('/site/products', '/products'),
