@@ -158,7 +158,7 @@
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.3
+      omero_server_release: 5.4.4
       # install-mock set for inital provision, then playbook re-run with correct accounts.
       #omero_server_dbuser: install-mock
       #omero_server_dbname:  install-mock
@@ -175,6 +175,7 @@
       # omero_server_datadir: overridden after inital role run via host vars
       omero_server_datadir_manage: False
       omero_server_systemd_limit_nofile: 16384
+      omero_server_system_user_manage: False
 
   post_tasks:
     - name: Check_MK postgres plugin | check for plugin existence
