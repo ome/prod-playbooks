@@ -129,6 +129,14 @@
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
       dest: /support
+    - match: "~/site/community/minutes/meetings/12th-annual-users-meeting-2017"
+      dest: /events/12th-annual-users-meeting-2017.html
+    - match: "~/site/community/minutes/meetings/11th-annual-users-meeting-2016"
+      dest: /events/11th-annual-users-meeting-2016.html
+    - match: "~/site/community/minutes/meetings/10th-annual-users-meeting-june-2015"
+      dest: /events/10th-annual-users-meeting-june-2015.html
+    - match: "~/site/community/minutes/meetings/9th-annual-users-meeting-june-2014"
+      dest: /events/9th-annual-users-meeting-june-2014.html
     - match: "~/site/community/jobs/?$"
       dest: /careers
     - match: "~/site/community/scripts/?$"
