@@ -25,15 +25,5 @@ ansible:
       nginx_ssl_key_filename: selfsigned.key
       website_name: molecule-test
 
-molecule:
-  test:
-    sequence:
-    - destroy
-    - syntax
-    - create
-    - converge
-    # Playbook has idempotence bugs
-    - verify
-
 verifier:
   name: testinfra
