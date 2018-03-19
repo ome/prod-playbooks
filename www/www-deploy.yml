@@ -69,8 +69,6 @@
       dest: /security/advisories/
     - match: "~/info/vulnerabilities/(?<link>.*[^/])/?$"
       dest: /security/advisories/$link/
-    - match: "~/info/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/info/$link
     - match: "~/omero-blog.*"
       dest: http://blog.openmicroscopy.org
     - match: "~/site/?$"
@@ -121,14 +119,14 @@
       dest: /bio-formats/downloads/
     - match: "~/site/products/ome-files-cpp/?$"
       dest: /ome-files
-    - match: "~/site/products/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/products/$link
 
     # community
     - match: "~/site/community/?$"
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
       dest: /support
+    - match: "~/site/events(/.*)?$"
+      dest: /events
     - match: "~/site/community/minutes/meetings/12th-annual-users-meeting-2017"
       dest: /events/12th-annual-users-meeting-2017.html
     - match: "~/site/community/minutes/meetings/11th-annual-users-meeting-2016"
@@ -141,16 +139,12 @@
       dest: /careers
     - match: "~/site/community/scripts/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html
-    - match: "~/site/community/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/community/$link
 
     # support
     - match: "~/site/support/?$"
       dest: /docs
     - match: "~/site/support/ome-artwork(/.*)?$"
       dest: /artwork
-    - match: "~/site/support/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/support/$link
 
     nginx_proxy_direct_locations:
     - location: "/"
