@@ -30,6 +30,7 @@ redirect_uris = [
 
     ('/site/community', '/support'),
     ('/site/community/mailing-lists', '/support'),
+    ('/site/events', '/events'),
     ('/site/community/minutes/meetings/12th-annual-users-meeting-2017', '/events/12th-annual-users-meeting-2017.html'),
     ('/site/community/minutes/meetings/11th-annual-users-meeting-2016', '/events/11th-annual-users-meeting-2016.html'),
     ('/site/community/minutes/meetings/10th-annual-users-meeting-june-2015', '/events/10th-annual-users-meeting-june-2015.html'),
