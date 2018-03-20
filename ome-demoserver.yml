@@ -10,7 +10,7 @@
 
 # To allow the OMERO.web plugins to upgrade, also pass `--extra-vars upgrade_webapps=True`
 
-- hosts: ome-demoserver.openmicroscopy.org
+- hosts: ome-demoservers
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: yes
