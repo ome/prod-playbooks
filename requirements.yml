@@ -15,9 +15,6 @@
 - src: openmicroscopy.nginx-proxy
   version: 1.7.0
 
-- src: openmicroscopy.nginx-ssl-selfsigned
-  version: 1.0.0
-
 - name: openmicroscopy.ssl-certificate
   src: https://github.com/manics/ansible-role-nginx-ssl-selfsigned.git
   version: ssl-certificate
