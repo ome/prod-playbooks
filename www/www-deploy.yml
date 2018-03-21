@@ -8,8 +8,8 @@
       tags: nginxconf
 
   vars:
-    ssl_certificate_path: /etc/nginx/ssl/star_openmicroscopy_org-20161006.crt+bundle
-    ssl_certificate_key_path: /etc/nginx/ssl/star_openmicroscopy_org-20141020.key
+    ssl_certificate_path: /etc/nginx/ssl/server.crt
+    ssl_certificate_key_path: /etc/nginx/ssl/server.key
     # Vars for role openmicroscopy.nginx-proxy
     nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
     nginx_proxy_worker_connections: 65000
