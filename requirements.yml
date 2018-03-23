@@ -16,8 +16,7 @@
   version: 1.7.0
 
 - name: openmicroscopy.ssl-certificate
-  src: https://github.com/manics/ansible-role-ssl-certificate.git
-  version: ssl-certificate
+  version: 0.1.0
 
 - src: openmicroscopy.nfs-mount
   version: 1.0.0
