@@ -8,13 +8,13 @@
       tags: nginxconf
 
   vars:
-    ssl_certificate_path: /etc/nginx/ssl/server.crt
+    ssl_certificate_public_path: /etc/nginx/ssl/server.crt
     ssl_certificate_key_path: /etc/nginx/ssl/server.key
     # Vars for role openmicroscopy.nginx-proxy
     nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
     nginx_proxy_worker_connections: 65000
     nginx_proxy_ssl: True
-    nginx_proxy_ssl_certificate: "{{ ssl_certificate_path }}"
+    nginx_proxy_ssl_certificate: "{{ ssl_certificate_public_path }}"
     nginx_proxy_ssl_certificate_key: "{{ ssl_certificate_key_path }}"
     nginx_proxy_http2: True
     nginx_proxy_force_ssl: False
