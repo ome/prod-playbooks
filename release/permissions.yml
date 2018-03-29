@@ -1,0 +1,32 @@
+---
+- hosts: idr0-slot3.openmicroscopy.org
+  become: true
+  tasks:
+    - file:
+          path: /uod/idr/www
+          state: directory
+          owner: root
+          group: root
+          mode: 0755
+
+    - file:
+          path: "{{ item }}"
+          state: directory
+          owner: root
+          group: root
+          mode: 0755
+      with_items: "{{ www_folders }}"
+
+    - find:
+        paths: "{{ www_folders }}"
+        file_type: "directory"
+        recurse: "no"
+      register: "products"
+
+    - file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: lsd
+        mode: 01775
+      with_items: "{{ products.files | map(attribute='path') | list }}"
