@@ -1,6 +1,7 @@
 ---
 - hosts: idr0-slot3.openmicroscopy.org
   become: true
+  tasks:
     - stat:
         path: "/uod/idr/www/downloads.openmicroscopy.org/{{ product }}/{{ version }}/"
       register: s
