@@ -36,6 +36,7 @@ public_images:
   - { src: '../../../repos/curated/ome-tiff/ome-schemas/',
       dest: 'OME-TIFF'}
   - { src: '../../../repos/curated/ome-xml/ome-schemas/', dest: 'OME-XML'}
+  - { src: '../../../repos/curated/png/public/', dest: 'PNG'}
   - { src: '../../../repos/curated/becker-hickl-spc/public/',
       dest: 'SPC-FIFO'}
   - { src: '../../../repos/curated/svs/public/', dest: 'SVS'}
