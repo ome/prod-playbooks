@@ -114,7 +114,7 @@
     - match: "~/site/products/ome-files-cpp/?$"
       dest: /ome-files
     - match: "~/site/products/(?<link>.*)$"
-      dest: /products/
+      dest: /products
 
     # community
     - match: "~/site/community/?$"
