@@ -113,6 +113,8 @@
       dest: /bio-formats/downloads/
     - match: "~/site/products/ome-files-cpp/?$"
       dest: /ome-files
+    - match: "~/site/products/(?<link>.*)$"
+      dest: /products/
 
     # community
     - match: "~/site/community/?$"
