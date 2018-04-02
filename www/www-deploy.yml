@@ -147,15 +147,15 @@
       dest: /security/advisories/
     - match: "~/info/vulnerabilities/(?<link>.*[^/])/?$"
       dest: /security/advisories/$link/
-    - match: "~/info/omero$"
+    - match: "~/info/omero/?$"
       dest: /omero
-    - match: "~/info/OMERO.insight$"
+    - match: "~/info/OMERO.insight/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
-    - match: "~/info/OMERO.importer$"
+    - match: "~/info/OMERO.importer/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
-    - match: "~/info/OMERO.editor$"
+    - match: "~/info/OMERO.editor/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
-    - match: "~/info/OMERO.web$"
+    - match: "~/info/OMERO.web/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
     - match: "~/info/OMERO.server"
       dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
