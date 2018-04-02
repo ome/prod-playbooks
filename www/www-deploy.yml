@@ -185,8 +185,8 @@
       dest: https://docs.openmicroscopy.org/latest/bio-formats/
     - match: "~/info/slidebook"
       dest: https://www.intelligent-imaging.com/technical-answers
-    - match: "~/info/?$"
-      dest: /
+    - match: "~/info/(.*)?$"
+      dest: /site-map
 
     nginx_proxy_direct_locations:
     - location: "/"
