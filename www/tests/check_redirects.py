@@ -12,7 +12,6 @@ import requests
 
 HOST_OME = os.getenv('HOST', 'https://ome-www.openmicroscopy.org')
 HOST_OPENMICROSCOPY = os.getenv('HOST', 'https://www.openmicroscopy.org')
-LEGACY_HOST = os.getenv('LEGACY_HOST', 'https://www-legacy.openmicroscopy.org')
 hosts = (HOST_OME, HOST_OPENMICROSCOPY)
 suffixes = ['', '/']
 redirect_uris = [
@@ -136,12 +135,11 @@ def test_redirect_external(host, uri, expect, suffix):
 
 
 @pytest.mark.parametrize('host', hosts)
-@pytest.mark.parametrize('uri', legacy_uris)
 @pytest.mark.parametrize('suffix', suffixes)
 def test_legacy_redirects(host, uri, suffix):
     r = requests.head('%s%s%s' % (host, uri, suffix))
     assert r.is_redirect
-    assert r.headers['Location'] == '%s%s%s' % (LEGACY_HOST, uri, suffix)
+    assert r.headers['Location'] == '%s%s%s' % (uri, suffix)
 
 
 @pytest.mark.parametrize('host', hosts)
