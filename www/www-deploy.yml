@@ -135,6 +135,8 @@
       dest: /careers
     - match: "~/site/community/scripts/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html
+    - match: "~/site/community/(?<link>.*)$"
+      dest: /support
 
     # support
     - match: "~/site/support/?$"
