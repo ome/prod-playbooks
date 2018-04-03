@@ -135,14 +135,6 @@ def test_redirect_external(host, uri, expect, suffix):
 
 
 @pytest.mark.parametrize('host', hosts)
-@pytest.mark.parametrize('suffix', suffixes)
-def test_legacy_redirects(host, uri, suffix):
-    r = requests.head('%s%s%s' % (host, uri, suffix))
-    assert r.is_redirect
-    assert r.headers['Location'] == '%s%s%s' % (uri, suffix)
-
-
-@pytest.mark.parametrize('host', hosts)
 def test_404(host):
     uri = '/non-existent/path'
     r = requests.head('%s%s' % (host, uri))
