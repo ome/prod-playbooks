@@ -63,14 +63,6 @@
     # by default redirect to the 404 page
     - match: default
       dest: /404.html
-    - match: "~/info/?$"
-      dest: /
-    - match: "~/info/vulnerabilities/?$"
-      dest: /security/advisories/
-    - match: "~/info/vulnerabilities/(?<link>.*[^/])/?$"
-      dest: /security/advisories/$link/
-    - match: "~/info/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/info/$link
     - match: "~/omero-blog.*"
       dest: http://blog.openmicroscopy.org
     - match: "~/site/?$"
@@ -83,7 +75,7 @@
       dest: /about
     - match: "~/site/about/who-ome"
       dest: /teams
-    - match: "~/site/about/licensing-attribution/?$"
+    - match: "~/site/about/licensing-attribution(/.*)?$"
       dest: /licensing
     - match: "~/site/about/ome-contributors/?$"
       dest: /contributors
@@ -122,13 +114,15 @@
     - match: "~/site/products/ome-files-cpp/?$"
       dest: /ome-files
     - match: "~/site/products/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/products/$link
+      dest: /products
 
     # community
     - match: "~/site/community/?$"
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
       dest: /support
+    - match: "~/site/events(/.*)?$"
+      dest: /events
     - match: "~/site/community/minutes/meetings/12th-annual-users-meeting-2017"
       dest: /events/12th-annual-users-meeting-2017.html
     - match: "~/site/community/minutes/meetings/11th-annual-users-meeting-2016"
@@ -142,15 +136,59 @@
     - match: "~/site/community/scripts/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html
     - match: "~/site/community/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/community/$link
+      dest: /support
 
     # support
     - match: "~/site/support/?$"
       dest: /docs
     - match: "~/site/support/ome-artwork(/.*)?$"
       dest: /artwork
-    - match: "~/site/support/(?<link>.*)$"
-      dest: https://www-legacy.openmicroscopy.org/site/support/$link
+
+    # info
+    - match: "~/info/vulnerabilities/?$"
+      dest: /security/advisories/
+    - match: "~/info/vulnerabilities/(?<link>.*[^/])/?$"
+      dest: /security/advisories/$link/
+    - match: "~/info/omero/?$"
+      dest: /omero
+    - match: "~/info/OMERO.insight/?$"
+      dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
+    - match: "~/info/OMERO.importer/?$"
+      dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
+    - match: "~/info/OMERO.editor/?$"
+      dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
+    - match: "~/info/OMERO.web/?$"
+      dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
+    - match: "~/info/OMERO.server"
+      dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
+    - match: "~/info/permissions"
+      dest: https://docs.openmicroscopy.org/latest/omero/sysadmins/server-permissions.html
+    - match: "~/info/demo"
+      dest: http://help.openmicroscopy.org/demo-server.html
+    - match: "~/info/cls"
+      dest: /omero/downloads/
+    - match: "~/info/download"
+      dest: /omero/downloads/
+    - match: "~/info/downloads"
+      dest: /omero/downloads/
+    - match: "~/info/lists"
+      dest: http://lists.openmicroscopy.org.uk/mailman/listinfo/
+    - match: "~/info/videos"
+      dest: https://www.youtube.com/channel/UCyySB9ZzNi8aBGYqcxSrauQ
+    - match: "~/info/attribution"
+      dest: /licensing/
+    - match: "~/info/downgrade"
+      dest: https://docs.openmicroscopy.org/latest/omero/developers/Model/XsltTransformations.html
+    - match: "~/info/flimfit"
+      dest: http://flimfit.org
+    - match: "~/info/scripts"
+      dest: https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html
+    - match: "~/info/bio-formats(/.*)?$"
+      dest: https://docs.openmicroscopy.org/latest/bio-formats/
+    - match: "~/info/slidebook"
+      dest: https://www.intelligent-imaging.com/technical-answers
+    - match: "~/info/(.*)?$"
+      dest: /site-map
 
     nginx_proxy_direct_locations:
     - location: "/"
