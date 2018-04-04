@@ -75,6 +75,8 @@
       dest: /about
     - match: "~/site/about/who-ome"
       dest: /teams
+    - match: "~/site/about/licensing"
+      dest: /licensing
     - match: "~/site/about/licensing-attribution(/.*)?$"
       dest: /licensing
     - match: "~/site/about/ome-contributors/?$"
