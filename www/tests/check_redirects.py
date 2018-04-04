@@ -17,6 +17,7 @@ suffixes = ['', '/']
 redirect_uris = [
     ('/site', '/'),
     ('/site/about', '/about'),
+    ('/site/about/licensing', '/licensing'),
     ('/site/about/licensing-attribution', '/licensing'),
     ('/site/about/licensing-attribution/licensing', '/licensing'),
     ('/site/about/ome-contributors', '/contributors'),
