@@ -126,7 +126,7 @@
     - match: "~/site/events(/.*)?$"
       dest: /events
     - match: "~/site/community/minutes/conference-calls/?$"
-      dest: /on-the-web/
+      dest: /on-the-web
     - match: "~/site/community/minutes/meetings/12th-annual-users-meeting-2017"
       dest: /events/12th-annual-users-meeting-2017.html
     - match: "~/site/community/minutes/meetings/11th-annual-users-meeting-2016"
