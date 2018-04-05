@@ -164,8 +164,8 @@
     - match: '~/site/support/omero5\.2/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/omero5.2/$link/
     - match: '~/site/support/omero5\.3/(?<link>.*[^/])/?$'
-      dest: https://docs.openmicroscopy.org/latest/omero5.3/$link/  
-      
+      dest: https://docs.openmicroscopy.org/latest/omero5.3/$link/
+
     - match: "~/site/support/ome-model/(?<link>.*[^/])/?$"
       dest: https://docs.openmicroscopy.org/latest/ome-model/$link/
     - match: "~/site/support/ome-files-cpp/(?<link>.*[^/])/?$"
