@@ -148,22 +148,22 @@
       dest: https://docs.openmicroscopy.org/latest/bio-formats/$link/
     - match: "~/site/support/bio-formats5/(?<link>.*[^/])/?$"
       dest: https://docs.openmicroscopy.org/latest/bio-formats5/$link/
-    - match: "~/site/support/bio-formats5\.3/(?<link>.*[^/])/?$"
+    - match: '~/site/support/bio-formats5\.3/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/bio-formats5.3/$link/
-    - match: "~/site/support/bio-formats5\.4/(?<link>.*[^/])/?$"
+    - match: '~/site/support/bio-formats5\.4/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/bio-formats5.4/$link/
-    - match: "~/site/support/bio-formats5\.5/(?<link>.*[^/])/?$"
+    - match: '~/site/support/bio-formats5\.5/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/bio-formats5.5/$link/
 
     - match: "~/site/support/omero/(?<link>.*[^/])/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/$link/
     - match: "~/site/support/omero5/(?<link>.*[^/])/?$"
       dest: https://docs.openmicroscopy.org/latest/omero5/$link/
-    - match: "~/site/support/omero5\.1/(?<link>.*[^/])/?$"
+    - match: '~/site/support/omero5\.1/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/omero5.1/$link/
-    - match: "~/site/support/omero5\.2/(?<link>.*[^/])/?$"
+    - match: '~/site/support/omero5\.2/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/omero5.2/$link/
-    - match: "~/site/support/omero5\.3/(?<link>.*[^/])/?$"
+    - match: '~/site/support/omero5\.3/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/omero5.3/$link/  
       
     - match: "~/site/support/ome-model/(?<link>.*[^/])/?$"
