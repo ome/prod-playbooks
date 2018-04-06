@@ -78,6 +78,7 @@ external_uris = [
     ('/site/support/omero5.2', 'https://docs.openmicroscopy.org/latest/omero5.2/'),
     ('/site/support/omero5.3', 'https://docs.openmicroscopy.org/latest/omero5.3/'),
     ('/site/support/ome-model', 'https://docs.openmicroscopy.org/latest/ome-model/'),
+    ('/site/support/file-formats', 'https://docs.openmicroscopy.org/latest/ome-model/'),
     ('/site/support/ome-files-cpp', 'https://docs.openmicroscopy.org/latest/ome-files-cpp/'),
     ('/site/support/contributing', 'https://docs.openmicroscopy.org/contributing/'),
     ('/site/support/previous', 'https://docs.openmicroscopy.org'),
