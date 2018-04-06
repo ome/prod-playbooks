@@ -191,15 +191,17 @@
     - match: "~/site/support/ome-model/?$"
       dest: https://docs.openmicroscopy.org/latest/ome-model/
     - match: "~/site/support/ome-model/(?<link>.*)$"
-      dest: https://docs.openmicroscopy.org/latest/ome-model$link
+      dest: https://docs.openmicroscopy.org/latest/ome-model/$link
+    - match: "~/site/support/file-formats/?$"
+      dest: https://docs.openmicroscopy.org/latest/ome-model/
     - match: "~/site/support/ome-files-cpp/?$"
       dest: https://docs.openmicroscopy.org/latest/ome-files-cpp/
     - match: "~/site/support/ome-files-cpp/(?<link>.*)$"
-      dest: https://docs.openmicroscopy.org/latest/ome-files-cpp$link
+      dest: https://docs.openmicroscopy.org/latest/ome-files-cpp/$link
     - match: "~/site/support/contributing/?$"
       dest: https://docs.openmicroscopy.org/contributing/
     - match: "~/site/support/contributing/(?<link>.*)$"
-      dest: https://docs.openmicroscopy.org/contributing$link
+      dest: https://docs.openmicroscopy.org/contributing/$link
     - match: "~/site/support/previous(/.*)?$"
       dest: https://docs.openmicroscopy.org
     - match: "~/site/support/ome-artwork(/.*)?$"
