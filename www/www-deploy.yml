@@ -146,8 +146,8 @@
     - match: "~/site/support/?$"
       dest: /docs
 
-    - match: "~/site/support/bio-formats/(?<link>.*[^/])/?$"
-      dest: https://docs.openmicroscopy.org/latest/bio-formats/$link/
+    - match: "~/site/support/bio-formats(?<link>/.*)?$"
+      dest: https://docs.openmicroscopy.org/latest/bio-formats$link;
     - match: "~/site/support/bio-formats5/(?<link>.*[^/])/?$"
       dest: https://docs.openmicroscopy.org/latest/bio-formats5/$link/
     - match: '~/site/support/bio-formats5\.3/(?<link>.*[^/])/?$'
@@ -157,8 +157,8 @@
     - match: '~/site/support/bio-formats5\.5/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/bio-formats5.5/$link/
 
-    - match: "~/site/support/omero/(?<link>.*[^/])/?$"
-      dest: https://docs.openmicroscopy.org/latest/omero/$link/
+    - match: "~/site/support/omero(?<link>/.*)?$"
+      dest: https://docs.openmicroscopy.org/latest/omero$link;
     - match: "~/site/support/omero5/(?<link>.*[^/])/?$"
       dest: https://docs.openmicroscopy.org/latest/omero5/$link/
     - match: '~/site/support/omero5\.1/(?<link>.*[^/])/?$'
@@ -168,12 +168,12 @@
     - match: '~/site/support/omero5\.3/(?<link>.*[^/])/?$'
       dest: https://docs.openmicroscopy.org/latest/omero5.3/$link/
 
-    - match: "~/site/support/ome-model/(?<link>.*[^/])/?$"
-      dest: https://docs.openmicroscopy.org/latest/ome-model/$link/
-    - match: "~/site/support/ome-files-cpp/(?<link>.*[^/])/?$"
-      dest: https://docs.openmicroscopy.org/latest/ome-files-cpp/$link/
-    - match: "~/site/support/contributing/(?<link>.*[^/])/?$"
-      dest: https://docs.openmicroscopy.org/contributing/$link/
+    - match: "~/site/support/ome-model(?<link>/.*)?$"
+      dest: https://docs.openmicroscopy.org/latest/ome-model$link;
+    - match: "~/site/support/ome-files-cpp(?<link>/.*)?$"
+      dest: https://docs.openmicroscopy.org/latest/ome-files-cpp$link;
+    - match: "~/site/support/contributing(?<link>/.*)?$"
+      dest: https://docs.openmicroscopy.org/contributing$link;
     - match: "~/site/support/previous(/.*)?$"
       dest: https://docs.openmicroscopy.org
     - match: "~/site/support/ome-artwork(/.*)?$"
