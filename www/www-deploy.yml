@@ -163,9 +163,9 @@
     - match: '~/site/support/bio-formats5\.4/(?<link>.*)$'
       dest: https://docs.openmicroscopy.org/latest/bio-formats5.4/$link
     - match: '~/site/support/bio-formats5\.5/?$'
-      dest: https://docs.openmicroscopy.org/latest/bio-formats5.4/
+      dest: https://docs.openmicroscopy.org/latest/bio-formats5.5/
     - match: '~/site/support/bio-formats5\.5/(?<link>.*)$'
-      dest: https://docs.openmicroscopy.org/latest/bio-formats5.4/$link
+      dest: https://docs.openmicroscopy.org/latest/bio-formats5.5/$link
 
     - match: "~/site/support/omero/?$"
       dest: https://docs.openmicroscopy.org/latest/omero/
