@@ -15,9 +15,8 @@
 - src: openmicroscopy.nginx-proxy
   version: 1.7.0
 
-- name: openmicroscopy.ssl-certificate
-  src: https://github.com/sbesson/ansible-role-ssl-certificate.git
-  version: localcerts
+- src: openmicroscopy.ssl-certificate
+  version: 0.2.0
 
 - src: openmicroscopy.nfs-mount
   version: 1.0.0
