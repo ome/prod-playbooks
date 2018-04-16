@@ -175,6 +175,10 @@
       # omero_server_datadir: overridden after inital role run via host vars
       omero_server_datadir_manage: False
       omero_server_systemd_limit_nofile: 16384
+      omero_server_systemd_after:
+      - gpfs.service
+      omero_server_systemd_requires:
+      - gpfs.service
       omero_server_system_user_manage: False
 
   post_tasks:
