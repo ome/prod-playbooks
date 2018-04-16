@@ -177,10 +177,10 @@
       dest: https://docs.openmicroscopy.org/latest/omero5/
     - match: "~/site/support/omero5/(?<link>.*)$"
       dest: https://docs.openmicroscopy.org/latest/omero5/$link
-      - match: '~/site/support/omero5\.0/?$'
-        dest: https://docs.openmicroscopy.org/latest/omero5.0/
-      - match: '~/site/support/omero5\.0/(?<link>.*)$'
-        dest: https://docs.openmicroscopy.org/latest/omero5.0/$link
+    - match: '~/site/support/omero5\.0/?$'
+      dest: https://docs.openmicroscopy.org/latest/omero5.0/
+    - match: '~/site/support/omero5\.0/(?<link>.*)$'
+      dest: https://docs.openmicroscopy.org/latest/omero5.0/$link
     - match: '~/site/support/omero5\.1/?$'
       dest: https://docs.openmicroscopy.org/latest/omero5.1/
     - match: '~/site/support/omero5\.1/(?<link>.*)$'
