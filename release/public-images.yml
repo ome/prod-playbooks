@@ -1,0 +1,11 @@
+---
+- hosts: idr0-slot3.openmicroscopy.org
+  become: true
+  tasks:
+    - name: check public images
+      file:
+        force: yes
+        src: "{{ item.src}}"
+        dest: "/uod/idr/www/downloads.openmicroscopy.org/images/{{ item.dest }}"
+        state: link
+      with_items: "{{ public_images }}"

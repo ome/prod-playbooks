@@ -1,0 +1,24 @@
+---
+- hosts: idr0-slot3.openmicroscopy.org
+  become: true
+  tasks:
+    - stat:
+        path: "/uod/idr/www/downloads.openmicroscopy.org/{{ product }}/{{ version }}/"
+      register: s
+      when: product is defined and version is defined
+
+    - file:
+        path: "{{ item }}/{{ product }}/{{ version }}/.htaccess"
+        state: absent
+      when: s.stat is defined and s.stat.exists
+      with_items: "{{ www_folders }}"
+
+    - file:
+        path: "{{ item }}/{{ product }}/{{ version }}"
+        state: directory
+        owner: root
+        group: root
+        recurse: true
+        mode: 01555
+      when: s.stat is defined and s.stat.exists
+      with_items: "{{ www_folders }}"
