@@ -16,24 +16,10 @@ docker:
 
 ansible:
   diff: True
-  playbook: molecule-playbook.yml
+  playbook: www-deploy.yml
   host_vars:
     www:
-      nginx_ssl_cert_files: {}
-      nginx_ssl_files_path: /etc/nginx/ssl
-      nginx_ssl_cert_filename: selfsigned.cert
-      nginx_ssl_key_filename: selfsigned.key
       website_name: molecule-test
-
-molecule:
-  test:
-    sequence:
-    - destroy
-    - syntax
-    - create
-    - converge
-    # Playbook has idempotence bugs
-    - verify
 
 verifier:
   name: testinfra

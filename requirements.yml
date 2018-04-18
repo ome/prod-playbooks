@@ -15,8 +15,8 @@
 - src: openmicroscopy.nginx-proxy
   version: 1.7.0
 
-- src: openmicroscopy.nginx-ssl-selfsigned
-  version: 1.0.0
+- src: openmicroscopy.ssl-certificate
+  version: 0.2.0
 
 - src: openmicroscopy.nfs-mount
   version: 1.0.0
