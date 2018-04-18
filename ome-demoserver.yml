@@ -114,12 +114,11 @@
     - role: openmicroscopy.postgresql
       no_log: true
       postgresql_users_databases:
-      - user: "{{ secrets.omero_server_db_user }}"
-        password: "{{ secrets.omero_server_dbpassword }}"
-        databases: ["{{ secrets.omero_server_dbname }}"]
+      - user: "{{ vault.omero_server_db_user }}"
+        password: "{{ vault.omero_server_dbpassword }}"
+        databases: ["{{ vault.omero_server_dbname }}"]
 
     - role: openmicroscopy.omero-server
-<<<<<<< HEAD
       omero_server_release: "{{ omero_server_release_desired | default('5.4.5') }}"
       omero_server_dbuser: "{{ vault.omero_server_db_user }}"
       omero_server_dbname:  "{{ vault.omero_server_dbname }}"
@@ -136,17 +135,17 @@
       omero_user_bin_omero: /opt/omero/server/OMERO.server/bin/omero
       omero_user_system: omero-server
       omero_user_admin_user: root
-      omero_user_admin_pass: "{{ secrets.omero_server_rootpassword }}"
+      omero_user_admin_pass: "{{ vault.omero_server_rootpassword }}"
       omero_group_create:
       - name: public
         type: read-only
       - name: "My Data"
         type: private
       omero_user_create:
-      - login: "{{ secrets.omero_web_public_user }}"
+      - login: "{{ vault.omero_web_public_user }}"
         firstname: Public
         lastname: User
-        password: "{{ secrets.omero_web_public_password }}"
+        password: "{{ vault.omero_web_public_password }}"
         groups: "--group-name public"
 
   post_tasks:
@@ -353,8 +352,8 @@
 
     omero_web_config_set:
       # https://www.openmicroscopy.org/site/support/omero5.3/sysadmins/public.html
-      omero.web.public.user: "{{ secrets.omero_web_public_user }}"
-      omero.web.public.password: "{{ secrets.omero_web_public_password }}"
+      omero.web.public.user: "{{ vault.omero_web_public_user }}"
+      omero.web.public.password: "{{ vault.omero_web_public_password }}"
       omero.web.public.enabled: True
       omero.web.public.server_id: 1
       omero.web.public.url_filter: "^/(webgateway/(?!(archived_files|download_as))|webclient/annotation/([0-9]+)/)"
