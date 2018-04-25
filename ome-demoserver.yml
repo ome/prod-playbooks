@@ -10,7 +10,7 @@
 
 # To allow the OMERO.web plugins to upgrade, also pass `--extra-vars upgrade_webapps=True`
 
-- hosts: ome-demoserver.openmicroscopy.org
+- hosts: ome-demoservers
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: yes
@@ -119,7 +119,7 @@
         databases: ["{{ vault.omero_server_dbname }}"]
 
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.5
+      omero_server_release: "{{ omero_server_release_desired | default('5.4.5') }}"
       omero_server_dbuser: "{{ vault.omero_server_db_user }}"
       omero_server_dbname:  "{{ vault.omero_server_dbname }}"
       omero_server_dbpassword: "{{ vault.omero_server_dbpassword }}"
@@ -127,7 +127,7 @@
       omero_server_systemd_limit_nofile: 16384
 
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.4.5
+      omero_web_release: "{{ omero_server_release_desired | default('5.4.5') }}"
 
     # This role only works on OMERO 5.3+
     - role: openmicroscopy.omero-user

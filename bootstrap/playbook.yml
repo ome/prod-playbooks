@@ -20,3 +20,6 @@
     - user: "%omedev"
       become: ALL
       command: "NOPASSWD: ALL"
+- hosts: vlan-10ge-servers
+  roles:
+  - role: openmicroscopy.network
