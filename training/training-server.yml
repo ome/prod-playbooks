@@ -39,7 +39,7 @@
 
   roles:
 
-    - role: openmicroscopy.postgresql
+    - role: openmicroscopy.postgresql-3
       postgresql_databases:
       - name: omero
       postgresql_users:
