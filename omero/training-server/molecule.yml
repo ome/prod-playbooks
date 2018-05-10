@@ -31,12 +31,6 @@ docker:
     - docker-hosts
 
 ansible:
-  diff: True
-  playbook: training-server.yml
-  host_vars:
-    outreach.openmicroscopy.org:
-      ice_python_wheel: https://github.com/openmicroscopy/zeroc-ice-py-centos7/releases/download/0.0.3/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
-
   group_vars:
     docker-hosts:
       omero_server_systemd_require_network: False
