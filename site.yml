@@ -4,4 +4,4 @@
 - include: nightshade-webclients.yml
 - include: ome-demoserver.yml
 - include: ome-dundeeomero.yml
-- include: training-server.yml
+- include: omero/training-server/playbook.yml

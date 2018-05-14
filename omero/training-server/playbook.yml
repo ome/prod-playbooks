@@ -39,7 +39,7 @@
 
   roles:
 
-    - role: openmicroscopy.postgresql
+    - role: openmicroscopy.postgresql-3
       postgresql_databases:
       - name: omero
       postgresql_users:
@@ -155,7 +155,7 @@
     - name: Config for OMERO.web plugins
       become: yes
       template:
-        src: omero-web-config-for-webapps.j2
+        src: ../../templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
@@ -166,7 +166,7 @@
     - name: Set default viewer in OMERO.web
       become: yes
       template:
-        src: omero-web-config-default-viewer.j2
+        src: ../../templates/omero-web-config-default-viewer.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
         owner: "root"
         group: "root"
