@@ -114,11 +114,31 @@
         owner: "omero-server"
         group: "omero-server"
 
+    - name: Create a users_meeting (scripts) directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
     - name: Download the Scipy_Gaussian_Filter.py script
       become: yes
       get_url:
         url: https://raw.githubusercontent.com/jburel/omero-example-scripts/cambridge-training/cambridge-training-2017-12/Scipy_Gaussian_Filter.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the Scipy_Gaussian_Filter.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/will-moore/training-scripts/b398d7526e48df79a6c33ce61a679d1458a15ded/practical/python/server/batch_roi_export_to_table.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting/batch_roi_export_to_table.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
