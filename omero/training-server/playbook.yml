@@ -111,7 +111,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_tag }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_tag }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0755
         owner: "omero-server"
@@ -189,7 +189,7 @@
     - name: Config for OMERO.web plugins
       become: yes
       template:
-        src: omero-web-config-for-webapps.j2
+        src: ../../templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
@@ -200,7 +200,7 @@
     - name: Set default viewer in OMERO.web
       become: yes
       template:
-        src: omero-web-config-default-viewer.j2
+        src: ../../templates/omero-web-config-default-viewer.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
         owner: "root"
         group: "root"
