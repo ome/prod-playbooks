@@ -80,8 +80,8 @@
       become: yes
       pip:
         name:
-        - "omero-cli-duplicate==0.2.0"
-        - "omero-cli-render==0.1.0"
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_vars }}"
+        - "omero-cli-render=={{ omero_cli_render_vars }}"
         - "docker-py"
         state: present
 
@@ -243,6 +243,8 @@
     omero_fpbioimage_tag: "{{ omero_fpbioimage_tag_override | default('0.2.0') }}"
     omero_webtagging_autotag_vars: "{{ omero_webtagging_autotag_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_vars: "{{ omero_webtagging_tagsearch_override | default('3.0.3') }}"
+    omero_cli_duplicate_vars: "{{ omero_cli_duplicate_override | default('0.2.0') }}"
+    omero_cli_render_vars: "{{ omero_cli_render_override | default('0.3.0') }}"
     os_system_users_password: "{{ os_systems_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.3.0') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
