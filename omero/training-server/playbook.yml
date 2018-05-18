@@ -49,10 +49,10 @@
       postgresql_version: "9.6"
 
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.3
+      omero_server_release: "{{ omero_server_release_vars }}"
 
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.4.3
+      omero_web_release: "{{ omero_web_release_vars }}"
       # omero_web_upgrade: True
       # omero_web_config_set:
 
@@ -237,6 +237,8 @@
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: True
+    omero_server_release_vars: "{{ omero_server_release_override | default('5.4.6') }}"
+    omero_web_release_vars: "{{ omero_web_release_override | default('5.4.6') }}"
     os_system_users_password: "{{ os_systems_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.3.0') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
