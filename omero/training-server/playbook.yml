@@ -63,11 +63,11 @@
       become: yes
       pip:
         name:
-        - "omero-figure==3.1.2"
+        - "omero-figure=={{ omero_figure_tag }}"
         - "omero-fpbioimage==0.2.0"
         - "omero-webtagging-autotag==3.0.2"
         - "omero-webtagging-tagsearch==3.0.3"
-        - "omero-iviewer==0.4.1"
+        #- "omero-iviewer==0.4.1"
         editable: False
         state: present
         # variable comes from role openmicroscopy.omero-web
@@ -98,7 +98,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_tag }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0755
         owner: "omero-server"
@@ -239,6 +239,7 @@
     omero_server_datadir_chown: True
     omero_server_release_vars: "{{ omero_server_release_override | default('5.4.6') }}"
     omero_web_release_vars: "{{ omero_web_release_override | default('5.4.6') }}"
+    omero_figure_tag: "{{ omero_figure_tag_override | default('3.2.1') }}"
     os_system_users_password: "{{ os_systems_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.3.0') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
