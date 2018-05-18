@@ -53,7 +53,7 @@
 
     - role: openmicroscopy.omero-web
       omero_web_release: "{{ omero_web_release_vars }}"
-      # omero_web_upgrade: True
+      omero_web_upgrade: True
       # omero_web_config_set:
 
     - role: openmicroscopy.docker
@@ -67,7 +67,20 @@
         - "omero-fpbioimage=={{ omero_fpbioimage_tag }}"
         - "omero-webtagging-autotag=={{ omero_webtagging_autotag_vars }}"
         - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_vars }}"
-        #- "omero-iviewer==0.4.1"
+        editable: False
+        state: present
+        # variable comes from role openmicroscopy.omero-web
+        virtualenv: "{{ omero_web_basedir }}/venv"
+        virtualenv_site_packages: yes
+      notify:
+        - restart omero-web
+
+    - name: Omero.web plugins testpypi | plugin install via testpypi
+      become: yes
+      pip:
+        extra_args: -i https://testpypi.python.org/pypi
+        name:
+        - "omero-iviewer==1.0.1"
         editable: False
         state: present
         # variable comes from role openmicroscopy.omero-web
@@ -103,6 +116,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
+        force: yes
 
     - name: Create a cambridge_scripts directory
       become: yes
@@ -134,7 +148,7 @@
         group: "omero-server"
         force: yes
 
-    - name: Download the Scipy_Gaussian_Filter.py script
+    - name: Download the batch_roi_export_to_table.py script
       become: yes
       get_url:
         url: https://raw.githubusercontent.com/will-moore/training-scripts/b398d7526e48df79a6c33ce61a679d1458a15ded/practical/python/server/batch_roi_export_to_table.py
@@ -175,7 +189,7 @@
     - name: Config for OMERO.web plugins
       become: yes
       template:
-        src: ../../templates/omero-web-config-for-webapps.j2
+        src: omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
@@ -186,7 +200,7 @@
     - name: Set default viewer in OMERO.web
       become: yes
       template:
-        src: ../../templates/omero-web-config-default-viewer.j2
+        src: omero-web-config-default-viewer.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
         owner: "root"
         group: "root"
