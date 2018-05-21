@@ -65,6 +65,8 @@
         name:
         - "omero-figure=={{ omero_figure_tag }}"
         - "omero-fpbioimage=={{ omero_fpbioimage_tag }}"
+        - "omero-mapr=={{ omero_mapr }}"
+        - "omero-parade=={{ omero_parade }}"
         - "omero-webtagging-autotag=={{ omero_webtagging_autotag }}"
         - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch }}"
         editable: False
@@ -255,6 +257,8 @@
     omero_web_release: "{{ omero_web_release_override | default('5.4.6') }}"
     omero_figure_tag: "{{ omero_figure_tag_override | default('3.2.1') }}"
     omero_fpbioimage_tag: "{{ omero_fpbioimage_tag_override | default('0.2.0') }}"
+    omero_mapr: "{{ omero_mapr_override | default('0.2.3') }}"
+    omero_parade: "{{ omero_parade_override | default('0.1.0') }}"
     omero_webtagging_autotag: "{{ omero_webtagging_autotag_override | default('3.0.2') }}"
     omero_webtagging_tagsearch: "{{ omero_webtagging_tagsearch_override | default('3.0.3') }}"
     omero_cli_duplicate: "{{ omero_cli_duplicate_override | default('0.2.0') }}"
