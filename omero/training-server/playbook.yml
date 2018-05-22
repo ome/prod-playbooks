@@ -91,13 +91,18 @@
       notify:
         - restart omero-web
 
+    - name: Docker | python client
+      become: yes
+      yum:
+        name: docker-python
+        state: present
+
     - name: Omero.cli plugins | plugin install via pip & pypi
       become: yes
       pip:
         name:
         - "omero-cli-duplicate=={{ omero_cli_duplicate }}"
         - "omero-cli-render=={{ omero_cli_render }}"
-        - "docker-py"
         state: present
 
     - name: Create a figure scripts directory
