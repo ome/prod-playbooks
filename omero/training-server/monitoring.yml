@@ -1,0 +1,229 @@
+# Setup prometheus and grafana monitoring
+
+- hosts: outreach.openmicroscopy.org
+  roles:
+  - role: openmicroscopy.prometheus
+    prometheus_docker_network: "{{ docker_monitoring_network }}"
+    prometheus_additional_command_args: >
+      --web.external-url=http://$(hostname):9090/prometheus
+      --web.route-prefix=/
+    # groupname must be unique
+    prometheus_targets:
+    - groupname: nodes
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9100
+      jobname: node-exporter
+
+    - groupname: blitz
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9180
+      jobname: jmx-blitz
+
+    - groupname: indexer
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9181
+      jobname: jmx-indexer
+
+    - groupname: pixeldata
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9182
+      jobname: jmx-pixeldata
+
+    - groupname: postgres
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9187
+      jobname: postgres-exporter
+
+    - groupname: omero-web
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 80
+      jobname: django
+      metrics_path: /django_prometheus/metrics
+
+    - groupname: omero-sessions
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9171
+      jobname: omero-sessions
+
+    - groupname: omero-counts
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9172
+      jobname: omero-counts
+
+  - role: openmicroscopy.prometheus-jmx
+  - role: openmicroscopy.prometheus-node
+
+  - role: openmicroscopy.prometheus-postgres
+    prometheus_postgres_dbname: omero
+    prometheus_postgres_query_filenames:
+    - queries-default.yml
+#    - queries-pg_statio_user_tables.yml
+#    - queries-pg_stat_statements.yml
+
+  # For restart handlers
+  - role: openmicroscopy.omero-common
+
+  tasks:
+
+  ## Grafana
+
+  - name: Grafana configuration directory
+    become: yes
+    file:
+      path: /etc/grafana/provisioning/{{ item }}
+      recurse: yes
+      state: directory
+    with_items:
+    - datasources
+    - dashboards
+
+  - name: Grafana default datasource
+    become: yes
+    copy:
+      content: |
+        apiVersion: 1
+        datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://prometheus:9090
+          access: proxy
+          isDefault: true
+      dest: /etc/grafana/provisioning/datasources/datasources.yml
+
+  - name: Run Grafana docker
+    become: yes
+    docker_container:
+      image: grafana/grafana:5.1.3
+      name: grafana
+      env:
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password_override | default ('secret') }}"
+        #GF_SERVER_DOMAIN: outreach.openmicroscopy.org
+        #GF_SERVER_ROOT_URL: "https://%(domain)s/grafana/"
+        GF_SERVER_ROOT_URL: "http://%(domain)s/grafana/"
+      networks:
+      - name: "{{ docker_monitoring_network }}"
+      published_ports:
+      - "3000:3000"
+      state: started
+      restart_policy: always
+      volumes:
+      - "grafana-data:/var/lib/grafana"
+      - "/etc/grafana/provisioning:/etc/grafana/provisioning:ro"
+
+  ## omero-prometheus-tools
+
+  - name: Install omero-prometheus-tools
+    become: yes
+    pip:
+      name:
+      # - https://github.com/manics/omero-prometheus-tools/archive/pip-package.zip
+      - https://github.com/manics/omero-prometheus-tools/archive/bdd3ef4e3732f7892af280723e67eadd1eeb07a9.zip
+      state: present
+      virtualenv: /opt/prometheus-omero-tools
+      virtualenv_site_packages: yes
+    notify:
+    - restart prometheus-omero-sessions
+    - restart prometheus-omero-counts
+
+  - name: Create omero-prometheus system user
+    become: yes
+    user:
+      name: omero-prometheus
+      state: present
+      system: yes
+
+  - name: Configure omero-prometheus-sessions service
+    become: yes
+    template:
+      src: files/sysconfig-prometheus-omero-sessions.j2
+      dest: /etc/sysconfig/prometheus-omero-sessions
+      owner: omero-prometheus
+      group: root
+      mode: 0440
+    notify:
+    - restart prometheus-omero-sessions
+
+  - name: Additional queries for omero-prometheus-counts service
+    become: yes
+    copy:
+      src: files/prometheus-omero-additional-queries.yml
+      dest: /opt/prometheus-omero-tools/etc/prometheus-omero-additional-queries.yml
+
+  - name: Configure omero-prometheus-counts service
+    become: yes
+    template:
+      src: files/sysconfig-prometheus-omero-counts.j2
+      dest: /etc/sysconfig/prometheus-omero-counts
+      owner: omero-prometheus
+      group: root
+      mode: 0440
+    notify:
+    - restart prometheus-omero-counts
+
+  - name: Install omero-prometheus-tools services
+    become: yes
+    copy:
+      dest: /etc/systemd/system/{{item }}.service
+      src: /opt/prometheus-omero-tools/etc/{{ item }}.service
+      remote_src: True
+    with_items:
+    - prometheus-omero-sessions
+    - prometheus-omero-counts
+    notify:
+    - restart prometheus-omero-sessions
+    - restart prometheus-omero-counts
+
+  - name: Enable prometheus-omero-tools services
+    become: yes
+    systemd:
+      daemon_reload: yes
+      enabled: yes
+      name: "{{ item }}"
+      state: started
+    with_items:
+    - prometheus-omero-sessions
+    - prometheus-omero-counts
+
+  ## OMERO jmx
+
+  - name: omero-server prometheus jmx agents
+    become: yes
+    copy:
+      content: |
+        config set -- omero.jvmcfg.append.blitz "-javaagent:/opt/prometheus/jars/jmx_prometheus_javaagent.jar=9180:/etc/prometheus/jmx-default-config.yml"
+        config set -- omero.jvmcfg.append.indexer "-javaagent:/opt/prometheus/jars/jmx_prometheus_javaagent.jar=9181:/etc/prometheus/jmx-default-config.yml"
+        config set -- omero.jvmcfg.append.pixeldata "-javaagent:/opt/prometheus/jars/jmx_prometheus_javaagent.jar=9182:/etc/prometheus/jmx-default-config.yml"
+      dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+    notify:
+    - restart omero-server
+
+  handlers:
+
+  - name: restart prometheus-omero-sessions
+    become: yes
+    systemd:
+      daemon_reload: yes
+      enabled: yes
+      name: prometheus-omero-sessions
+      state: restarted
+
+  - name: restart prometheus-omero-counts
+    become: yes
+    systemd:
+      daemon_reload: yes
+      enabled: yes
+      name: prometheus-omero-counts
+      state: restarted
+
+  vars:
+    omero_monitoring_password: testing
+    docker_monitoring_network: monitoring
