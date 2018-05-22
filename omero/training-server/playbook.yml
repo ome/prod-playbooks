@@ -49,10 +49,8 @@
       postgresql_version: "9.6"
 
     - role: openmicroscopy.omero-server
-      omero_server_release: "{{ omero_server_release }}"
 
     - role: openmicroscopy.omero-web
-      omero_web_release: "{{ omero_web_release }}"
       omero_web_upgrade: True
       # omero_web_config_set:
 
@@ -91,13 +89,18 @@
       notify:
         - restart omero-web
 
+    - name: Docker | python client
+      become: yes
+      yum:
+        name: docker-python
+        state: present
+
     - name: Omero.cli plugins | plugin install via pip & pypi
       become: yes
       pip:
         name:
         - "omero-cli-duplicate=={{ omero_cli_duplicate }}"
         - "omero-cli-render=={{ omero_cli_render }}"
-        - "docker-py"
         state: present
 
     - name: Create a figure scripts directory
