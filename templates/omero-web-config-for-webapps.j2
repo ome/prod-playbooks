@@ -11,9 +11,22 @@ config append -- omero.web.open_with '["omero_figure", "new_figure", {"supported
 config append -- omero.web.apps '"omero_fpbioimage"'
 config append -- omero.web.open_with '["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]'
 
-# iviewer
+# omero-iviewer
 config append -- omero.web.apps '"omero_iviewer"'
 config append -- omero.web.open_with '["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]'
+
+# omero-mapr
+config append -- omero.web.apps '"omero_mapr"'
+config set -- omero.web.mapr.config '[{"menu": "gene", "config": {"default": ["Gene Symbol"], "all": ["Gene Symbol", "Gene Identifier"], "ns": ["openmicroscopy.org/mapr/gene"], "label": "Gene"}}, {"menu": "keyvalue", "config": {"default": ["Any Value"], "all": [], "ns": ["openmicroscopy.org/omero/client/mapAnnotation"], "label": "KeyValue"}}]'
+
+config append -- omero.web.ui.top_links '["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]'
+
+config append -- omero.web.ui.top_links '["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]'
+
+# omero-parade
+config append -- omero.web.apps '"omero_parade"'
+config append -- omero.web.ui.center_plugins '["Parade", "omero_parade/init.js.html", "omero_parade"]'
+config append -- omero.web.ui.top_links '["Parade", "parade_index", {"title": "Search and filter in OMERO.parade"}]'
 
 # Autotag
 config append -- omero.web.apps '"omero_webtagging_autotag"'
