@@ -49,10 +49,8 @@
       postgresql_version: "9.6"
 
     - role: openmicroscopy.omero-server
-      omero_server_release: "{{ omero_server_release }}"
 
     - role: openmicroscopy.omero-web
-      omero_web_release: "{{ omero_web_release }}"
       omero_web_upgrade: True
       # omero_web_config_set:
 
