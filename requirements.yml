@@ -51,8 +51,8 @@
 
 # https://github.com/openmicroscopy/ansible-role-prometheus/pull/5
 - name: openmicroscopy.prometheus
-  src: https://github.com/manics/ansible-role-prometheus/archive/4a79d18a34f4307ae5a3f286b5b0ac32c4f0a78d.tar.gz
-  version: 4a79d18a34f4307ae5a3f286b5b0ac32c4f0a78d
+  src: https://github.com/manics/ansible-role-prometheus/archive/fad82bea161a8145ec0029424684dc4837dce009.tar.gz
+  version: fad82bea161a8145ec0029424684dc4837dce009
 
 # https://github.com/openmicroscopy/ansible-role-prometheus-jmx/pull/2
 - name: openmicroscopy.prometheus-jmx

@@ -1,0 +1,5 @@
+# Additioal metric queries
+omero_countevents_actiontypes_total:
+  description: Number of events by type
+  query: 'SELECT COUNT(*), action, entityType From EventLog GROUP BY action, entityType'
+  labels: [action, entity]

@@ -307,3 +307,5 @@
 
 - include: letsencrypt.yml
   when: not (molecule_test | default(False))
+
+- include: monitoring.yml
