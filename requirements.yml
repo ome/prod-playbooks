@@ -49,6 +49,26 @@
   src: openmicroscopy.postgresql
   version: 3.0.1
 
+# https://github.com/openmicroscopy/ansible-role-prometheus/pull/5
+- name: openmicroscopy.prometheus
+  src: https://github.com/manics/ansible-role-prometheus/archive/4a79d18a34f4307ae5a3f286b5b0ac32c4f0a78d.tar.gz
+  version: 4a79d18a34f4307ae5a3f286b5b0ac32c4f0a78d
+
+# https://github.com/openmicroscopy/ansible-role-prometheus-jmx/pull/2
+- name: openmicroscopy.prometheus-jmx
+  src: https://github.com/manics/ansible-role-prometheus-jmx/archive/4c83adca49816fe8333d8b912633160e79a3f444.tar.gz
+  version: 4c83adca49816fe8333d8b912633160e79a3f444
+
+# https://github.com/openmicroscopy/ansible-role-prometheus-node/pull/2
+- name: openmicroscopy.prometheus-node
+  src: https://github.com/manics/ansible-role-prometheus-node/archive/9b5fd284287f60d9be39bf8448c82f23d372f996.tar.gz
+  version: 9b5fd284287f60d9be39bf8448c82f23d372f996
+
+# https://github.com/openmicroscopy/ansible-role-prometheus-postgres/pull/3
+- name: openmicroscopy.prometheus-postgres
+  src: https://github.com/manics/ansible-role-prometheus-postgres/archive/8d26cfe3f21352b3023612095012400bdbd8efa9.tar.gz
+  version: 8d26cfe3f21352b3023612095012400bdbd8efa9
+
 - name: openmicroscopy.selinux-utils
   version: 1.0.3
 
