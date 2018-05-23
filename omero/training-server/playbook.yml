@@ -208,6 +208,14 @@
        password: "{{ os_system_users_password }}"
       with_sequence: start=1 end=40 format=fm%d
 
+    - name: Add operating system user "importer"
+      become: true
+      user:
+       name: "importer"
+       state: present
+       groups: "{{ omero_server_system_managedrepo_group }}"
+       password: "{{ os_system_users_password }}"
+
     - name: Add DropBox folders for fm1 through fm40
       become: true
       file:
