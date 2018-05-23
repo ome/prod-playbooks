@@ -208,10 +208,10 @@
        password: "{{ os_system_users_password }}"
       with_sequence: start=1 end=40 format=fm%d
 
-    - name: Add operating system user "importer"
+    - name: Add operating system user "importer1"
       become: true
       user:
-       name: "importer"
+       name: "importer1"
        state: present
        groups: "{{ omero_server_system_managedrepo_group }}"
        password: "{{ os_system_users_password }}"
