@@ -63,24 +63,11 @@
         name:
         - "omero-figure=={{ omero_figure_tag }}"
         - "omero-fpbioimage=={{ omero_fpbioimage_tag }}"
+        - "omero-iviewer=={{ omero_iviewer_tag }}"
         - "omero-mapr=={{ omero_mapr }}"
         - "omero-parade=={{ omero_parade }}"
         - "omero-webtagging-autotag=={{ omero_webtagging_autotag }}"
         - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch }}"
-        editable: False
-        state: present
-        # variable comes from role openmicroscopy.omero-web
-        virtualenv: "{{ omero_web_basedir }}/venv"
-        virtualenv_site_packages: yes
-      notify:
-        - restart omero-web
-
-    - name: Omero.web plugins testpypi | plugin install via testpypi
-      become: yes
-      pip:
-        extra_args: -i https://testpypi.python.org/pypi
-        name:
-        - "omero-iviewer==1.0.1"
         editable: False
         state: present
         # variable comes from role openmicroscopy.omero-web
@@ -258,8 +245,9 @@
     omero_server_datadir_chown: True
     omero_server_release: "{{ omero_server_release_override | default('5.4.6') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.4.6') }}"
-    omero_figure_tag: "{{ omero_figure_tag_override | default('3.2.1') }}"
+    omero_figure_tag: "{{ omero_figure_tag_override | default('4.0.0') }}"
     omero_fpbioimage_tag: "{{ omero_fpbioimage_tag_override | default('0.2.0') }}"
+    omero_iviewer_tag: "{{ omero_iviewer_tag_override | default('0.5.0') }}"
     omero_mapr: "{{ omero_mapr_override | default('0.2.3') }}"
     omero_parade: "{{ omero_parade_override | default('0.1.0') }}"
     omero_webtagging_autotag: "{{ omero_webtagging_autotag_override | default('3.0.2') }}"
