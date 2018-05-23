@@ -51,7 +51,7 @@
     - role: openmicroscopy.omero-server
 
     - role: openmicroscopy.omero-web
-      omero_web_upgrade: True
+      # omero_web_upgrade: True
       # omero_web_config_set:
 
     - role: openmicroscopy.docker
