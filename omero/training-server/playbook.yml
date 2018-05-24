@@ -142,7 +142,7 @@
     - name: Download the batch_roi_export_to_table.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/will-moore/training-scripts/b398d7526e48df79a6c33ce61a679d1458a15ded/practical/python/server/batch_roi_export_to_table.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/master/practical/python/server/batch_roi_export_to_table.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting/batch_roi_export_to_table.py
         mode: 0755
         owner: "omero-server"
