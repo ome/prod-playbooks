@@ -98,6 +98,34 @@
           isDefault: true
       dest: /etc/grafana/provisioning/datasources/datasources.yml
 
+  - name: Grafana dashboards
+    become: yes
+    copy:
+      content: |
+        apiVersion: 1
+        providers:
+        - name: Dashboards
+          orgId: 1
+          folder: ""
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /etc/grafana/provisioning/dashboards
+      dest: /etc/grafana/provisioning/dashboards/dashboards.yml
+
+  - name: Grafana copy dashboards
+    become: yes
+    copy:
+      src: files/{{ item }}
+      dest: /etc/grafana/provisioning/dashboards/{{ item }}
+    with_items:
+    - outreach-OMEROCounts.json
+    - outreach-OMEROevents.json
+    - outreach-OMEROsessions.json
+    - outreach-PostgreSQL.json
+    - outreach-NodeResources.json
+
   - name: Run Grafana docker
     become: yes
     docker_container:
