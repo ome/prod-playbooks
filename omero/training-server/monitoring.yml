@@ -74,6 +74,9 @@
   # For restart handlers
   - role: openmicroscopy.omero-common
 
+  # Autodetect whether selinux is enabled
+  - role: openmicroscopy.selinux-utils
+
   tasks:
 
   ## Grafana
@@ -132,6 +135,26 @@
       volumes:
       - "grafana-data:/var/lib/grafana"
       - "/etc/grafana/provisioning:/etc/grafana/provisioning:ro"
+
+  ## nginx proxy
+
+  # Not sure why this is needed, maybe because of the forwarded ports?
+  - name: nginx selinux allow network connect
+    become: yes
+    seboolean:
+      name: httpd_can_network_connect
+      state: yes
+      persistent: yes
+    when: selinux_enabled
+
+  - name: nginx proxy grafana and prometheus
+    become: yes
+    copy:
+      dest: /etc/nginx/conf.d-nested-includes/proxy-monitoring.conf
+      src: files/nginx-proxy-monitoring.conf
+    notify:
+    - reload nginx
+
 
   ## omero-prometheus-tools
 
