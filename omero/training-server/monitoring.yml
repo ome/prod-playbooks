@@ -2,11 +2,13 @@
 
 - hosts: outreach.openmicroscopy.org
   roles:
+
   - role: openmicroscopy.prometheus
     prometheus_docker_network: "{{ docker_monitoring_network }}"
     prometheus_additional_command_args: >
       --web.external-url=http://$(hostname):9090/prometheus
       --web.route-prefix=/
+
     # groupname must be unique
     prometheus_targets:
     - groupname: nodes
@@ -59,6 +61,7 @@
       jobname: omero-counts
 
   - role: openmicroscopy.prometheus-jmx
+
   - role: openmicroscopy.prometheus-node
 
   - role: openmicroscopy.prometheus-postgres
@@ -88,31 +91,14 @@
   - name: Grafana default datasource
     become: yes
     copy:
-      content: |
-        apiVersion: 1
-        datasources:
-        - name: Prometheus
-          type: prometheus
-          url: http://prometheus:9090
-          access: proxy
-          isDefault: true
       dest: /etc/grafana/provisioning/datasources/datasources.yml
+      src: files/grafana-datasources.yml
 
   - name: Grafana dashboards
     become: yes
     copy:
-      content: |
-        apiVersion: 1
-        providers:
-        - name: Dashboards
-          orgId: 1
-          folder: ""
-          type: file
-          disableDeletion: false
-          editable: true
-          options:
-            path: /etc/grafana/provisioning/dashboards
       dest: /etc/grafana/provisioning/dashboards/dashboards.yml
+      src: files/grafana-dashboards.yml
 
   - name: Grafana copy dashboards
     become: yes
@@ -226,11 +212,8 @@
   - name: omero-server prometheus jmx agents
     become: yes
     copy:
-      content: |
-        config set -- omero.jvmcfg.append.blitz "-javaagent:/opt/prometheus/jars/jmx_prometheus_javaagent.jar=9180:/etc/prometheus/jmx-default-config.yml"
-        config set -- omero.jvmcfg.append.indexer "-javaagent:/opt/prometheus/jars/jmx_prometheus_javaagent.jar=9181:/etc/prometheus/jmx-default-config.yml"
-        config set -- omero.jvmcfg.append.pixeldata "-javaagent:/opt/prometheus/jars/jmx_prometheus_javaagent.jar=9182:/etc/prometheus/jmx-default-config.yml"
       dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+      src: omero-server-config-prometheus.omero
     notify:
     - restart omero-server
 
