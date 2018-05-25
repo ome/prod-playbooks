@@ -24,7 +24,7 @@ vagrant:
 docker:
   containers:
   - name: outreach.openmicroscopy.org
-    image: centos/systemd
+    image: openmicroscopy/centos-systemd-ip
     image_version: latest
     privileged: True
     ansible_groups:
