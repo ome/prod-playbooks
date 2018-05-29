@@ -132,7 +132,7 @@
     - name: Download the Scipy_Gaussian_Filter.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/jburel/omero-example-scripts/cambridge-training/cambridge-training-2017-12/Scipy_Gaussian_Filter.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
         mode: 0755
         owner: "omero-server"
@@ -142,7 +142,7 @@
     - name: Download the batch_roi_export_to_table.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/master/practical/python/server/batch_roi_export_to_table.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/batch_roi_export_to_table.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting/batch_roi_export_to_table.py
         mode: 0755
         owner: "omero-server"
@@ -257,6 +257,7 @@
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.5.0') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.2.3') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.0') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.1.0') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
