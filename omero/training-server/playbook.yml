@@ -132,7 +132,7 @@
     - name: Download the Scipy_Gaussian_Filter.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/jburel/omero-example-scripts/cambridge-training/cambridge-training-2017-12/Scipy_Gaussian_Filter.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/master/practical/python/server/scipy_gaussian_filter.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
         mode: 0755
         owner: "omero-server"
