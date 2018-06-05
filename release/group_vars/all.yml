@@ -28,6 +28,8 @@ public_images:
   - { src: '../../../repos/curated/leica-lif/public/', dest: 'Leica-LIF'}
   - { src: '../../../repos/curated/micromanager/public/',
       dest: 'Micro-Manager'}
+  - { src: '../../../repos/curated/leica-scn/public/', dest: 'Leica-SCN'}
+  - { src: '../../../repos/curated/mrc/public/', dest: 'MRC'}
   - { src: '../../../repos/curated/nd2/public/', dest: 'ND2'}
   - { src: '../../../repos/curated/nifti/public/', dest: 'NIfTI'}
   - { src: '../../../repos/curated/nrrd/public/', dest: 'NRRD'}
