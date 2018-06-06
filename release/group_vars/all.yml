@@ -43,6 +43,7 @@ public_images:
       dest: 'SPC-FIFO'}
   - { src: '../../../repos/curated/svs/public/', dest: 'SVS'}
   - { src: '../../../repos/curated/tiff/public/', dest: 'TIFF'}
+  - { src: '../../../repos/curated/trestle/public/', dest: 'Trestle'}
   - { src: '../../../repos/curated/zip/u-track/', dest: 'u-track'}
   - { src: '../../../repos/curated/vectra-qptiff/public/',
       dest: 'Vectra-QPTIFF'}
