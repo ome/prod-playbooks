@@ -24,11 +24,12 @@ public_images:
   - { src: '../../../../repos/curated/perkinelmer-operetta/public/',
       dest: 'HCS/Operetta'}
   - { src: '../../../repos/curated/imaris/public/', dest: 'Imaris-IMS'}
+  - { src: '../../../repos/curated/incell/public/', dest: 'InCell2000'}
   - { src: '../../../repos/curated/incell3000/public/', dest: 'InCell3000'}
   - { src: '../../../repos/curated/leica-lif/public/', dest: 'Leica-LIF'}
+  - { src: '../../../repos/curated/leica-scn/public/', dest: 'Leica-SCN'}
   - { src: '../../../repos/curated/micromanager/public/',
       dest: 'Micro-Manager'}
-  - { src: '../../../repos/curated/leica-scn/public/', dest: 'Leica-SCN'}
   - { src: '../../../repos/curated/mrc/public/', dest: 'MRC'}
   - { src: '../../../repos/curated/nd2/public/', dest: 'ND2'}
   - { src: '../../../repos/curated/nifti/public/', dest: 'NIfTI'}
@@ -38,6 +39,7 @@ public_images:
   - { src: '../../../repos/curated/ome-tiff/ome-schemas/',
       dest: 'OME-TIFF'}
   - { src: '../../../repos/curated/ome-xml/ome-schemas/', dest: 'OME-XML'}
+  - { src: '../../../repos/curated/perkinelmer-operetta/public/', dest: 'Operetta'}
   - { src: '../../../repos/curated/png/public/', dest: 'PNG'}
   - { src: '../../../repos/curated/becker-hickl-spc/public/',
       dest: 'SPC-FIFO'}
