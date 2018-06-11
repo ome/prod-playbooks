@@ -29,7 +29,7 @@ env:
   - DIRECTORY="." PLAYBOOK=nightshade-webclients.yml
   - DIRECTORY="." PLAYBOOK=ome-demoserver.yml
   - DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
-  - DIRECTORY="." PLAYBOOK=training-server.yml
+  - DIRECTORY=omero/training-server PLAYBOOK=
   - DIRECTORY=bootstrap PLAYBOOK=
   - DIRECTORY=web-proxy PLAYBOOK=
   - DIRECTORY=www PLAYBOOK=

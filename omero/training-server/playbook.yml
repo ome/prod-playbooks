@@ -39,7 +39,7 @@
 
   roles:
 
-    - role: openmicroscopy.postgresql
+    - role: openmicroscopy.postgresql-3
       postgresql_databases:
       - name: omero
       postgresql_users:
@@ -49,11 +49,8 @@
       postgresql_version: "9.6"
 
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.3
 
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.4.3
-      # omero_web_upgrade: True
       # omero_web_config_set:
 
     - role: openmicroscopy.docker
@@ -63,11 +60,13 @@
       become: yes
       pip:
         name:
-        - "omero-figure==3.1.2"
-        - "omero-fpbioimage==0.2.0"
-        - "omero-webtagging-autotag==3.0.2"
-        - "omero-webtagging-tagsearch==3.0.3"
-        - "omero-iviewer==0.4.1"
+        - "omero-figure=={{ omero_figure_release }}"
+        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+        - "omero-iviewer=={{ omero_iviewer_release }}"
+        - "omero-mapr=={{ omero_mapr_release }}"
+        - "omero-parade=={{ omero_parade_release }}"
+        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
         editable: False
         state: present
         # variable comes from role openmicroscopy.omero-web
@@ -76,13 +75,18 @@
       notify:
         - restart omero-web
 
+    - name: Docker | python client
+      become: yes
+      yum:
+        name: docker-python
+        state: present
+
     - name: Omero.cli plugins | plugin install via pip & pypi
       become: yes
       pip:
         name:
-        - "omero-cli-duplicate==0.2.0"
-        - "omero-cli-render==0.1.0"
-        - "docker-py"
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+        - "omero-cli-render=={{ omero_cli_render_release }}"
         state: present
 
     - name: Create a figure scripts directory
@@ -98,11 +102,12 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v3.1.2/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
+        force: yes
 
     - name: Create a cambridge_scripts directory
       become: yes
@@ -114,11 +119,31 @@
         owner: "omero-server"
         group: "omero-server"
 
+    - name: Create a users_meeting (scripts) directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
     - name: Download the Scipy_Gaussian_Filter.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/jburel/omero-example-scripts/cambridge-training/cambridge-training-2017-12/Scipy_Gaussian_Filter.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the batch_roi_export_to_table.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/batch_roi_export_to_table.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting/batch_roi_export_to_table.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -155,7 +180,7 @@
     - name: Config for OMERO.web plugins
       become: yes
       template:
-        src: omero-web-config-for-webapps.j2
+        src: ../../templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
@@ -166,7 +191,7 @@
     - name: Set default viewer in OMERO.web
       become: yes
       template:
-        src: omero-web-config-default-viewer.j2
+        src: ../../templates/omero-web-config-default-viewer.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
         owner: "root"
         group: "root"
@@ -182,6 +207,14 @@
        groups: "{{ omero_server_system_managedrepo_group }}"
        password: "{{ os_system_users_password }}"
       with_sequence: start=1 end=40 format=fm%d
+
+    - name: Add operating system user "importer1"
+      become: true
+      user:
+       name: "importer1"
+       state: present
+       groups: "{{ omero_server_system_managedrepo_group }}"
+       password: "{{ os_system_users_password }}"
 
     - name: Add DropBox folders for fm1 through fm40
       become: true
@@ -217,6 +250,18 @@
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: True
+    omero_server_release: "{{ omero_server_release_override | default('5.4.6') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.4.6') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.0.0') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.2.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.5.0') }}"
+    omero_mapr_release: "{{ omero_mapr_release_override | default('0.2.3') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.1.0') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.1.0') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.3.0') }}"
     os_system_users_password: "{{ os_systems_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.3.0') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"

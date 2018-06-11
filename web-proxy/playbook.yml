@@ -1,5 +1,5 @@
 ---
-# Playbook for maintaining IDR service nodes
+# Playbook for maintaining OME production web proxies
 
 - hosts: prod-web-proxies
   roles:
