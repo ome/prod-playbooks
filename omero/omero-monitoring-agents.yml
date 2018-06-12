@@ -3,8 +3,6 @@
 # TODO: Change this to one of the omero-server host groups
 - hosts: outreach.openmicroscopy.org
 
-  pre_tasks:
-
   roles:
 
   - role: openmicroscopy.prometheus-jmx
@@ -30,3 +28,11 @@
       src: omero-server-config-prometheus.omero
     notify:
     - restart omero-server
+
+
+# TODO: Change this to one of the omero-web host groups
+- hosts: outreach.openmicroscopy.org
+
+  roles:
+
+  - role: omero-web-django-prometheus
