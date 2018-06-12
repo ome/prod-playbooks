@@ -48,31 +48,11 @@
       jobname: django
       metrics_path: /django_prometheus/metrics
 
-    - groupname: omero-sessions
+    - groupname: omero-server
       hosts:
       - "{{ ansible_default_ipv4.address }}"
-      port: 9171
-      jobname: omero-sessions
-
-    - groupname: omero-counts
-      hosts:
-      - "{{ ansible_default_ipv4.address }}"
-      port: 9172
-      jobname: omero-counts
-
-  - role: openmicroscopy.prometheus-jmx
-
-  - role: openmicroscopy.prometheus-node
-
-  - role: openmicroscopy.prometheus-postgres
-    prometheus_postgres_dbname: omero
-    prometheus_postgres_query_filenames:
-    - queries-default.yml
-#    - queries-pg_statio_user_tables.yml
-#    - queries-pg_stat_statements.yml
-
-  # For restart handlers
-  - role: openmicroscopy.omero-common
+      port: 9449
+      jobname: omero-server
 
   # Autodetect whether selinux is enabled
   - role: openmicroscopy.selinux-utils
@@ -156,108 +136,5 @@
     - reload nginx
 
 
-  ## omero-prometheus-tools
-
-  - name: Install omero-prometheus-tools
-    become: yes
-    pip:
-      name:
-      # - https://github.com/manics/omero-prometheus-tools/archive/pip-package.zip
-      - https://github.com/manics/omero-prometheus-tools/archive/bdd3ef4e3732f7892af280723e67eadd1eeb07a9.zip
-      state: present
-      virtualenv: /opt/prometheus-omero-tools
-      virtualenv_site_packages: yes
-    notify:
-    - restart prometheus-omero-sessions
-    - restart prometheus-omero-counts
-
-  - name: Create omero-prometheus system user
-    become: yes
-    user:
-      name: omero-prometheus
-      state: present
-      system: yes
-
-  - name: Configure omero-prometheus-sessions service
-    become: yes
-    template:
-      src: files/sysconfig-prometheus-omero-sessions.j2
-      dest: /etc/sysconfig/prometheus-omero-sessions
-      owner: omero-prometheus
-      group: root
-      mode: 0440
-    notify:
-    - restart prometheus-omero-sessions
-
-  - name: Additional queries for omero-prometheus-counts service
-    become: yes
-    copy:
-      src: files/prometheus-omero-additional-queries.yml
-      dest: /opt/prometheus-omero-tools/etc/prometheus-omero-additional-queries.yml
-
-  - name: Configure omero-prometheus-counts service
-    become: yes
-    template:
-      src: files/sysconfig-prometheus-omero-counts.j2
-      dest: /etc/sysconfig/prometheus-omero-counts
-      owner: omero-prometheus
-      group: root
-      mode: 0440
-    notify:
-    - restart prometheus-omero-counts
-
-  - name: Install omero-prometheus-tools services
-    become: yes
-    copy:
-      dest: /etc/systemd/system/{{item }}.service
-      src: /opt/prometheus-omero-tools/etc/{{ item }}.service
-      remote_src: True
-    with_items:
-    - prometheus-omero-sessions
-    - prometheus-omero-counts
-    notify:
-    - restart prometheus-omero-sessions
-    - restart prometheus-omero-counts
-
-  - name: Enable prometheus-omero-tools services
-    become: yes
-    systemd:
-      daemon_reload: yes
-      enabled: yes
-      name: "{{ item }}"
-      state: started
-    with_items:
-    - prometheus-omero-sessions
-    - prometheus-omero-counts
-
-  ## OMERO jmx
-
-  - name: omero-server prometheus jmx agents
-    become: yes
-    copy:
-      dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
-      src: omero-server-config-prometheus.omero
-    notify:
-    - restart omero-server
-
-  handlers:
-
-  - name: restart prometheus-omero-sessions
-    become: yes
-    systemd:
-      daemon_reload: yes
-      enabled: yes
-      name: prometheus-omero-sessions
-      state: restarted
-
-  - name: restart prometheus-omero-counts
-    become: yes
-    systemd:
-      daemon_reload: yes
-      enabled: yes
-      name: prometheus-omero-counts
-      state: restarted
-
   vars:
-    omero_monitoring_password: testing
     docker_monitoring_network: monitoring

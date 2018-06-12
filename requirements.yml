@@ -27,6 +27,11 @@
 - src: openmicroscopy.omego
   version: 0.1.1
 
+# https://github.com/manics/ansible-role-omero-prometheus-exporter
+- name: omero-prometheus-exporter
+  src: https://github.com/manics/ansible-role-omero-prometheus-exporter/archive/2be2c649720b24e27ae28984ddf3914686b84616.tar.gz
+  version: 2be2c649720b24e27ae28984ddf3914686b84616
+
 - src: openmicroscopy.omero-server
   version: 2.0.5
 
