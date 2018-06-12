@@ -36,15 +36,13 @@
 - src: openmicroscopy.omero-user
   version: 0.1.1
 
-# https://github.com/manics/ansible-role-omero-prometheus-exporter
-- name: omero-prometheus-exporter
-  src: https://github.com/manics/ansible-role-omero-prometheus-exporter/archive/2be2c649720b24e27ae28984ddf3914686b84616.tar.gz
-  version: 2be2c649720b24e27ae28984ddf3914686b84616
+- name: openmicroscopy.omero-prometheus-exporter
+  src: https://github.com/manics/ansible-role-omero-prometheus-exporter/archive/0.1.0.tar.gz
+  version: 0.1.0
 
-# https://github.com/manics/ansible-role-omero-web-django-prometheus
-- name: omero-web-django-prometheus
-  src: https://github.com/manics/ansible-role-omero-web-django-prometheus/archive/48cf82513504e9a3884dae465113922d747d464d.tar.gz
-  version: 48cf82513504e9a3884dae465113922d747d464d
+- name: openmicroscopy.omero-web-django-prometheus
+  src: https://github.com/manics/ansible-role-omero-web-django-prometheus/archive/0.1.0.tar.gz
+  version: 0.1.0
 
 - src: openmicroscopy.docker
   version: 2.3.0
@@ -59,10 +57,9 @@
   src: openmicroscopy.postgresql
   version: 3.0.1
 
-# https://github.com/openmicroscopy/ansible-role-prometheus/pull/5
 - name: openmicroscopy.prometheus
-  src: https://github.com/manics/ansible-role-prometheus/archive/fad82bea161a8145ec0029424684dc4837dce009.tar.gz
-  version: fad82bea161a8145ec0029424684dc4837dce009
+  src: openmicroscopy.ansible-role-prometheus
+  version: 0.3.0
 
 - name: openmicroscopy.prometheus-jmx
   src: openmicroscopy.ansible-role-prometheus-jmx
