@@ -135,6 +135,12 @@
     notify:
     - reload nginx
 
+  handlers:
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
 
   vars:
     docker_monitoring_network: monitoring
