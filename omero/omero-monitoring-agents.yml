@@ -1,0 +1,32 @@
+# Setup prometheus agents
+
+# TODO: Change this to one of the omero-server host groups
+- hosts: outreach.openmicroscopy.org
+
+  pre_tasks:
+
+  roles:
+
+  - role: openmicroscopy.prometheus-jmx
+
+  - role: openmicroscopy.prometheus-node
+
+  - role: openmicroscopy.prometheus-postgres
+    prometheus_postgres_dbname: omero
+
+  # For restart handlers
+  - role: openmicroscopy.omero-common
+
+  - role: omero-prometheus-exporter
+    omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
+    omero_prometheus_exporter_omero_password: "{{ secret_omero_prometheus_exporter_omero_password | default('omero') }}"
+
+  tasks:
+
+  - name: omero-server prometheus jmx agents
+    become: yes
+    copy:
+      dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+      src: omero-server-config-prometheus.omero
+    notify:
+    - restart omero-server

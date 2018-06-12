@@ -1,9 +1,0 @@
-OPTIONS=" \
-  --config /opt/prometheus-omero-tools/etc/prometheus-omero-counts.yml \
-  --config \ /opt/prometheus-omero-tools/etc/prometheus-omero-additional-queries.yml \
-  --host localhost \
-  --user {{ omero_monitoring_user | default('system-monitoring') | quote }} \
-  --password {{ omero_monitoring_password | default('system-monitoring') | quote }} \
-  --listen 9172 \
-  --interval 60 \
-"
