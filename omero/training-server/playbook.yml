@@ -56,6 +56,24 @@
     - role: openmicroscopy.docker
 
   post_tasks:
+
+    - name: Create additional nginx include directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+
+    # Inspired by
+    # https://github.com/openmicroscopy/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
+    - name: omero-web nginx nested include
+      become: yes
+      lineinfile:
+        destfile: /etc/nginx/conf.d/omero-web.conf
+        insertafter: 'server {'
+        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
+      notify:
+      - restart nginx
+
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
       pip:
@@ -285,3 +303,7 @@
       omero.ldap.user_filter: "(objectClass=person)"
       omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
       omero.ldap.username: "uid=admin,ou=system"
+
+
+- include: letsencrypt.yml
+  when: not (molecule_test | default(False))

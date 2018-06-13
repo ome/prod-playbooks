@@ -32,6 +32,8 @@ docker:
 
 ansible:
   group_vars:
+    all:
+      molecule_test: True
     docker-hosts:
       omero_server_systemd_require_network: False
       # This should allow docker-in-docker to work

@@ -1,0 +1,125 @@
+# Additional Nginx configuration including Let's Encrypt
+# Should be run when less than 10 days remain on the certificate
+# See the remaining_days parameter:
+# https://docs.ansible.com/ansible/2.3/letsencrypt_module.html
+
+- hosts: outreach.openmicroscopy.org
+
+  tasks:
+
+  - name: letsencrypt ssl directory
+    become: yes
+    file:
+      path: /etc/letsencrypt/private
+      owner: root
+      group: root
+      mode: 0700
+      recurse: yes
+      state: directory
+
+  - name: letsencrypt http challenge directory
+    become: yes
+    file:
+      path: /srv/www/letsencrypt/challenge
+      recurse: yes
+      state: directory
+      serole: _default
+      setype: _default
+      seuser: _default
+
+  - name: letsencrypt nginx challenge location
+    become: yes
+    copy:
+      content: |
+        location /.well-known/acme-challenge/ {
+            alias /srv/www/letsencrypt/challenge/;
+        }
+      dest: /etc/nginx/conf.d-nested-includes/letsencrypt.conf
+    notify:
+    - reload nginx
+
+  - name: Ensure nginx is reloaded
+    meta: flush_handlers
+
+  - name: letsencrypt account key
+    become: yes
+    command: openssl genrsa -out /etc/letsencrypt/private/account.key 2048
+    args:
+      creates: /etc/letsencrypt/private/account.key
+
+  - name: letsencrypt csr
+    become: yes
+    command: >
+      openssl req -new -newkey rsa:2048 -nodes
+      -out /etc/letsencrypt/private/domain.csr
+      -keyout /etc/letsencrypt/private/domain.key
+      -subj "{{ letsencrypt_subject }}"
+    args:
+      creates: /etc/letsencrypt/private/domain.csr
+
+  - name: letsencrypt get challenge
+    become: yes
+    letsencrypt:
+      account_email: "{{ letsencrypt_email }}"
+      account_key: /etc/letsencrypt/private/account.key
+      agreement: https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf
+      csr: /etc/letsencrypt/private/domain.csr
+      dest: /etc/letsencrypt/private/domain.crt
+      acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    register: letsencrypt_challenge
+
+  - name: letsencrypt answer challenge
+    become: yes
+    copy:
+      # Should always begin .well-known/acme-challenge/
+      dest: /srv/www/letsencrypt/challenge/{{ letsencrypt_challenge.challenge_data[letsencrypt_cn]['http-01'].resource | basename }}
+      content: "{{ letsencrypt_challenge.challenge_data[letsencrypt_cn]['http-01'].resource_value }}"
+    when: 'letsencrypt_challenge | changed'
+
+  - name: letsencrypt get certificate
+    become: yes
+    letsencrypt:
+      account_email: "{{ letsencrypt_email }}"
+      account_key: /etc/letsencrypt/private/account.key
+      agreement: https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf
+      csr: /etc/letsencrypt/private/domain.csr
+      dest: /etc/letsencrypt/private/domain.crt
+      acme_directory: https://acme-v01.api.letsencrypt.org/directory
+      data: "{{ letsencrypt_challenge }}"
+
+  - name: letsencrypt get certificate chain
+    become: yes
+    get_url:
+      dest: /etc/letsencrypt/private/zzzz-letsencrypt-chain.crt
+      url: https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt
+
+  - name: letsencrypt create full certificate chain
+    become: yes
+    assemble:
+      src: /etc/letsencrypt/private
+      dest: /etc/letsencrypt/full-chain.crt
+      regexp: 'crt$'
+      mode: '0600'
+
+  - name: letsencrypt nginx certificate configuration
+    become: yes
+    copy:
+      content: |
+        listen 443 ssl;
+        ssl_certificate /etc/letsencrypt/full-chain.crt;
+        ssl_certificate_key /etc/letsencrypt/private/domain.key;
+      dest: /etc/nginx/conf.d-nested-includes/https.conf
+    notify:
+    - reload nginx
+
+  handlers:
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
+
+  vars:
+    letsencrypt_cn: outreach.openmicroscopy.org
+    letsencrypt_email: sysadmin@openmicroscopy.org
+    letsencrypt_subject: "/C=GB/ST=/L=Dundee/O=University of Dundee/OU=Open Microscopy Environment/CN={{ letsencrypt_cn }}"
