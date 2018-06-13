@@ -59,10 +59,12 @@ ansible:
 molecule:
   test:
     sequence:
+    - destroy
+    - syntax
     - create
     - converge
+    #- idempotence
     - verify
-    - destroy
 
 verifier:
   name: testinfra
