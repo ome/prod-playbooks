@@ -206,6 +206,17 @@
       notify:
       - restart omero-web
 
+    - name: Outreach only config for OMERO.web plugins
+      become: yes
+      copy:
+        src: files/omero-web-outreach-webapps.omero
+        dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+      - restart omero-web
+
     - name: Set default viewer in OMERO.web
       become: yes
       template:
