@@ -202,6 +202,7 @@
       with_dict: "{{ nginx_ssl_cert_files }}"
       no_log: true
 
+    # TODO: Move this to /etc/nginx/conf.d-nested-includes/omero-web-ssl.conf
     - name: NGINX - SSL Configuration - Additional listen port
       become: yes
       lineinfile:
@@ -209,6 +210,7 @@
         insertafter: '    listen 80;'
         line: '    listen 443 ssl;'
 
+    # TODO: Move this to /etc/nginx/conf.d-nested-includes/omero-web-ssl.conf
     - name: NGINX - SSL Configuration - Rest of SSL section to omero-web.conf
       become: yes
       blockinfile:
@@ -225,6 +227,21 @@
               }
       notify:
         - restart nginx
+
+    - name: NGINX - create nested includes directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+
+    - name: NGINX - omero-web.conf nested includes
+      become: yes
+      lineinfile:
+        destfile: /etc/nginx/conf.d/omero-web.conf
+        insertafter: 'server {'
+        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
+      notify:
+      - restart nginx
 
     # Config for OMERO.web plugins, loaded into OMERO.web by the
     # omero.web systemd restart.
