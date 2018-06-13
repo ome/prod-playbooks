@@ -38,3 +38,50 @@
   roles:
 
   - role: openmicroscopy.omero-web-django-prometheus
+
+
+# TODO: change to a prod omero group
+# This assumes omero-web.conf is present so won't work if only OMERO.server
+# is present. We may need a separate group for non-web servers
+- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+
+  roles:
+  # Autodetect whether selinux is enabled
+  - role: openmicroscopy.selinux-utils
+
+  tasks:
+
+  - name: nginx selinux allow network connect
+    become: yes
+    seboolean:
+      name: httpd_can_network_connect
+      state: yes
+      persistent: yes
+    when: selinux_enabled
+
+  - name: Create monitoring htpasswd
+    become: yes
+    copy:
+      content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
+      dest: /etc/nginx/monitoring.htpasswd
+
+  - name: Create nginx proxy for prometheus exporters
+    become: yes
+    copy:
+      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
+      src: confd-nested-proxy-exporters.conf
+    notify:
+    - reload nginx
+
+  handlers:
+
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
+
+  vars:
+    # monitoring:monitoring
+    monitoring_nginx_htpasswd: |
+      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
