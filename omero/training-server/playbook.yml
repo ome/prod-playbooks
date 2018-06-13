@@ -273,7 +273,8 @@
         state: started
         restart_policy: always
 
-
+  # Crypted passwords generated using
+  # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
   vars:
     #omero_server_datadir_chown: True
     omero_server_system_managedrepo_group: managed_repo_group
