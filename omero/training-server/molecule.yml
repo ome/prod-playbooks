@@ -20,15 +20,19 @@ vagrant:
     - name: outreach.openmicroscopy.org
       ansible_groups:
       - vagrant-hosts
+      - prod-omero
+      - prod-omero-web
 
 docker:
   containers:
   - name: outreach.openmicroscopy.org
-    image: centos/systemd
+    image: openmicroscopy/centos-systemd-ip
     image_version: latest
     privileged: True
     ansible_groups:
     - docker-hosts
+    - prod-omero
+    - prod-omero-web
 
 ansible:
   group_vars:

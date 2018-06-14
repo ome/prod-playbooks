@@ -1,0 +1,87 @@
+# Setup prometheus agents
+
+# TODO: change to prod-omero
+- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+#- hosts: prod-omero
+
+  roles:
+
+  - role: openmicroscopy.prometheus-jmx
+
+  - role: openmicroscopy.prometheus-node
+
+  - role: openmicroscopy.prometheus-postgres
+    prometheus_postgres_dbname: omero
+
+  # For restart handlers
+  - role: openmicroscopy.omero-common
+
+  - role: openmicroscopy.omero-prometheus-exporter
+    omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
+    omero_prometheus_exporter_omero_password: "{{ secret_omero_prometheus_exporter_omero_password | default('omero') }}"
+
+  tasks:
+
+  - name: omero-server prometheus jmx agents
+    become: yes
+    copy:
+      dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+      src: omero-server-config-prometheus.omero
+    notify:
+    - restart omero-server
+
+
+# TODO: change to prod-omero-web
+- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+#- hosts: prod-omero-web
+
+  roles:
+
+  - role: openmicroscopy.omero-web-django-prometheus
+
+
+# TODO: change to a prod omero group
+# This assumes omero-web.conf is present so won't work if only OMERO.server
+# is present. We may need a separate group for non-web servers
+- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+
+  roles:
+  # Autodetect whether selinux is enabled
+  - role: openmicroscopy.selinux-utils
+
+  tasks:
+
+  - name: nginx selinux allow network connect
+    become: yes
+    seboolean:
+      name: httpd_can_network_connect
+      state: yes
+      persistent: yes
+    when: selinux_enabled
+
+  - name: Create monitoring htpasswd
+    become: yes
+    copy:
+      content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
+      dest: /etc/nginx/monitoring.htpasswd
+
+  - name: Create nginx proxy for prometheus exporters
+    become: yes
+    copy:
+      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
+      src: confd-nested-proxy-exporters.conf
+    notify:
+    - reload nginx
+
+  handlers:
+
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
+
+  vars:
+    # monitoring:monitoring
+    monitoring_nginx_htpasswd: |
+      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0

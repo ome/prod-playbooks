@@ -6,6 +6,7 @@ services:
 
 install:
   - pip install ome-ansible-molecule-dependencies
+  - pip install jmespath
 
 script:
   # If PLAYBOOK is not defined assume that directory has a full
