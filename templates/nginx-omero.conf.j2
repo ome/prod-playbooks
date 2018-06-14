@@ -27,6 +27,8 @@ server {
     sendfile on;
     client_max_body_size 0;
 
+    include /etc/nginx/conf.d-nested-includes/*.conf;
+
     # maintenance page serve from here
     location @maintenance {
         root {{ omero_common_basedir }}/server/OMERO.server/etc/templates/error;
