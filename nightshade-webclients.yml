@@ -116,6 +116,7 @@
       no_log: true
 
     # post 2.3 'destfile' should be renamed 'path'
+    # TODO: Move this to /etc/nginx/conf.d-nested-includes/omero-web-ssl.conf
     - name: NGINX - SSL Configuration - Additional listen port
       become: yes
       lineinfile:
@@ -124,6 +125,7 @@
         line: '    listen 443 ssl;'
 
     # post 2.3 'destfile' should be renamed 'path'
+    # TODO: Move this to /etc/nginx/conf.d-nested-includes/omero-web-ssl.conf
     - name: NGINX - SSL Configuration - Rest of SSL section to omero-web.conf
       become: yes
       blockinfile:
@@ -138,6 +140,21 @@
               if ($ssl_protocol = "") {
                   rewrite ^/(.*) https://$host/$1 permanent;
               }
+      notify:
+        - restart nginx
+
+    - name: NGINX - create nested includes directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+
+    - name: NGINX - omero-web.conf nested includes
+      become: yes
+      lineinfile:
+        destfile: /etc/nginx/conf.d/omero-web.conf
+        insertafter: 'server {'
+        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
       notify:
         - restart nginx
 
