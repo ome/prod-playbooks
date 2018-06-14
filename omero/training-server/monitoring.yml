@@ -1,0 +1,146 @@
+# Setup prometheus and grafana monitoring
+
+- hosts: outreach.openmicroscopy.org
+  roles:
+
+  - role: openmicroscopy.prometheus
+    prometheus_docker_network: "{{ docker_monitoring_network }}"
+    prometheus_additional_command_args: >
+      --web.external-url=http://$(hostname):9090/prometheus
+      --web.route-prefix=/
+
+    # groupname must be unique
+    prometheus_targets:
+    - groupname: nodes
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9100
+      jobname: node-exporter
+
+    - groupname: blitz
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9180
+      jobname: jmx-blitz
+
+    - groupname: indexer
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9181
+      jobname: jmx-indexer
+
+    - groupname: pixeldata
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9182
+      jobname: jmx-pixeldata
+
+    - groupname: postgres
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9187
+      jobname: postgres-exporter
+
+    - groupname: omero-web
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 80
+      jobname: django
+      metrics_path: /django_prometheus/metrics
+
+    - groupname: omero-server
+      hosts:
+      - "{{ ansible_default_ipv4.address }}"
+      port: 9449
+      jobname: omero-server
+
+  # Autodetect whether selinux is enabled
+  - role: openmicroscopy.selinux-utils
+
+  tasks:
+
+  ## Grafana
+
+  - name: Grafana configuration directory
+    become: yes
+    file:
+      path: /etc/grafana/provisioning/{{ item }}
+      recurse: yes
+      state: directory
+    with_items:
+    - datasources
+    - dashboards
+
+  - name: Grafana default datasource
+    become: yes
+    copy:
+      dest: /etc/grafana/provisioning/datasources/datasources.yml
+      src: files/grafana-datasources.yml
+
+  - name: Grafana dashboards
+    become: yes
+    copy:
+      dest: /etc/grafana/provisioning/dashboards/dashboards.yml
+      src: files/grafana-dashboards.yml
+
+  - name: Grafana copy dashboards
+    become: yes
+    copy:
+      src: files/{{ item }}
+      dest: /etc/grafana/provisioning/dashboards/{{ item }}
+    with_items:
+    - outreach-OMEROCounts.json
+    - outreach-OMEROevents.json
+    - outreach-OMEROsessions.json
+    - outreach-PostgreSQL.json
+    - outreach-NodeResources.json
+
+  - name: Run Grafana docker
+    become: yes
+    docker_container:
+      image: grafana/grafana:5.1.3
+      name: grafana
+      env:
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password_override | default ('secret') }}"
+        #GF_SERVER_DOMAIN: outreach.openmicroscopy.org
+        #GF_SERVER_ROOT_URL: "https://%(domain)s/grafana/"
+        GF_SERVER_ROOT_URL: "http://%(domain)s/grafana/"
+      networks:
+      - name: "{{ docker_monitoring_network }}"
+      published_ports:
+      - "3000:3000"
+      state: started
+      restart_policy: always
+      volumes:
+      - "grafana-data:/var/lib/grafana"
+      - "/etc/grafana/provisioning:/etc/grafana/provisioning:ro"
+
+  ## nginx proxy
+
+  # Not sure why this is needed, maybe because of the forwarded ports?
+  - name: nginx selinux allow network connect
+    become: yes
+    seboolean:
+      name: httpd_can_network_connect
+      state: yes
+      persistent: yes
+    when: selinux_enabled
+
+  - name: nginx proxy grafana and prometheus
+    become: yes
+    copy:
+      dest: /etc/nginx/conf.d-nested-includes/proxy-monitoring.conf
+      src: files/nginx-proxy-monitoring.conf
+    notify:
+    - reload nginx
+
+  handlers:
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
+
+  vars:
+    docker_monitoring_network: monitoring

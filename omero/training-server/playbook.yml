@@ -318,3 +318,7 @@
 
 - include: letsencrypt.yml
   when: not (molecule_test | default(False))
+
+- include: ../omero-monitoring-agents.yml
+
+- include: monitoring.yml
