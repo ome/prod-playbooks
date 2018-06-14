@@ -48,15 +48,16 @@
       # Lowest priority
       weight: 99
 
-  # All other ports that allow incoming connections
+  # All other ports that allow incoming connections:
+  # - web
+  # - omero
+  # - checkmk
   - name: Iptables OME ports
     become: yes
     iptables_raw:
       name: ome_ports
       rules: |
-        -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 4063 -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 4064 -j ACCEPT
+        -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+        -A INPUT -p tcp -m multiport --dports 4063,4064 -j ACCEPT
         -A INPUT -p tcp -m tcp --dport 6556 -j ACCEPT
       state: present
