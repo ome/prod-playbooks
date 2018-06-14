@@ -35,6 +35,8 @@ docker:
     - prod-omero-web
 
 ansible:
+  playbook: ../../site.yml
+
   group_vars:
     all:
       molecule_test: True
