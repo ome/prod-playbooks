@@ -158,6 +158,7 @@
         - "omero-webtagging-autotag"
         - "omero-webtagging-tagsearch"
         - "omero-iviewer"
+        - "omero-parade"
         - "django-cors-headers"
         editable: False
         state: "{{ webapps_state }}"
