@@ -5,3 +5,5 @@
 - include: ome-demoserver.yml
 - include: ome-dundeeomero.yml
 - include: omero/training-server/playbook.yml
+
+- include: omero/omero-monitoring-agents.yml
