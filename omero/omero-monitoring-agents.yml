@@ -40,10 +40,9 @@
   - role: openmicroscopy.omero-web-django-prometheus
 
 
-# TODO: change to a prod omero group
-# This assumes omero-web.conf is present so won't work if only OMERO.server
-# is present. We may need a separate group for non-web servers
-- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+# NOTE: This assumes omero-web.conf is present and includes
+# /etc/nginx/conf.d-nested-includes
+- hosts: monitored
 
   roles:
   # Autodetect whether selinux is enabled

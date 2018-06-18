@@ -1,8 +1,6 @@
 # Setup up iptables firewall on OMERO servers
 
-# TODO: change to prod-omero, prod-omero-web
-- hosts: pub-omero.openmicroscopy.org, outreach.openmicroscopy.org
-#- hosts: prod-omero, prod-omero-web
+- hosts: monitored
 
   roles:
 
