@@ -294,7 +294,7 @@
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.3.0') }}"
     # The os_system_users_password default is "ome".
     # You may wish to change this variable,
-    # or override it with a private variable os_system_users_password_override.
+    # or override it by defining the private variable os_system_users_password_override.
     os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.3.0') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
