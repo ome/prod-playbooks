@@ -292,7 +292,10 @@
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.3.0') }}"
-    os_system_users_password: "{{ os_systems_users_password_override | default('$6$sjH0EeRKZdWYc1y8$F79INhPIfwVUfZ/DRrk.rYEetacoxoqxMVSVRavjggro84vpCqcxUhcNs79C5y4RmdLBb/3sA3vRagfNVjMxD.') }}"
+    # The os_system_users_password default is "ome".
+    # You may wish to change this variable,
+    # or override it by defining the private variable os_system_users_password_override.
+    os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.3.0') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
     omero_server_config_set:
