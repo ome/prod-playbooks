@@ -6,4 +6,5 @@
 - include: ome-dundeeomero.yml
 - include: omero/training-server/playbook.yml
 
+- include: omero/omero-firewall.yml
 - include: omero/omero-monitoring-agents.yml
