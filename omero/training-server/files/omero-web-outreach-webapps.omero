@@ -5,7 +5,3 @@ config set -- omero.web.mapr.config '[{"menu": "gene", "config": {"default": ["G
 config append -- omero.web.ui.top_links '["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]'
 
 config append -- omero.web.ui.top_links '["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]'
-
-# omero-parade
-config append -- omero.web.apps '"omero_parade"'
-config append -- omero.web.ui.center_plugins '["Parade", "omero_parade/init.js.html", "omero_parade"]'

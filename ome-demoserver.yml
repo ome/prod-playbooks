@@ -379,3 +379,5 @@
       # Advice is (2*cores + 1) from OME docs.
       omero.web.wsgi_workers: "{{ (2 * (ansible_processor_count * ansible_processor_cores)) + 1 }}"
       omero.web.admins:  "{{ omero_web_admins }}"
+      # https://pypi.org/project/omero-iviewer/ - set iviewer to default viewer
+      omero.web.viewer.view: omero_iviewer.views.index
