@@ -1,7 +1,7 @@
 # Setup prometheus agents
 
 # TODO: change to prod-omero
-- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org,demo.openmicroscopy.org:q
 #- hosts: prod-omero
 
   roles:
@@ -32,7 +32,7 @@
 
 
 # TODO: change to prod-omero-web
-- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org
+- hosts: pub-omero.openmicroscopy.org,outreach.openmicroscopy.org,demo.openmicroscopy.org
 #- hosts: prod-omero-web
 
   roles:
