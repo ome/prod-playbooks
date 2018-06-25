@@ -4,8 +4,8 @@
   version: v2.0.1
 
 - name: openmicroscopy.iptables-raw
-  src: https://github.com/openmicroscopy/ansible-role-iptables-raw/archive/0.1.0.tar.gz
-  version: 0.1.0
+  src: https://github.com/openmicroscopy/ansible-role-iptables-raw/archive/0.2.0.tar.gz
+  version: 0.2.0
 
 - src: openmicroscopy.jekyll-build
   version: 1.3.1

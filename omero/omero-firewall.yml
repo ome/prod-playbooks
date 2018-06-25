@@ -15,7 +15,7 @@
   # - ssh incoming connections
   - name: Iptables ssh and related
     become: yes
-    iptables_raw:
+    iptables_raw_25:
       name: ssh_and_established
       keep_unmanaged: no
       rules: |
@@ -36,7 +36,7 @@
   # http://www.chiark.greenend.org.uk/~peterb/network/drop-vs-reject
   - name: Iptables default
     become: yes
-    iptables_raw:
+    iptables_raw_25:
       name: default_reject
       rules: |
         -A INPUT -j REJECT
@@ -52,7 +52,7 @@
   # - checkmk
   - name: Iptables OME ports
     become: yes
-    iptables_raw:
+    iptables_raw_25:
       name: ome_ports
       rules: |
         -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
