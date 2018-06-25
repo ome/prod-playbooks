@@ -59,6 +59,7 @@
         name:
         - "omero-fpbioimage"
         - "omero-iviewer"
+        - "omero-parade"
         editable: False
         state: "{{ webapps_state }}"
         # variable comes from role openmicroscopy.omero-web
