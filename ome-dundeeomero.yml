@@ -114,6 +114,12 @@
       with_dict: "{{ nginx_ssl_cert_files }}"
       no_log: true
 
+    - name: NGINX - create nested includes directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - Configuration
       become: yes
