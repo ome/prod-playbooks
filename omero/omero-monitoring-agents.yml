@@ -60,6 +60,15 @@
       content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
       dest: /etc/nginx/monitoring.htpasswd
 
+  vars:
+    # monitoring:monitoring
+    monitoring_nginx_htpasswd: |
+      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
+
+
+- hosts: prod-omero-web
+
+  tasks:
   - name: Create nginx proxy for prometheus exporters
     become: yes
     copy:
@@ -69,14 +78,27 @@
     - reload nginx
 
   handlers:
-
   - name: reload nginx
     become: yes
     service:
       name: nginx
       state: reloaded
 
-  vars:
-    # monitoring:monitoring
-    monitoring_nginx_htpasswd: |
-      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
+
+- hosts: prod-omero:!prod-omero-web
+
+  tasks:
+  - name: Create nginx proxy for prometheus exporters
+    become: yes
+    copy:
+      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
+      src: confd-nested-proxy-exporters-noweb.conf
+    notify:
+    - reload nginx
+
+  handlers:
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
