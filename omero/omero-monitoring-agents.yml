@@ -1,6 +1,6 @@
 # Setup prometheus agents
 
-- hosts: prod-omero:&monitored
+- hosts: prod-omero
 
   roles:
 
@@ -29,7 +29,7 @@
     - restart omero-server
 
 
-- hosts: prod-omero-web:&monitored
+- hosts: prod-omero-web
 
   roles:
 
