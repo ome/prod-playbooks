@@ -75,14 +75,14 @@
       dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
       src: confd-nested-proxy-exporters.conf
     notify:
-    - reload nginx
+    - restart nginx
 
   handlers:
-  - name: reload nginx
+  - name: restart nginx
     become: yes
     service:
       name: nginx
-      state: reloaded
+      state: restarted
 
 
 - hosts: prod-omero:!prod-omero-web
@@ -94,11 +94,11 @@
       dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
       src: confd-nested-proxy-exporters-noweb.conf
     notify:
-    - reload nginx
+    - restart nginx
 
   handlers:
-  - name: reload nginx
+  - name: restart nginx
     become: yes
     service:
       name: nginx
-      state: reloaded
+      state: restarted
