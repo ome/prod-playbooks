@@ -6,8 +6,6 @@
 
   - role: openmicroscopy.prometheus-jmx
 
-  - role: openmicroscopy.prometheus-node
-
   - role: openmicroscopy.prometheus-postgres
     prometheus_postgres_dbname: omero
 
@@ -41,6 +39,9 @@
 - hosts: monitored
 
   roles:
+
+  - role: openmicroscopy.prometheus-node
+
   # Autodetect whether selinux is enabled
   - role: openmicroscopy.selinux-utils
 
@@ -60,15 +61,9 @@
       content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
       dest: /etc/nginx/monitoring.htpasswd
 
-  vars:
-    # monitoring:monitoring
-    monitoring_nginx_htpasswd: |
-      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
-
-
-- hosts: prod-omero-web
-
-  tasks:
+  # This is fine to apply to all servers because if an exporter doesn't
+  # exist it will return an error, and we know which exporters to expect
+  # when scraping
   - name: Create nginx proxy for prometheus exporters
     become: yes
     copy:
@@ -84,15 +79,20 @@
       name: nginx
       state: restarted
 
+  vars:
+    # monitoring:monitoring
+    monitoring_nginx_htpasswd: |
+      monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
 
-- hosts: prod-omero:!prod-omero-web
+
+- hosts: prod-omero-web
 
   tasks:
-  - name: Create nginx proxy for prometheus exporters
+  - name: Create nginx proxy for prometheus web exporters
     become: yes
     copy:
-      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
-      src: confd-nested-proxy-exporters-noweb.conf
+      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
+      src: confd-nested-proxy-exporters-web.conf
     notify:
     - restart nginx
 
