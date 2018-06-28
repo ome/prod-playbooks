@@ -1,6 +1,6 @@
 # Setup prometheus agents
 
-- hosts: prod-omero-server
+- hosts: omero-server
 
   roles:
 
@@ -27,7 +27,7 @@
     - restart omero-server
 
 
-- hosts: prod-omero-web
+- hosts: omero-web
 
   roles:
 
@@ -85,7 +85,7 @@
       monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
 
 
-- hosts: prod-omero-web
+- hosts: omero-web
 
   tasks:
   - name: Create nginx proxy for prometheus web exporters

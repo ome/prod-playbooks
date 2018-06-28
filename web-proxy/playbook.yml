@@ -1,7 +1,7 @@
 ---
 # Playbook for maintaining OME production web proxies
 
-- hosts: prod-web-proxies
+- hosts: web-proxies
   roles:
   - role: openmicroscopy.network
     tags: network
