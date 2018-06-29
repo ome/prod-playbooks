@@ -9,7 +9,7 @@ driver:
 
 docker:
   containers:
-  - name: prod-web-proxies
+  - name: web-proxies
     image: centos
     image_version: 7
 

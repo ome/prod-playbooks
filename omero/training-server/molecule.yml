@@ -20,8 +20,8 @@ vagrant:
     - name: outreach.openmicroscopy.org
       ansible_groups:
       - vagrant-hosts
-      - prod-omero
-      - prod-omero-web
+      - omero-server
+      - omero-web
       - monitored
 
 docker:
@@ -32,8 +32,8 @@ docker:
     privileged: True
     ansible_groups:
     - docker-hosts
-    - prod-omero
-    - prod-omero-web
+    - omero-server
+    - omero-web
     - monitored
 
 ansible:
