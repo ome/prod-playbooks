@@ -2,6 +2,20 @@
 
 - hosts: www
 
+  # TODO: Remove these pre-tasks after the new archive is deployed to
+  # production for the first time
+  pre_tasks:
+
+  - name: Check for old deployment directory
+    stat:
+      path: "{{ deploy_archive_symlink }}"
+    register: _archive_symlink_st
+
+  - name: Rename old deployment directory if present
+    become: yes
+    command: mv "{{ deploy_archive_symlink }}" "{{ deploy_archive_symlink }}.old-jekyll-deploy"
+    when: _archive_symlink_st.stat.exists and _archive_symlink_st.stat.isdir
+
   roles:
   - role: openmicroscopy.deploy-archive
     tags: jekyll
