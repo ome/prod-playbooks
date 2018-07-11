@@ -1,12 +1,14 @@
-# Install NGINX, and prepare the OME (UoD/SLS) prerequisites
+# Update the static website
 
 - hosts: www
-  environment:
-      PATH: /usr/local/bin:{{ ansible_env.PATH }}
+
   roles:
-    - role: openmicroscopy.jekyll-build
-      tags: jekyll
-      jekyll_build_git_repo: "https://github.com/openmicroscopy/www.openmicroscopy.org"
-      jekyll_build_force_rebuild: False
-      jekyll_build_config: ['_config.yml', '_prod.yml']
-      jekyll_build_name: "{{ website_name }}"
+  - role: openmicroscopy.deploy-archive
+    tags: jekyll
+
+  vars:
+    website_version: 20180711
+    deploy_archive_dest_dir: /var/www/{{ website_name }}/{{ website_version }}
+    deploy_archive_src_url: https://github.com/sbesson/www.openmicroscopy.org/releases/download/{{ website_version }}/wwww.openmicroscopy.org.tar.gz
+    deploy_archive_sha256: 5d8fe25d0ed104e9120f054da9488080de297872a7a01b2278f135ae8914e8fc
+    deploy_archive_symlink: /var/www/{{ website_name }}/html
