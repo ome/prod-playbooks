@@ -22,8 +22,9 @@
     tags: jekyll
 
   vars:
-    website_version: 20180711
+    website_version: "20180711"
+    website_name: www.openmicroscopy.org
     deploy_archive_dest_dir: /var/www/{{ website_name }}/{{ website_version }}
-    deploy_archive_src_url: https://github.com/sbesson/www.openmicroscopy.org/releases/download/{{ website_version }}/wwww.openmicroscopy.org.tar.gz
+    deploy_archive_src_url: https://github.com/sbesson/{{ website_name }}/releases/download/{{ website_version }}/w{{ website_name }}.tar.gz
     deploy_archive_sha256: 5d8fe25d0ed104e9120f054da9488080de297872a7a01b2278f135ae8914e8fc
     deploy_archive_symlink: /var/www/{{ website_name }}/html
