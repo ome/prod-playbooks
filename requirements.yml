@@ -1,14 +1,12 @@
 ---
 
-- src: rvm_io.ruby
-  version: v2.0.1
+- name: openmicroscopy.deploy-archive
+  src: https://github.com/manics/ansible-role-deploy-archive/archive/4819bae1d58174b09d7182d25f6c6ab0d491e4a4.tar.gz
+  version: 4819bae1d58174b09d7182d25f6c6ab0d491e4a4
 
 - name: openmicroscopy.iptables-raw
   src: https://github.com/openmicroscopy/ansible-role-iptables-raw/archive/0.2.0.tar.gz
   version: 0.2.0
-
-- src: openmicroscopy.jekyll-build
-  version: 1.3.1
 
 - src: openmicroscopy.lvm-partition
   version: 1.1.0
