@@ -18,6 +18,7 @@
 
   roles:
   - role: openmicroscopy.deploy-archive
+    become: yes
     tags: jekyll
 
   vars:
