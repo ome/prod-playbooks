@@ -17,9 +17,6 @@ docker:
 ansible:
   diff: True
   playbook: www-deploy.yml
-  host_vars:
-    www:
-      website_name: molecule-test
 
 verifier:
   name: testinfra

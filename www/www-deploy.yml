@@ -250,7 +250,7 @@
 
     nginx_proxy_direct_locations:
     - location: "/"
-      root: "/var/www/{{ website_name }}/html"
+      root: "/var/www/www.openmicroscopy.org/html"
       index: index.html
 
 
