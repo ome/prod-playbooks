@@ -8,6 +8,10 @@ install:
   - pip install ome-ansible-molecule-dependencies
   - pip install jmespath
 
+matrix:
+  allow_failures:
+     - env: DIRECTORY=www PLAYBOOK=
+     
 script:
   # If PLAYBOOK is not defined assume that directory has a full
   # molecule.yml configuration file, otherwise use the default
