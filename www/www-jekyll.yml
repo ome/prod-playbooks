@@ -17,7 +17,7 @@
     when: _archive_symlink_st.stat.exists and _archive_symlink_st.stat.isdir
 
   roles:
-  - role: openmicroscopy.deploy-archive
+  - role: openmicroscopy.deploy_archive
     become: yes
     tags: jekyll
 

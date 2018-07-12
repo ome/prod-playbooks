@@ -1,8 +1,7 @@
 ---
 
-- name: openmicroscopy.deploy-archive
-  src: https://github.com/manics/ansible-role-deploy-archive/archive/4819bae1d58174b09d7182d25f6c6ab0d491e4a4.tar.gz
-  version: 4819bae1d58174b09d7182d25f6c6ab0d491e4a4
+- src: openmicroscopy.deploy_archive
+  version: 0.1.1
 
 - name: openmicroscopy.iptables-raw
   src: https://github.com/openmicroscopy/ansible-role-iptables-raw/archive/0.2.0.tar.gz
