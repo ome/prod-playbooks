@@ -58,6 +58,10 @@
   src: openmicroscopy.postgresql
   version: 3.0.1
 
+- name: openmicroscopy.postgresql_backup
+  src: https://github.com/manics/ansible-role-postgresql-backup/archive/master.tar.gz
+  version: master
+
 - name: openmicroscopy.prometheus
   src: openmicroscopy.ansible-role-prometheus
   version: 0.3.0
