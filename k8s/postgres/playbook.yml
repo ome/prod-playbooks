@@ -25,4 +25,4 @@
   - role: openmicroscopy.postgresql_backup
     postgresql_backup_dir: /mnt/backups/
     postgresql_backup_filename_format: "{{ ansible_hostname }}-%a.pgdump"
-    postgresql_backup_minimum_expected_size: 1000000
+    postgresql_backup_minimum_expected_size: 100000
