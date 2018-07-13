@@ -14,5 +14,8 @@ docker:
     image_version: latest
     privileged: True
 
+ansible:
+  playbook: molecule-playbook.yml
+
 verifier:
   name: testinfra
