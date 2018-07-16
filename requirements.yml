@@ -42,8 +42,9 @@
   version: 0.1.0
 
 - name: openmicroscopy.omero-web-django-prometheus
-  src: https://github.com/openmicroscopy/ansible-role-omero-web-django-prometheus/archive/0.1.0.tar.gz
-  version: 0.1.0
+  # https://github.com/openmicroscopy/ansible-role-omero-web-django-prometheus/pull/1
+  src: https://github.com/manics/ansible-role-omero-web-django-prometheus/archive/984c52bea6ff81713bb30630e9a466869651a827.tar.gz
+  version: 984c52bea6ff81713bb30630e9a466869651a827
 
 - src: openmicroscopy.docker
   version: 2.3.0
