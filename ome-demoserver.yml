@@ -356,7 +356,6 @@
     filesystem: "xfs"
 
     omero_server_config_set:
-      omero.security.password_required: false
       omero.db.poolsize: 60
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
