@@ -369,6 +369,9 @@
       omero.throttling.method_time.error: 60000
 
     omero_web_config_set:
+      omero.mail.config: true
+      omero.mail.from: "{{ omero_server_mail_from }}"
+      omero.mail.host: "{{ omero_server_mail_host }}"
       # https://www.openmicroscopy.org/site/support/omero5.3/sysadmins/public.html
       omero.web.public.user: "{{ vault.omero_web_public_user }}"
       omero.web.public.password: "{{ vault.omero_web_public_password }}"
