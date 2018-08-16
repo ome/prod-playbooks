@@ -32,6 +32,9 @@
 - hosts: ome-training-jh.openmicroscopy.org
   # Separate playbook to force refresh of facts (including docker network
   # interface)
+  pre_tasks:
+  - name: Refresh facts
+    setup:
 
   roles:
 
