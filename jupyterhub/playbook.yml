@@ -2,9 +2,32 @@
 # Playbook for maintaining fallback public jupyterhub training server
 
 - hosts: ome-training-jh.openmicroscopy.org
+
+  pre_tasks:
+  # RHEL system needs extra repositories for docker
+
+  - name: Check if rhel-7-server-extras-rpms repo enabled
+    become: yes
+    command: subscription-manager repos --list-enabled
+    register: _subscription_manager_repos
+    check_mode: no
+    changed_when: "'rhel-7-server-extras-rpms' not in _subscription_manager_repos.stdout"
+
+  - name: Enable rhel-7-server-extras-rpms repo
+    become: yes
+    command: subscription-manager repos --enable=rhel-7-server-extras-rpms
+    when: "'rhel-7-server-extras-rpms' not in _subscription_manager_repos.stdout"
+
   roles:
 
   - role: openmicroscopy.docker
+
+
+- hosts: ome-training-jh.openmicroscopy.org
+  # Separate playbook to force refresh of facts (including docker network
+  # interface)
+
+  roles:
 
   - role: idr.idr-jupyter
     idr_jupyter_prefix: /training
@@ -13,7 +36,10 @@
     - --timeout=300
     - --max-age=86400
     - --cull-users
+    idr_jupyter_hub_log_level: INFO
+    # Allow any username
     idr_jupyter_users: []
+    # No admins
     idr_jupyter_admins: []
     idr_jupyter_pull_latest: True
     idr_jupyter_notebook_image: "{{ idr_jupyter_notebook_image_override | default('openmicroscopy/training-notebooks:master') }}"
