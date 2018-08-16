@@ -22,6 +22,11 @@
   roles:
 
   - role: openmicroscopy.docker
+    docker_additional_options:
+      # WARNING: This disables the default docker network forwarding rules
+      # so we can restrict outgoinng connections from JupyterHub servers,
+      # but this means we must manually configure everything
+      iptables: False
 
 
 - hosts: ome-training-jh.openmicroscopy.org
@@ -60,3 +65,96 @@
       websockets: True
       read_timeout: 86400
       host_header: "$host"
+
+  # Setup up iptables to restrict anonymous jupyterhub users
+  - role: openmicroscopy.iptables-raw
+
+  tasks:
+
+  # Allow:
+  # - all established/related in/out
+  # - all internal localhost connections
+  # - ICMP echo (ping)
+  # - ssh incoming connections
+  - name: Iptables ssh and related
+    become: yes
+    iptables_raw_25:
+      name: ssh_and_established
+      keep_unmanaged: no
+      rules: |
+        -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+        -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+        -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+        -A INPUT -i lo -j ACCEPT
+        -A OUTPUT -o lo -j ACCEPT
+        -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+        -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+      state: present
+      # Highest priority
+      weight: 0
+
+  # Use a low priority REJECT rule so that clients can detect when
+  # they've been rejected
+  # The alternative of setting a default DROP policy will leave them
+  # hanging until they timeout, though this may be preferable for public
+  # servers:
+  # http://www.chiark.greenend.org.uk/~peterb/network/drop-vs-reject
+  - name: Iptables default
+    become: yes
+    iptables_raw_25:
+      name: default_reject
+      rules: |
+        -A INPUT -j REJECT
+        -A FORWARD -j REJECT
+        -A OUTPUT -j ACCEPT
+      state: present
+      # Lowest priority
+      weight: 99
+
+  # All other ports that allow incoming connections:
+  # - web
+  # - jupyterhub
+  - name: JupyterHub incoming
+    become: yes
+    iptables_raw_25:
+      name: jupyterhub_incoming
+      rules: |
+        -A INPUT -p tcp -m multiport --dports 80,443,8000,8081 -j ACCEPT
+        -A INPUT -p tcp -m tcp --dport 6556 -j ACCEPT
+      state: present
+
+  # Block all other output from docker containers apart from:
+  # - DNS udp
+  # - OMERO/web tcp to EBI/UoD
+  # https://docs.docker.com/network/iptables/
+  # TODO: We should move the EBI IDR ports into a common configuration file
+  # e.g. idr.openmicroscopy.org/connection/omero-client-ports.json
+  - name: JupyterHub Docker outgoing ports
+    become: yes
+    iptables_raw_25:
+      name: jupyterhub_outgoing
+      rules: |
+        -A FORWARD -i docker0 ! -o docker0 -p udp -m udp --dport 53 -j ACCEPT
+        -A FORWARD -i docker0 ! -o docker0 -p tcp -m multiport --dports {{ jupyterhub_training_docker_tcp_dports | join(',') }} -d 193.60.0.0/14 -j ACCEPT
+        -A FORWARD -i docker0 ! -o docker0 -p tcp -m multiport --dports {{ jupyterhub_training_docker_tcp_dports | join(',') }} -d 134.36.0.0/16 -j ACCEPT
+      state: present
+
+  - name: JupyterHub Docker masquerade
+    become: yes
+    iptables_raw_25:
+      keep_unmanaged: no
+      name: jupyterhub_outgoing
+      rules: |
+        -A POSTROUTING -s {{ jupyterhub_training_docker_source }} ! -o docker0 -j MASQUERADE
+      state: present
+      table: nat
+
+  vars:
+    jupyterhub_training_docker_source: "{{ ansible_docker0.ipv4.network }}/{{ ansible_docker0.ipv4.netmask }}"
+    jupyterhub_training_docker_tcp_dports:
+    - 80
+    - 443
+    - 4063
+    - 4064
+    - 14060
+    - 14061
