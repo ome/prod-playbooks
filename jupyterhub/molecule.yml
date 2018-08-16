@@ -18,11 +18,11 @@ vagrant:
       memory: 512
       cpus: 1
   instances:
-  - name: jupyterhub-training-alt
+  - name: ome-training-jh.openmicroscopy.org
 
 docker:
   containers:
-  - name: jupyterhub-training-alt
+  - name: ome-training-jh.openmicroscopy.org
     image: openmicroscopy/centos-systemd-ip
     image_version: latest
     privileged: True
@@ -38,6 +38,8 @@ ansible:
       docker_storage_driver: vfs
       # Docker in docker bug with newer versions
       docker_version: 17.09.1.ce-1.el7.centos
+      # Use a small notebook image when testing in Docker (e.g. on Travis)
+      idr_jupyter_notebook_image_override: "jupyter/base-notebook:latest"
 
 verifier:
   name: testinfra

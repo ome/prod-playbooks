@@ -1,17 +1,22 @@
 ---
 # Playbook for maintaining fallback public jupyterhub training server
 
-- hosts: jupyterhub-training-alt
+- hosts: ome-training-jh.openmicroscopy.org
   roles:
 
   - role: openmicroscopy.docker
 
   - role: idr.idr-jupyter
-    idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
     idr_jupyter_prefix: /training
     idr_jupyter_authenticator: tmpauthenticator.TmpAuthenticator
-    idr_jupyter_cull_timeout: 300
-    #idr_jupyter_notebook_image:
+    idr_jupyter_cull_options:
+    - --timeout=300
+    - --max-age=86400
+    - --cull-users
+    idr_jupyter_users: []
+    idr_jupyter_admins: []
+    idr_jupyter_pull_latest: True
+    idr_jupyter_notebook_image: "{{ idr_jupyter_notebook_image_override | default('openmicroscopy/training-notebooks:master') }}"
 
   - role: openmicroscopy.ssl-certificate
 
