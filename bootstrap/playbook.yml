@@ -17,6 +17,8 @@
     lvm_lvsize: 100%FREE
     lvm_lvfilesystem: xfs
     lvm_vgname: VolGroup00
+    lvm_shrink: False
+
   - role: openmicroscopy.sudoers
     sudoers_individual_commands:
     - user: "%omedev"
