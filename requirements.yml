@@ -58,6 +58,9 @@
   src: openmicroscopy.postgresql
   version: 3.0.1
 
+- src: openmicroscopy.postgresql_backup
+  version: 0.1.0
+
 - name: openmicroscopy.prometheus
   src: openmicroscopy.ansible-role-prometheus
   version: 0.3.0

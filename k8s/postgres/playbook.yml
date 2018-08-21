@@ -1,6 +1,7 @@
 ---
 - hosts: ome-k8s-pg-01.openmicroscopy.org
   roles:
+
   - role: openmicroscopy.postgresql-3
     postgresql_version: "9.6"
     postgresql_server_listen: "'*'"
@@ -17,3 +18,11 @@
     - database: idr-redmine
       user: idr-redmine
       address: "{{ idr_redmine_postgres_auth_ip | default('0.0.0.0/0') }}"
+
+  - role: openmicroscopy.nfs-mount
+    # Parameters for this role are internal
+
+  - role: openmicroscopy.postgresql_backup
+    postgresql_backup_dir: /mnt/backups/
+    postgresql_backup_filename_format: "{{ ansible_hostname }}-%a.pgdump"
+    postgresql_backup_minimum_expected_size: 100000

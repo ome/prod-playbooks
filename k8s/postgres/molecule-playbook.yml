@@ -1,0 +1,10 @@
+# Workaround lack of cron on Docker
+- hosts: ome-k8s-pg-01.openmicroscopy.org
+  tasks:
+  - name: Install cron
+    become: yes
+    yum:
+      name: cronie
+      state: present
+
+- include: playbook.yml
