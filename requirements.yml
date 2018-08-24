@@ -1,5 +1,9 @@
 ---
 
+- name: openmicroscopy.certbot
+  src: https://github.com/manics/ansible-role-certbot/archive/ansible-2.3.tar.gz
+  version: ansible-2.3
+
 - src: openmicroscopy.deploy_archive
   version: 0.1.1
 
@@ -102,8 +106,3 @@
 - name: idr.idr-jupyter
   src: https://github.com/manics/ansible-role-idr-jupyter/archive/update.tar.gz
   version: update
-
-# External roles
-
-- src: geerlingguy.certbot
-  version: 3.0.0

@@ -1,5 +1,7 @@
 ---
 # Playbook for maintaining fallback public jupyterhub training server
+# Ensure https_letsencrypt_enabled is set to True in production to
+# ensure certbot handles the letsencrypt certificate setup
 
 - hosts: ome-training-jh.openmicroscopy.org
 
@@ -33,6 +35,7 @@
   # Separate playbook to force refresh of facts (including docker network
   # interface)
   pre_tasks:
+
   - name: Refresh facts
     setup:
 
@@ -54,22 +57,6 @@
     idr_jupyter_notebook_image: "{{ idr_jupyter_notebook_image_override | default('openmicroscopy/training-notebooks:master') }}"
     idr_jupyter_additional_config:
       Spawner.mem_limit: 4G
-
-  - role: openmicroscopy.ssl-certificate
-
-  - role: openmicroscopy.nginx-proxy
-    #nginx_proxy_force_ssl: True
-    nginx_proxy_ssl: True
-    nginx_proxy_ssl_certificate: "{{ ssl_certificate_public_path }}"
-    nginx_proxy_ssl_certificate_key: "{{ ssl_certificate_key_path }}"
-    nginx_proxy_websockets_enable: True
-    nginx_proxy_backends:
-    - name: next-web
-      location: /training/
-      server: http://127.0.0.1:8000
-      websockets: True
-      read_timeout: 86400
-      host_header: "$host"
 
   # Setup up iptables to restrict anonymous jupyterhub users
   - role: openmicroscopy.iptables-raw
@@ -163,3 +150,78 @@
     - 4064
     - 14060
     - 14061
+
+
+- hosts: ome-training-jh.openmicroscopy.org
+  # Separate playbook because bootstrapping letsencrypt is complicated.
+  # We need to run a web server for the certbot validation before the
+  # certificates exist.
+  # We could use the standalone server but that would result in nginx
+  # being stopped during renewals instead of just being reloaded
+  pre_tasks:
+
+  - name: Check whether letsencrypt needs to be initialised
+    become: yes
+    stat:
+      path: "{{ https_letsencrypt_cert_path }}/cert.pem"
+    register: _letsencrypt_certs
+
+  - name: lentsencrypt challenge directory
+    become: yes
+    file:
+      path: /srv/www/letsencrypt/.well-known/
+      recurse: yes
+      state: directory
+
+  roles:
+
+  - role: openmicroscopy.ssl-certificate
+    when: not (https_letsencrypt_enabled | default(False))
+
+  # This is needed because we attempt to stop/start nginx in certbot, so
+  # it needs to be installed even if it's not used
+  - role: openmicroscopy.nginx
+
+  # Lets encrypt with automatic renewal
+  # This will stop nginx when the certificate is first created
+  # For renewals we will configure Nginx to server the challenge
+  - role: openmicroscopy.certbot
+    become: yes
+    certbot_create_if_missing: yes
+    certbot_admin_email: sysadmin@openmicroscopy.org
+    certbot_domains:
+    - "{{ https_certificate_domain }}"
+    certbot_create_standalone_stop_services:
+    - nginx
+    certbot_auto_renew_deploy_hooks:
+    - systemctl reload nginx
+    certbot_auto_renew_args: --webroot --webroot-path /srv/www/letsencrypt/ --force-renewal
+    # May be useful for testing
+    #certbot_create_args: --test-cert
+    #certbot_auto_renew_args: --test-cert --force-renewal --webroot --webroot-path /srv/www/letsencrypt/
+    when: https_letsencrypt_enabled | default(False)
+
+  - role: openmicroscopy.nginx-proxy
+    #nginx_proxy_force_ssl: True
+    nginx_proxy_ssl: True
+    nginx_proxy_ssl_certificate: "{{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/fullchain.pem', ssl_certificate_public_path) }}"
+    nginx_proxy_ssl_certificate_key: "{{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/privkey.pem', ssl_certificate_key_path) }}"
+    nginx_proxy_direct_locations:
+    # Required for renewals
+    - location: /.well-known/
+      alias: /srv/www/letsencrypt/.well-known/
+    nginx_proxy_websockets_enable: True
+    nginx_proxy_backends:
+    - name: next-web
+      location: /training/
+      server: http://127.0.0.1:8000
+      websockets: True
+      read_timeout: 86400
+      host_header: "$host"
+
+  vars:
+    https_certificate_domain: outreach-analysis.openmicroscopy.org
+    # This must match the expectations of certbot, do not change this:
+    https_letsencrypt_cert_path: /etc/letsencrypt/live/{{ https_certificate_domain }}
+    # In production set this to True:
+    # https_lets_encrypt_enabled:
