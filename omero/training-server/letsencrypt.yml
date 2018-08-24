@@ -1,7 +1,5 @@
 # Additional Nginx configuration including Let's Encrypt
-# Should be run when less than 10 days remain on the certificate
-# See the remaining_days parameter:
-# https://docs.ansible.com/ansible/2.3/letsencrypt_module.html
+# Should be run when less than 30 days remain on the certificate
 
 - hosts: outreach.openmicroscopy.org
 
@@ -66,6 +64,7 @@
       csr: /etc/letsencrypt/private/domain.csr
       dest: /etc/letsencrypt/private/domain.crt
       acme_directory: https://acme-v01.api.letsencrypt.org/directory
+      remaining_days: 30
     register: letsencrypt_challenge
 
   - name: letsencrypt answer challenge
@@ -86,6 +85,7 @@
       dest: /etc/letsencrypt/private/domain.crt
       acme_directory: https://acme-v01.api.letsencrypt.org/directory
       data: "{{ letsencrypt_challenge }}"
+      remaining_days: 30
 
   - name: letsencrypt get certificate chain
     become: yes
