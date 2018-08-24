@@ -100,6 +100,8 @@
       dest: /etc/letsencrypt/full-chain.crt
       regexp: 'crt$'
       mode: '0600'
+    notify:
+    - reload nginx
 
   - name: letsencrypt nginx certificate configuration
     become: yes
