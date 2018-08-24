@@ -130,20 +130,10 @@
         group: "omero-server"
         force: yes
 
-    - name: Create a cambridge_scripts directory
+    - name: Create a workshop_scripts directory
       become: yes
       file:
-        path: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts
-        state: directory
-        mode: 0755
-        recurse: yes
-        owner: "omero-server"
-        group: "omero-server"
-
-    - name: Create a users_meeting (scripts) directory
-      become: yes
-      file:
-        path: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts
         state: directory
         mode: 0755
         recurse: yes
@@ -154,7 +144,7 @@
       become: yes
       get_url:
         url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Scipy_Gaussian_Filter.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -164,7 +154,37 @@
       become: yes
       get_url:
         url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/batch_roi_export_to_table.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting/batch_roi_export_to_table.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/batch_roi_export_to_table.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the Kymograph.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/scripts/c37df30b23eb4e49203bcfdeeb2d2fc351b8fbe8/omero/analysis_scripts/Kymograph.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the simple_frap.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/db8fa617279af79e89f092ee88fcc3ce3315092a/practical/python/server/simple_frap.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the simple_frap_with_figure.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/db8fa617279af79e89f092ee88fcc3ce3315092a/practical/python/server/simple_frap_with_figure.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
