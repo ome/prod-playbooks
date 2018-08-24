@@ -102,3 +102,8 @@
 - name: idr.idr-jupyter
   src: https://github.com/manics/ansible-role-idr-jupyter/archive/update.tar.gz
   version: update
+
+# External roles
+
+- src: geerlingguy.certbot
+  version: 3.0.0
