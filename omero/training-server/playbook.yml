@@ -25,6 +25,7 @@
         - python-markdown # For OMERO.figure
         - mencoder # For the 'make movie' script
         - scipy
+        - python-matplotlib # For "simple frap with figure" script
 
     - name: Prerequisites for ldap
       become: yes
