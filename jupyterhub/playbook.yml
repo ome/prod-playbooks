@@ -40,7 +40,7 @@
     #idr_jupyter_pull_latest: True
     idr_jupyter_notebook_image: "{{ idr_jupyter_notebook_image_override | default('openmicroscopy/training-notebooks:0.3.0') }}"
     idr_jupyter_additional_config:
-      Spawner.mem_limit: 4G
+      Spawner.mem_limit: 2G
 
   # Setup up iptables to restrict anonymous jupyterhub users
   - role: openmicroscopy.iptables-raw
