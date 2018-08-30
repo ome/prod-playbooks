@@ -150,21 +150,21 @@
         group: "omero-server"
         force: yes
 
-    - name: Download the batch_roi_export_to_table.py script
+    - name: Download the Kymograph.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/batch_roi_export_to_table.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/batch_roi_export_to_table.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/Kymograph.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
         force: yes
 
-    - name: Download the Kymograph.py script
+    - name: Download the Kymograph_Analysis.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/scripts/c37df30b23eb4e49203bcfdeeb2d2fc351b8fbe8/omero/analysis_scripts/Kymograph.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/Kymograph_Analysis.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph_Analysis.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -173,7 +173,7 @@
     - name: Download the simple_frap.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/db8fa617279af79e89f092ee88fcc3ce3315092a/practical/python/server/simple_frap.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/simple_frap.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
         mode: 0755
         owner: "omero-server"
@@ -183,8 +183,8 @@
     - name: Download the simple_frap_with_figure.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/db8fa617279af79e89f092ee88fcc3ce3315092a/practical/python/server/simple_frap_with_figure.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/simple_frap_with_figure.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
