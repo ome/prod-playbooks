@@ -25,6 +25,7 @@
         - python-markdown # For OMERO.figure
         - mencoder # For the 'make movie' script
         - scipy
+        - python-matplotlib # For "simple frap with figure" script
 
     - name: Prerequisites for ldap
       become: yes
@@ -129,20 +130,10 @@
         group: "omero-server"
         force: yes
 
-    - name: Create a cambridge_scripts directory
+    - name: Create a workshop_scripts directory
       become: yes
       file:
-        path: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts
-        state: directory
-        mode: 0755
-        recurse: yes
-        owner: "omero-server"
-        group: "omero-server"
-
-    - name: Create a users_meeting (scripts) directory
-      become: yes
-      file:
-        path: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts
         state: directory
         mode: 0755
         recurse: yes
@@ -153,17 +144,47 @@
       become: yes
       get_url:
         url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/cambridge_scripts/Scipy_Gaussian_Filter.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Scipy_Gaussian_Filter.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
         force: yes
 
-    - name: Download the batch_roi_export_to_table.py script
+    - name: Download the Kymograph.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/batch_roi_export_to_table.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/users_meeting/batch_roi_export_to_table.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/Kymograph.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the Kymograph_Analysis.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/Kymograph_Analysis.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph_Analysis.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the simple_frap.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/simple_frap.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the simple_frap_with_figure.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/simple_frap_with_figure.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -281,14 +302,14 @@
     #omero_server_datadir_chown: True
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
-    omero_server_datadir_chown: True
+    omero_server_datadir_chown: False
     omero_server_release: "{{ omero_server_release_override | default('5.4.7') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.4.7') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.0.0') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.0.1') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.2.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.5.0') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.2.3') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.1.1') }}"
     ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.1.0') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
