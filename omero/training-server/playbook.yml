@@ -153,7 +153,7 @@
     - name: Download the Kymograph.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/Kymograph.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/Kymograph.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph.py
         mode: 0755
         owner: "omero-server"
@@ -163,7 +163,7 @@
     - name: Download the Kymograph_Analysis.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/Kymograph_Analysis.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/Kymograph_Analysis.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph_Analysis.py
         mode: 0755
         owner: "omero-server"
@@ -173,7 +173,7 @@
     - name: Download the simple_frap.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/simple_frap.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
         mode: 0755
         owner: "omero-server"
@@ -183,7 +183,7 @@
     - name: Download the simple_frap_with_figure.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v0.3.0/practical/python/server/simple_frap_with_figure.py
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap_with_figure.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
         mode: 0755
         owner: "omero-server"
@@ -309,8 +309,8 @@
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.2.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.5.0') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.2.3') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.1') }}"
-    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.1.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.3.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
