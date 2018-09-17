@@ -3,6 +3,15 @@
 - src: openmicroscopy.deploy_archive
   version: 0.1.1
 
+- src: openmicroscopy.docker
+  version: 2.3.0
+
+- src: openmicroscopy.ice
+  version: 2.1.1
+
+- src: openmicroscopy.java
+  version: 2.0.1
+
 - name: openmicroscopy.iptables-raw
   src: https://github.com/openmicroscopy/ansible-role-iptables-raw/archive/0.2.0.tar.gz
   version: 0.2.0
@@ -13,43 +22,41 @@
 - name: openmicroscopy.network
   version: 1.1.2
 
+- src: openmicroscopy.nginx
+  version: 1.0.0
+
 - src: openmicroscopy.nginx-proxy
   version: 1.8.0
 
-- src: openmicroscopy.ssl-certificate
-  version: 0.2.0
 
 - src: openmicroscopy.nfs-mount
   version: 1.0.0
 
-- src: openmicroscopy.omero-common
-  version: 0.1.0
-
 - src: openmicroscopy.omego
   version: 0.1.1
 
-- src: openmicroscopy.omero-server
-  version: 2.0.5
-
-- src: openmicroscopy.omero-web
-  version: 2.0.0
-
-- src: openmicroscopy.omero-user
-  version: 0.1.1
+- src: openmicroscopy.omero-common
+  version: 0.1.0
 
 - name: openmicroscopy.omero-prometheus-exporter
   src: https://github.com/openmicroscopy/ansible-role-omero-prometheus-exporter/archive/0.1.0.tar.gz
   version: 0.1.0
 
+- src: openmicroscopy.omero-python-deps
+  version: 1.1.0
+
+- src: openmicroscopy.omero-server
+  version: 2.0.5
+
+- src: openmicroscopy.omero-user
+  version: 0.1.1
+
+- src: openmicroscopy.omero-web
+  version: 2.0.0
+
 - name: openmicroscopy.omero-web-django-prometheus
   src: https://github.com/openmicroscopy/ansible-role-omero-web-django-prometheus/archive/0.2.0.tar.gz
   version: 0.2.0
-
-- src: openmicroscopy.docker
-  version: 2.3.0
-
-- src: openmicroscopy.lvm-partition
-  version: 1.1.0
 
 - src: openmicroscopy.postgresql
   version: 2.0.0
@@ -80,8 +87,11 @@
 - name: openmicroscopy.selinux-utils
   version: 1.0.3
 
-- src: openmicroscopy.system-monitor-agent
-  version: 0.1.0
+- src: openmicroscopy.ssl-certificate
+  version: 0.2.0
 
 - src: openmicroscopy.sudoers
   version: 1.0.0
+
+- src: openmicroscopy.system-monitor-agent
+  version: 0.1.0
