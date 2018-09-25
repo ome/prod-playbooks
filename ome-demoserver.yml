@@ -1,13 +1,5 @@
 # Install OMERO.server, OMERO.web and prepare the OME (UoD/SLS) prerequisites
 
-# To allow OMERO to upgrade, change the omero_server_release variable to the
-# desired version and pass `--extra-vars omero_server_upgrade=True` to the
-# `ansible-playbook` command.
-
-# To allow OMERO.web to upgrade, change the omero_web_release variable to the
-# desired version and pass `--extra-vars omero_web_upgrade=True` to the
-# `ansible-playbook` command.
-
 # To allow the OMERO.web plugins to upgrade, also pass `--extra-vars upgrade_webapps=True`
 
 - hosts: ome-demoservers

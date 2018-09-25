@@ -1,8 +1,5 @@
 # Install OMERO.server and prepare the OME (UoD/SLS) prerequisites
 
-# To allow OMERO to upgrade, change the omero_server_release variable and pass `--extra-vars omero_server_upgrade=True` to the `ansible-playbook` command.
-# To allow OMERO.web to upgrade, change the omero_web_release variable and pass `--extra-vars omero_web_upgrade=True`
-
 - hosts: ome-dundeeomero.openmicroscopy.org
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
