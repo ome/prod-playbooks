@@ -2,7 +2,9 @@
 # Playbook which runs the necessary root-level steps so that a host can be managed by others
 - hosts: omedev
   roles:
+
   - role: openmicroscopy.network
+
   - role: openmicroscopy.lvm-partition
     lvm_lvname: var_log
     lvm_lvmount: /var/log
@@ -20,6 +22,11 @@
     - user: "%omedev"
       become: ALL
       command: "NOPASSWD: ALL"
+
+  - role: openmicroscopy.upgrade-distpackages
+    upgrade_distpackages_reboot_kernel: True
+
+
 - hosts: vlan-10ge-servers
   roles:
   - role: openmicroscopy.network
