@@ -15,5 +15,5 @@
     # Optional checksum. It should be safe to omit as long as you never
     # overwrite an existing archive. This should not be a problem when using
     # versioned directories.
-    deploy_archive_sha256: b60f59005dbb33f600396f796d4019ec643d654c335f07672bc0d38b6b4a9606
+    deploy_archive_sha256: d3d3df799c4c4495121db8377470f66d4798df3ee7b0b277e3dba7782e3af922
     deploy_archive_symlink: /var/www/{{ website_name }}/html
