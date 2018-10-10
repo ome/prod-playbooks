@@ -108,7 +108,10 @@
         listen 443 ssl;
         ssl_certificate /etc/letsencrypt/full-chain.crt;
         ssl_certificate_key /etc/letsencrypt/private/domain.key;
-      dest: /etc/nginx/conf.d-nested-includes/https.conf
+
+        if ($ssl_protocol = "") {
+          rewrite ^/(.*) https://$host/$1 permanent;
+        }
     notify:
     - reload nginx
 
