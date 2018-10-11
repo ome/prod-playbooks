@@ -35,7 +35,7 @@
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
     - role: openmicroscopy.system-monitor-agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
-      
+
     - role: openmicroscopy.ssl-certificate
       # Configuration for this role in `vars`
 
