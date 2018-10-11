@@ -68,44 +68,6 @@
         # Initially replicate this setup, to minimise changes.
         - nginx
 
-    - name: NGINX - enable service / start on boot
-      become: yes
-      systemd:
-        name: nginx
-        enabled: yes
-
-    # post 2.3 'dest' should be renamed 'path'
-    - name: NGINX - Performance tuning - worker processes
-      become: yes
-      replace:
-        dest: "/etc/nginx/nginx.conf"
-        regexp: '^worker_processes\s+\d+;'
-        replace: "worker_processes 1;"
-
-    # post 2.3 'dest' should be renamed 'path'
-    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
-    - name: NGINX - Performance tuning - worker connections
-      become: yes
-      replace:
-        dest: "/etc/nginx/nginx.conf"
-        regexp: 'worker_connections\s+\d+;'
-        replace: "worker_connections 65000;"
-
-    - name: NGINX - create nested includes directory
-      become: yes
-      file:
-        path: /etc/nginx/conf.d-nested-includes
-        state: directory
-
-    # post 2.3 'destfile' should be renamed 'path'
-    - name: NGINX - Configuration
-      become: yes
-      template:
-        src: nginx-omero.conf.j2
-        dest: /etc/nginx/conf.d/omero-web.conf
-      notify:
-        - restart nginx
-
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server SLS` is checking for the SLS nameservers.
@@ -168,6 +130,44 @@
       # Configuration for this role in `vars`
 
   post_tasks:
+    - name: NGINX - enable service / start on boot
+      become: yes
+      systemd:
+        name: nginx
+        enabled: yes
+  
+    # post 2.3 'dest' should be renamed 'path'
+    - name: NGINX - Performance tuning - worker processes
+      become: yes
+      replace:
+        dest: "/etc/nginx/nginx.conf"
+        regexp: '^worker_processes\s+\d+;'
+        replace: "worker_processes 1;"
+  
+    # post 2.3 'dest' should be renamed 'path'
+    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+    - name: NGINX - Performance tuning - worker connections
+      become: yes
+      replace:
+        dest: "/etc/nginx/nginx.conf"
+        regexp: 'worker_connections\s+\d+;'
+        replace: "worker_connections 65000;"
+  
+    - name: NGINX - create nested includes directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+  
+    # post 2.3 'destfile' should be renamed 'path'
+    - name: NGINX - Configuration
+      become: yes
+      template:
+        src: nginx-omero.conf.j2
+        dest: /etc/nginx/conf.d/omero-web.conf
+      notify:
+        - restart nginx
+
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
       stat:
