@@ -91,26 +91,6 @@
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
 
-    - name: NGINX - SSL File Deployment - prepare directory
-      become: yes
-      file:
-        path: "{{ nginx_ssl_files_path }}"
-        state: directory
-        owner: root
-        group: root
-        mode: "u=r,go="
-
-    - name: NGINX - SSL File Deployment
-      become: yes
-      copy:
-        dest="{{ item.key }}"
-        content="{{ item.value.content }}"
-        owner="{{ item.value.owner }}"
-        group="{{ item.value.group }}"
-        mode="{{ item.value.mode }}"
-      with_dict: "{{ nginx_ssl_cert_files }}"
-      no_log: true
-
     - name: NGINX - create nested includes directory
       become: yes
       file:
@@ -183,6 +163,9 @@
       omero_server_systemd_requires:
       - gpfs.service
       omero_server_system_user_manage: False
+
+    - role: openmicroscopy.ssl-certificate
+      # Configuration for this role in `vars`
 
   post_tasks:
     - name: Check_MK postgres plugin | check for plugin existence
@@ -293,3 +276,14 @@
       omero.Ice.Default.Host: "{{ omero_server_ice_default_host }}"
       Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints }}"
       omero.data.dir: "{{ omero_server_datadir  }}"
+
+    # Server path to SSL public certificate
+    ssl_certificate_public_path: /etc/nginx/ssl/server.crt
+    # Server path to SSL intermediate certificate(s)
+    ssl_certificate_intermediate_path: /etc/nginx/ssl/intermediate.crt
+    # Server path to SSL bundled public and intermediate certificates
+    ssl_certificate_bundled_path: /etc/nginx/ssl/bundled.crt
+    # Server path to SSL certificate key
+    ssl_certificate_key_path: /etc/nginx/ssl/server.key
+    # Server path to SSL combined certificate and key, set to empty to disable
+    ssl_certificate_combined_path: ''
