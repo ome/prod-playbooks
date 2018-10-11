@@ -88,7 +88,7 @@
   version: 1.0.3
 
 - src: openmicroscopy.ssl-certificate
-  version: 0.2.0
+  version: 0.2.2
 
 - src: openmicroscopy.sudoers
   version: 1.0.0
