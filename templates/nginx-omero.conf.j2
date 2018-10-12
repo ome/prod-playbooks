@@ -7,8 +7,8 @@ server {
     listen 443 ssl;
     server_name $hostname;
 
-    ssl_certificate {{ nginx_ssl_files_path }}/{{ nginx_ssl_cert_filename }};
-    ssl_certificate_key {{ nginx_ssl_files_path }}/{{ nginx_ssl_key_filename }};
+    ssl_certificate {{ ssl_certificate_bundled_path }};
+    ssl_certificate_key {{ ssl_certificate_key_path }};
     ssl_protocols   {{ nginx_ssl_protocols }}
 
     if ($ssl_protocol = "") {

@@ -135,7 +135,7 @@
       systemd:
         name: nginx
         enabled: yes
-  
+
     # post 2.3 'dest' should be renamed 'path'
     - name: NGINX - Performance tuning - worker processes
       become: yes
@@ -143,7 +143,7 @@
         dest: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
         replace: "worker_processes 1;"
-  
+
     # post 2.3 'dest' should be renamed 'path'
     # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
@@ -152,13 +152,13 @@
         dest: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
-  
+
     - name: NGINX - create nested includes directory
       become: yes
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
-  
+
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - Configuration
       become: yes
