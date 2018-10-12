@@ -68,64 +68,6 @@
         # Initially replicate this setup, to minimise changes.
         - nginx
 
-    - name: NGINX - enable service / start on boot
-      become: yes
-      systemd:
-        name: nginx
-        enabled: yes
-
-    # post 2.3 'dest' should be renamed 'path'
-    - name: NGINX - Performance tuning - worker processes
-      become: yes
-      replace:
-        dest: "/etc/nginx/nginx.conf"
-        regexp: '^worker_processes\s+\d+;'
-        replace: "worker_processes 1;"
-
-    # post 2.3 'dest' should be renamed 'path'
-    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
-    - name: NGINX - Performance tuning - worker connections
-      become: yes
-      replace:
-        dest: "/etc/nginx/nginx.conf"
-        regexp: 'worker_connections\s+\d+;'
-        replace: "worker_connections 65000;"
-
-    - name: NGINX - SSL File Deployment - prepare directory
-      become: yes
-      file:
-        path: "{{ nginx_ssl_files_path }}"
-        state: directory
-        owner: root
-        group: root
-        mode: "u=r,go="
-
-    - name: NGINX - SSL File Deployment
-      become: yes
-      copy:
-        dest="{{ item.key }}"
-        content="{{ item.value.content }}"
-        owner="{{ item.value.owner }}"
-        group="{{ item.value.group }}"
-        mode="{{ item.value.mode }}"
-      with_dict: "{{ nginx_ssl_cert_files }}"
-      no_log: true
-
-    - name: NGINX - create nested includes directory
-      become: yes
-      file:
-        path: /etc/nginx/conf.d-nested-includes
-        state: directory
-
-    # post 2.3 'destfile' should be renamed 'path'
-    - name: NGINX - Configuration
-      become: yes
-      template:
-        src: nginx-omero.conf.j2
-        dest: /etc/nginx/conf.d/omero-web.conf
-      notify:
-        - restart nginx
-
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server SLS` is checking for the SLS nameservers.
@@ -161,7 +103,7 @@
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.8
+      omero_server_release: 5.4.9
       # install-mock set for inital provision, then playbook re-run with correct accounts.
       #omero_server_dbuser: install-mock
       #omero_server_dbname:  install-mock
@@ -184,7 +126,48 @@
       - gpfs.service
       omero_server_system_user_manage: False
 
+    - role: openmicroscopy.ssl-certificate
+      # Configuration for this role in `vars`
+
   post_tasks:
+    - name: NGINX - enable service / start on boot
+      become: yes
+      systemd:
+        name: nginx
+        enabled: yes
+
+    # post 2.3 'dest' should be renamed 'path'
+    - name: NGINX - Performance tuning - worker processes
+      become: yes
+      replace:
+        dest: "/etc/nginx/nginx.conf"
+        regexp: '^worker_processes\s+\d+;'
+        replace: "worker_processes 1;"
+
+    # post 2.3 'dest' should be renamed 'path'
+    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+    - name: NGINX - Performance tuning - worker connections
+      become: yes
+      replace:
+        dest: "/etc/nginx/nginx.conf"
+        regexp: 'worker_connections\s+\d+;'
+        replace: "worker_connections 65000;"
+
+    - name: NGINX - create nested includes directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+
+    # post 2.3 'destfile' should be renamed 'path'
+    - name: NGINX - Configuration
+      become: yes
+      template:
+        src: nginx-omero.conf.j2
+        dest: /etc/nginx/conf.d/omero-web.conf
+      notify:
+        - restart nginx
+
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
       stat:
@@ -293,3 +276,14 @@
       omero.Ice.Default.Host: "{{ omero_server_ice_default_host }}"
       Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints }}"
       omero.data.dir: "{{ omero_server_datadir  }}"
+
+    # Server path to SSL public certificate
+    ssl_certificate_public_path: /etc/nginx/ssl/server.crt
+    # Server path to SSL intermediate certificate(s)
+    ssl_certificate_intermediate_path: /etc/nginx/ssl/intermediate.crt
+    # Server path to SSL bundled public and intermediate certificates
+    ssl_certificate_bundled_path: /etc/nginx/ssl/bundled.crt
+    # Server path to SSL certificate key
+    ssl_certificate_key_path: /etc/nginx/ssl/server.key
+    # Server path to SSL combined certificate and key, set to empty to disable
+    ssl_certificate_combined_path: ''

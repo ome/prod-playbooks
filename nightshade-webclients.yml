@@ -29,12 +29,15 @@
 
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.4.8
+      omero_web_release: 5.4.9
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
     - role: openmicroscopy.system-monitor-agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
+
+    - role: openmicroscopy.ssl-certificate
+      # Configuration for this role in `vars`
 
   post_tasks:
 
@@ -96,26 +99,6 @@
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
 
-    - name: NGINX - SSL File Deployment - prepare directory
-      become: yes
-      file:
-        path: "{{ nginx_ssl_files_path }}"
-        state: directory
-        owner: root
-        group: root
-        mode: "u=r,go="
-
-    - name: NGINX - SSL File Deployment
-      become: yes
-      copy:
-        dest="{{ item.key }}"
-        content="{{ item.value.content }}"
-        owner="{{ item.value.owner }}"
-        group="{{ item.value.group }}"
-        mode="{{ item.value.mode }}"
-      with_dict: "{{ nginx_ssl_cert_files }}"
-      no_log: true
-
     # post 2.3 'destfile' should be renamed 'path'
     # TODO: Move this to /etc/nginx/conf.d-nested-includes/omero-web-ssl.conf
     - name: NGINX - SSL Configuration - Additional listen port
@@ -134,8 +117,8 @@
         insertbefore: '.*sendfile.*'
         block: |2+
 
-              ssl_certificate {{ nginx_ssl_files_path }}/{{ nginx_ssl_cert_filename }};
-              ssl_certificate_key {{ nginx_ssl_files_path }}/{{ nginx_ssl_key_filename }};
+              ssl_certificate {{ ssl_certificate_bundled_path }};
+              ssl_certificate_key {{ ssl_certificate_key_path }};
               ssl_protocols  {{ nginx_ssl_protocols }}
 
               if ($ssl_protocol = "") {
@@ -187,7 +170,7 @@
       notify:
         - restart omero-web
 
-    - name: NGINX - SSL Configuration - Custom Paper Redirect
+    - name: NGINX - Configuration - Custom Paper Redirect
       tags: redirect
       become: yes
       blockinfile:
@@ -205,3 +188,14 @@
 
   vars:
     omero_web_config_set: "{{ omero_web_config_set_for_group | combine(omero_web_config_set_for_host) }}"
+
+    # Server path to SSL public certificate
+    ssl_certificate_public_path: /etc/nginx/ssl/server.crt
+    # Server path to SSL intermediate certificate(s)
+    ssl_certificate_intermediate_path: /etc/nginx/ssl/intermediate.crt
+    # Server path to SSL bundled public and intermediate certificates
+    ssl_certificate_bundled_path: /etc/nginx/ssl/bundled.crt
+    # Server path to SSL certificate key
+    ssl_certificate_key_path: /etc/nginx/ssl/server.key
+    # Server path to SSL combined certificate and key, set to empty to disable
+    ssl_certificate_combined_path: ''
