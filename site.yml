@@ -12,3 +12,5 @@
 
 - include: omero/omero-firewall.yml
 - include: omero/omero-monitoring-agents.yml
+
+- include: jupyterhub/playbook.yml

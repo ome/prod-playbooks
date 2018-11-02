@@ -1,0 +1,30 @@
+---
+# Playbook for maintaining fallback public jupyterhub training server
+
+- hosts: jupyterhub-training-alt
+  roles:
+
+  - role: openmicroscopy.docker
+
+  - role: idr.idr-jupyter
+    idr_jupyter_ip: "{{ ansible_eth0.ipv4.address }}"
+    idr_jupyter_prefix: /training
+    idr_jupyter_authenticator: tmpauthenticator.TmpAuthenticator
+    idr_jupyter_cull_timeout: 300
+    #idr_jupyter_notebook_image:
+
+  - role: openmicroscopy.ssl-certificate
+
+  - role: openmicroscopy.nginx-proxy
+    #nginx_proxy_force_ssl: True
+    nginx_proxy_ssl: True
+    nginx_proxy_ssl_certificate: "{{ ssl_certificate_public_path }}"
+    nginx_proxy_ssl_certificate_key: "{{ ssl_certificate_key_path }}"
+    nginx_proxy_websockets_enable: True
+    nginx_proxy_backends:
+    - name: next-web
+      location: /training/
+      server: http://127.0.0.1:8000
+      websockets: True
+      read_timeout: 86400
+      host_header: "$host"
