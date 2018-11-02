@@ -1,15 +1,14 @@
 ---
 
 - name: openmicroscopy.certbot
-  src: https://github.com/manics/ansible-role-certbot/archive/ansible-2.3.tar.gz
-  version: ansible-2.3
+  src: https://github.com/openmicroscopy/ansible-role-certbot/archive/0.1.0.tar.gz
+  version: 0.1.0
 
 - src: openmicroscopy.deploy_archive
   version: 0.1.1
 
-- name: openmicroscopy.docker
-  src: https://github.com/manics/ansible-role-docker/archive/rhel7.tar.gz
-  version: rhel7
+- src: openmicroscopy.docker
+  version: 3.0.0
 
 - src: openmicroscopy.ice
   version: 2.1.1
@@ -108,5 +107,5 @@
   version: 1.1.0
 
 - name: idr.idr-jupyter
-  src: https://github.com/manics/ansible-role-idr-jupyter/archive/update.tar.gz
-  version: update
+  src: idr.ansible-role-idr-jupyter
+  version: 3.0.0
