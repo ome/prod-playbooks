@@ -95,3 +95,6 @@
 
 - src: openmicroscopy.system-monitor-agent
   version: 0.1.0
+
+- src: openmicroscopy.upgrade-distpackages
+  version: 1.1.0

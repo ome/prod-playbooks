@@ -1,6 +1,10 @@
 ---
-# ansible-playbook server-state-playbooks/site.yml --list-hosts
-# Optionally passing an inventory: -i ../ansible/inventory/prod-hosts
+# ansible-playbook -i <INVENTORY-DIR>/prod-hosts site.yml
+
+# For new hosts you may also need to run the bootstrap playbook to setup
+# networking and initial partitions:
+#- include: bootstrap/playbook.yml
+
 - include: nightshade-webclients.yml
 - include: ome-demoserver.yml
 - include: ome-dundeeomero.yml
