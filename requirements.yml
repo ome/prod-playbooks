@@ -7,8 +7,9 @@
 - src: openmicroscopy.deploy_archive
   version: 0.1.1
 
-- src: openmicroscopy.docker
-  version: 2.3.0
+- name: openmicroscopy.docker
+  src: https://github.com/manics/ansible-role-docker/archive/rhel7.tar.gz
+  version: rhel7
 
 - src: openmicroscopy.ice
   version: 2.1.1
@@ -61,6 +62,9 @@
 - name: openmicroscopy.omero-web-django-prometheus
   src: https://github.com/openmicroscopy/ansible-role-omero-web-django-prometheus/archive/0.2.0.tar.gz
   version: 0.2.0
+
+- src: openmicroscopy.lvm-partition
+  version: 1.1.0
 
 - src: openmicroscopy.postgresql
   version: 2.0.0

@@ -5,22 +5,6 @@
 
 - hosts: ome-training-jh.openmicroscopy.org
 
-  pre_tasks:
-  # RHEL system needs extra repositories for docker
-
-  - name: Check if rhel-7-server-extras-rpms repo enabled
-    become: yes
-    command: subscription-manager repos --list-enabled
-    register: _subscription_manager_repos
-    check_mode: no
-    changed_when: "'rhel-7-server-extras-rpms' not in _subscription_manager_repos.stdout"
-    when: ansible_distribution == 'RedHat'
-
-  - name: Enable rhel-7-server-extras-rpms repo
-    become: yes
-    command: subscription-manager repos --enable=rhel-7-server-extras-rpms
-    when: "ansible_distribution == 'RedHat' and 'rhel-7-server-extras-rpms' not in _subscription_manager_repos.stdout"
-
   roles:
 
   - role: openmicroscopy.docker
