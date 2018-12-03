@@ -38,7 +38,7 @@
     # No admins
     idr_jupyter_admins: []
     #idr_jupyter_pull_latest: True
-    idr_jupyter_notebook_image: "{{ idr_jupyter_notebook_image_override | default('openmicroscopy/training-notebooks:0.3.0') }}"
+    idr_jupyter_notebook_image: "{{ idr_jupyter_notebook_image_override | default('openmicroscopy/training-notebooks:0.4.0') }}"
     idr_jupyter_additional_config:
       Spawner.mem_limit: 2G
 
