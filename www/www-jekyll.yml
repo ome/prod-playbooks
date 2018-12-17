@@ -8,12 +8,12 @@
     tags: jekyll
 
   vars:
-    website_version: "2018.11.26-1"
+    website_version: "2018.12.15"
     website_name: www.openmicroscopy.org
     deploy_archive_dest_dir: /var/www/{{ website_name }}/{{ website_version }}
     deploy_archive_src_url: https://github.com/openmicroscopy/{{ website_name }}/releases/download/{{ website_version }}/{{ website_name }}.tar.gz
     # Optional checksum. It should be safe to omit as long as you never
     # overwrite an existing archive. This should not be a problem when using
     # versioned directories.
-    deploy_archive_sha256: 3c5bd850ef6f184a4a7df9ff5fb36e102d89d0942ad731b24113e653fe4640dd
+    deploy_archive_sha256: 21dfbbb1657a16f4d8b8d6de981564e7da85a5eec5353a2d2f3770800c66172a
     deploy_archive_symlink: /var/www/{{ website_name }}/html
