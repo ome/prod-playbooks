@@ -329,6 +329,7 @@
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
+      omero.fs.repo.path: "%user%_%userId%/%thread%//%year%-%month%/%day%/%time%"
       omero.ldap.config: "true"
       omero.ldap.urls: "ldap://localhost:10389"
       omero.ldap.base: "dc=openmicroscopy,dc=org"
