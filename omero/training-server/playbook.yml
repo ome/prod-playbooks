@@ -56,7 +56,12 @@
     - role: openmicroscopy.omero-web
       # omero_web_config_set:
 
+    - role: openmicroscopy.iptables-raw
+
     - role: openmicroscopy.docker
+      docker_additional_options:
+        # Manually configure to avoid conflicts between Docker and system rules
+        iptables: false
 
   post_tasks:
 
@@ -296,6 +301,32 @@
         state: started
         restart_policy: always
 
+    # https://fralef.me/docker-and-iptables.html
+    # https://blog.daknob.net/debian-firewall-docker/
+    # Allow:
+    # - all outbound from Docker containers
+    # - incoming from host localhost
+
+    - name: Iptables Docker forward rules
+      become: yes
+      iptables_raw_25:
+        name: docker_outreach_rules
+        rules: |
+          -A FORWARD -i docker0 -o {{ external_nic }} -j ACCEPT
+          -A FORWARD -i {{ external_nic }} -o docker0 -j ACCEPT
+        state: present
+
+    - name: Iptables Docker nat rules
+      become: yes
+      iptables_raw_25:
+        name: docker_outreach_nat
+        table: nat
+        rules: |
+          -A POSTROUTING -o {{ external_nic }} -j MASQUERADE
+          # Allow world to access 10389?
+          -A INPUT -p tcp -m tcp --dport 10389 -s 0.0.0.0/0 -j ACCEPT
+        state: present
+
   # Crypted passwords generated using
   # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
   vars:
@@ -343,6 +374,7 @@
       omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
       omero.ldap.username: "uid=admin,ou=system"
 
+    external_nic: "{{ ansible_default_ipv4.interface }}"
 
 - include: letsencrypt.yml
   when: not (molecule_test | default(False))
