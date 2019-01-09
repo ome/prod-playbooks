@@ -44,3 +44,14 @@ def test_omero_metrics_auth_fail(Command):
         'curl -f -u monitoring:incorrect localhost/metrics/9449')
     assert out.rc == 22
     assert '401' in out.stderr
+
+
+def test_local_ldap(Command):
+    initialised = Command.check_output(
+        '/home/ldap/ldapmanager get dc=openmicroscopy,dc=org')
+    if len(initialised.strip()) == 0:
+        Command.check_output('/home/ldap/ldapmanager init')
+
+    out = Command.check_output(
+        '/home/ldap/ldapmanager get dc=openmicroscopy,dc=org')
+    assert 'dn: dc=openmicroscopy,dc=org' in out
