@@ -67,7 +67,7 @@
       remaining_days: 30
     register: letsencrypt_challenge
 
-  - name: letsencrypt answer challenge
+  - name: letsencrypt answer challenge | fails in check mode
     become: yes
     copy:
       # Should always begin .well-known/acme-challenge/
