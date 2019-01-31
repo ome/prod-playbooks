@@ -159,6 +159,11 @@ params.page(0, 1)
 for delete_class in rsp.targets:
     if delete_class.endswith('Link'):
         continue
+    # TODO: Skipping these only to prevent console output.
+    if delete_class in ['ome.model.meta.GroupExperimenterMap',
+                        'ome.model.meta.Namespace',
+                        'ome.model.meta.ShareMember']:
+        continue
     try:
         query_service.projection(
             "SELECT 1 FROM {} WHERE details.owner.id = :id"
