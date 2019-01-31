@@ -2,10 +2,17 @@
 - hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
+    - name: create symlinks for public images
+      file:
+        force: yes
+        src: "../../../repos/curated/{{ item.key }}/public/"
+        dest: "/uod/idr/www/downloads.openmicroscopy.org/images/{{ item.value }}"
+        state: link
+      with_dict: "{{ public_folders }}"
     - name: check public images
       file:
         force: yes
-        src: "{{ item.src}}"
+        src: "{{ item.src }}"
         dest: "/uod/idr/www/downloads.openmicroscopy.org/images/{{ item.dest }}"
         state: link
-      with_items: "{{ public_images }}"
+      with_items: "{{ special_public_folders }}"
