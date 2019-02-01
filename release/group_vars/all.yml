@@ -2,49 +2,43 @@
 www_folders:
   - /uod/idr/www/docs.openmicroscopy.org
   - /uod/idr/www/downloads.openmicroscopy.org
-public_images:
-  - { src: '../../../repos/curated/amira/public/', dest: 'AmiraMesh'}
-  - { src: '../../../repos/curated/cellomics/public/', dest: 'Cellomics'}
-  - { src: '../../../repos/curated/dicom/public/', dest: 'DICOM'}
-  - { src: '../../../repos/curated/deltavision/public/', dest: 'DV'}
-  - { src: '../../../repos/curated/ecat7/public/', dest: 'ECAT7'}
-  - { src: '../../../../repos/curated/samples/carlos/big.tiff',
-      dest: 'gateway_tests/big.tiff'}
-  - { src: '../../../../repos/curated/samples/ome/CHOBI_d3d.dv',
-      dest: 'gateway_tests/CHOBI_d3d.dv'}
+# Public image format folders
+# All keys of this dictionary are expected to be a valid format folder and
+# have a subfolder called public containing the public sample images
+public_folders:
+  amira: 'AmiraMesh'
+  becker-hickl-spc: 'SPC-FIFO'
+  cellomics: 'Cellomics'
+  dicom: 'DICOM'
+  ecat7: 'ECAT7'
+  hamamatsu: 'Hamamatsu-NDPI'
+  hamamatsu-vms: 'Hamamatsu-VMS'
+  incell3000: 'InCell3000'
+  imaris: 'Imaris-IMS'
+  leica-lif: 'Leica-LIF'
+  leica-scn: 'Leica-SCN'
+  leo: 'LEO'
+  micromanager: 'Micro-Manager'
+  mrc: 'MRC'
+  nd2: 'ND2'
+  nifti: 'NIfTI'
+  nrrd: 'NRRD'
+  olympus-oir: 'Olympus-OIR'
+  png: 'PNG'
+  svs: 'SVS'
+  tiff: 'TIFF'
+  trestle: 'Trestle'
+  vectra-qptiff: 'Vectra-QPTIFF'
+# List containing special public images/folders that do not meet the standard
+# layout above
+special_public_folders:
+  - { src: '../../../../repos/curated/samples/carlos/big.tiff', dest: 'gateway_tests/big.tiff'}
+  - { src: '../../../../repos/curated/samples/ome/CHOBI_d3d.dv', dest: 'gateway_tests/CHOBI_d3d.dv'}
   - { src: '../../../../repos/curated/samples/ome/tinyTest.d3d.dv',
       dest: 'gateway_tests/tinyTest.d3d.dv' }
-  - { src: '../../../repos/curated/hamamatsu/public',
-      dest: 'Hamamatsu-NDPI'}
-  - { src: '../../../repos/curated/hamamatsu-vms/public/',
-      dest: 'Hamamatsu-VMS'}
   - { src: '../../../../repos/curated/cellomics/public/', dest: 'HCS/BBBC'}
-  - { src: '../../../../repos/curated/incell/public/',
-      dest: 'HCS/INCELL2000'}
-  - { src: '../../../../repos/curated/perkinelmer-operetta/public/',
-      dest: 'HCS/Operetta'}
-  - { src: '../../../repos/curated/imaris/public/', dest: 'Imaris-IMS'}
-  - { src: '../../../repos/curated/incell3000/public/', dest: 'InCell3000'}
-  - { src: '../../../repos/curated/leica-lif/public/', dest: 'Leica-LIF'}
-  - { src: '../../../repos/curated/leica-scn/public/', dest: 'Leica-SCN'}
-  - { src: '../../../repos/curated/leo/public/', dest: 'LEO'}
-  - { src: '../../../repos/curated/micromanager/public/',
-      dest: 'Micro-Manager'}
-  - { src: '../../../repos/curated/mrc/public/', dest: 'MRC'}
-  - { src: '../../../repos/curated/nd2/public/', dest: 'ND2'}
-  - { src: '../../../repos/curated/nifti/public/', dest: 'NIfTI'}
-  - { src: '../../../repos/curated/nrrd/public/', dest: 'NRRD'}
-  - { src: '../../../repos/curated/olympus-oir/public/',
-      dest: 'Olympus-OIR'}
-  - { src: '../../../repos/curated/ome-tiff/ome-schemas/',
-      dest: 'OME-TIFF'}
+  - { src: '../../../../repos/curated/incell/public/', dest: 'HCS/INCELL2000'}
+  - { src: '../../../../repos/curated/perkinelmer-operetta/public/', dest: 'HCS/Operetta'}
+  - { src: '../../../repos/curated/ome-tiff/ome-schemas/', dest: 'OME-TIFF'}
   - { src: '../../../repos/curated/ome-xml/ome-schemas/', dest: 'OME-XML'}
-  - { src: '../../../repos/curated/png/public/', dest: 'PNG'}
-  - { src: '../../../repos/curated/becker-hickl-spc/public/',
-      dest: 'SPC-FIFO'}
-  - { src: '../../../repos/curated/svs/public/', dest: 'SVS'}
-  - { src: '../../../repos/curated/tiff/public/', dest: 'TIFF'}
-  - { src: '../../../repos/curated/trestle/public/', dest: 'Trestle'}
   - { src: '../../../repos/curated/zip/u-track/', dest: 'u-track'}
-  - { src: '../../../repos/curated/vectra-qptiff/public/',
-      dest: 'Vectra-QPTIFF'}
