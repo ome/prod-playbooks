@@ -14,6 +14,7 @@ public_folders:
   deltavision: 'DV'
   dicom: 'DICOM'
   ecat7: 'ECAT7'
+  gatan: 'Gatan'
   hamamatsu: 'Hamamatsu-NDPI'
   hamamatsu-vms: 'Hamamatsu-VMS'
   incell3000: 'InCell3000'
