@@ -38,9 +38,8 @@
 - src: openmicroscopy.omero-common
   version: 0.1.0
 
-- name: openmicroscopy.omero-prometheus-exporter
-  src: https://github.com/openmicroscopy/ansible-role-omero-prometheus-exporter/archive/0.1.0.tar.gz
-  version: 0.1.0
+- src: openmicroscopy.omero_prometheus_exporter
+  version: 0.2.0
 
 - src: openmicroscopy.omero-python-deps
   version: 1.1.0
