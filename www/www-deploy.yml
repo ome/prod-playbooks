@@ -18,6 +18,14 @@
     nginx_proxy_404: "/404.html"
     nginx_proxy_conf_http:
       - "client_max_body_size 2g"
+    nginx_proxy_log_format: custom
+    nginx_proxy_log_format_custom: >-
+      '$server_name $remote_addr -
+      $remote_user [$time_local] "$host" "$request"
+      $status $body_bytes_sent "$http_referer"
+      "$http_user_agent" "$http_x_forwarded_for"
+      $request_time $upstream_cache_status'
+
     nginx_proxy_backends:
       # Proxy for phpBB forums
       - location: /community
