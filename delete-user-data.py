@@ -181,13 +181,10 @@ def delete_data(user_id):
     params.addId(rlong(user_id))
     delete = Delete2(dryRun=dry_run, targetObjects={})
     for delete_class in delete_classes:
-        # TODO: Fix the server's graphs code and remove this hack.
-        avoid_dirs = " AND mimetype <> 'Directory'" \
-                     if delete_class == 'ome.model.core.OriginalFile' else ""
         object_ids = []
         for result in query_service.projection(
-                "SELECT id FROM {} WHERE details.owner.id = :id{}"
-                .format(delete_class, avoid_dirs), params, all_groups):
+                "SELECT id FROM {} WHERE details.owner.id = :id"
+                .format(delete_class), params, all_groups):
             object_id = result[0].val
             object_ids.append(object_id)
         if object_ids:
