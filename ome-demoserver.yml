@@ -103,16 +103,19 @@
       lvm_lvfilesystem: "{{ filesystem }}"
       lvm_shrink: False
 
-    - role: openmicroscopy.postgresql
-      no_log: true
-      postgresql_users_databases:
-      - user: "{{ vault.omero_server_db_user }}"
-        password: "{{ vault.omero_server_dbpassword }}"
-        databases: ["{{ vault.omero_server_dbname }}"]
-
     - role: openmicroscopy.nginx
       # Defaults overridden in private configuration
       # nginx_version:
+
+    - role: openmicroscopy.postgresql-3
+      #no_log: true
+      postgresql_databases:
+        - name: omero
+      postgresql_users:
+      - user: "{{ omero_server_dbuser | default('omero') }}"
+        password: "{{ omero_server_dbpassword | default('omero') }}"
+        databases:
+          - omero
 
     - role: openmicroscopy.omero-server
       # Defaults overridden in private configuration
