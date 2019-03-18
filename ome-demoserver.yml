@@ -115,15 +115,17 @@
       # nginx_version:
 
     - role: openmicroscopy.omero-server
-      omero_server_release: "{{ omero_server_release_desired | default('5.4.9') }}"
-      omero_server_dbuser: "{{ vault.omero_server_db_user }}"
-      omero_server_dbname:  "{{ vault.omero_server_dbname }}"
-      omero_server_dbpassword: "{{ vault.omero_server_dbpassword }}"
-      omero_server_rootpassword: "{{ vault.omero_server_rootpassword }}"
+      # Defaults overridden in private configuration
+      # omero_server_release:
+      # omero_server_dbuser:
+      # omero_server_dbpassword:
+      # omero_server_rootpassword:
+      omero_server_dbname: omero
       omero_server_systemd_limit_nofile: 16384
 
     - role: openmicroscopy.omero-web
-      omero_web_release: "{{ omero_web_release_desired | default('5.4.9') }}"
+      # Defaults overridden in private configuration
+      # omero_web_release:
       omero_web_systemd_limit_nofile: 16384
 
     # This role only works on OMERO 5.3+
@@ -132,17 +134,17 @@
       omero_user_bin_omero: /opt/omero/server/OMERO.server/bin/omero
       omero_user_system: omero-server
       omero_user_admin_user: root
-      omero_user_admin_pass: "{{ vault.omero_server_rootpassword }}"
+      omero_user_admin_pass: "{{ omero_server_rootpassword }}"
       omero_group_create:
       - name: public
         type: read-only
       - name: "My Data"
         type: private
       omero_user_create:
-      - login: "{{ vault.omero_web_public_user }}"
+      - login: "{{ secret_omero_web_public_user | default('public') }}"
         firstname: Public
         lastname: User
-        password: "{{ vault.omero_web_public_password }}"
+        password: "{{ secret_omero_web_public_password | default('public') }}"
         groups: "--group-name public"
 
     - role: openmicroscopy.ssl-certificate
@@ -354,8 +356,8 @@
       omero.mail.from: "{{ omero_server_mail_from }}"
       omero.mail.host: "{{ omero_server_mail_host }}"
       # https://www.openmicroscopy.org/site/support/omero5.3/sysadmins/public.html
-      omero.web.public.user: "{{ vault.omero_web_public_user }}"
-      omero.web.public.password: "{{ vault.omero_web_public_password }}"
+      omero.web.public.user: "{{ secret_omero_web_public_user | default('public') }}"
+      omero.web.public.password: "{{ secret_omero_web_public_password | default('public') }}"
       omero.web.public.enabled: True
       omero.web.public.server_id: 1
       omero.web.public.url_filter: "^/(webgateway/(?!(archived_files|download_as))|webclient/annotation/([0-9]+)/)"
