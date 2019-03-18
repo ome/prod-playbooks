@@ -365,4 +365,4 @@
     ssl_certificate_combined_path: ''
 
 
-- import_playbook: omero/omero-web-patch-settings.yml
+- include: omero/omero-web-patch-settings.yml
