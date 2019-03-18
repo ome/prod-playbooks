@@ -110,6 +110,10 @@
         password: "{{ vault.omero_server_dbpassword }}"
         databases: ["{{ vault.omero_server_dbname }}"]
 
+    - role: openmicroscopy.nginx
+      # Defaults overridden in private configuration
+      # nginx_version:
+
     - role: openmicroscopy.omero-server
       omero_server_release: "{{ omero_server_release_desired | default('5.4.9') }}"
       omero_server_dbuser: "{{ vault.omero_server_db_user }}"
