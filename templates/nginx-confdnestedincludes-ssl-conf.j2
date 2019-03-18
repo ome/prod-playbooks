@@ -1,0 +1,10 @@
+# OMERO.web SSL configuration
+listen 443 ssl;
+
+ssl_certificate {{ ssl_certificate_bundled_path }};
+ssl_certificate_key {{ ssl_certificate_key_path }};
+ssl_protocols  {{ nginx_ssl_protocols }}
+
+if ($ssl_protocol = "") {
+    rewrite ^/(.*) https://$host/$1 permanent;
+}
