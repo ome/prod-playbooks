@@ -360,3 +360,6 @@
     ssl_certificate_key_path: /etc/nginx/ssl/server.key
     # Server path to SSL combined certificate and key, set to empty to disable
     ssl_certificate_combined_path: ''
+
+
+- import_playbook: omero/omero-web-patch-settings.yml
