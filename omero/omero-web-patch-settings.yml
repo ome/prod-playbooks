@@ -1,0 +1,32 @@
+# Temporary playbook to patch OMERO.web configuration until this is added and
+# released in OMERO.web
+
+- hosts: ome-demoservers
+
+  roles:
+    # Needed for handlers
+    - role: openmicroscopy.omero-common
+
+  tasks:
+
+    - name: Patch OMERO.web settings.py
+      become: yes
+      blockinfile:
+        block: |
+          CSRF_COOKIE_SECURE = True
+          CSRF_COOKIE_HTTPONLY = True
+          SESSION_COOKIE_HTTPONLY = True
+          X_FRAME_OPTIONS = 'SAMEORIGIN'
+        path: /opt/omero/web/OMERO.web/lib/python/omeroweb/settings.py
+        state: present
+      notify:
+        - restart omero-web
+
+    - name: Preventing clickjacking
+      become: yes
+      copy:
+        content: |
+          config append -- omero.web.middleware '{"index": 6, "class": "django.middleware.clickjacking.XFrameOptionsMiddleware"}'
+        dest: /opt/omero/web/config/omero-web-security.omero
+      notify:
+        - restart omero-web
