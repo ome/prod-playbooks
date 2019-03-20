@@ -1,7 +1,7 @@
 # Temporary playbook to patch OMERO.web configuration until this is added and
 # released in OMERO.web
 
-- hosts: ome-demoservers
+- hosts: ome-demoservers, ns-webclients
 
   roles:
     # Needed for handlers
