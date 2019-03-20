@@ -8,10 +8,7 @@
 - hosts: legacy-ssl-org-wildcard
   roles:
   - role: openmicroscopy.ssl-certificate
-    # Vars here since vars will change for each certificate we're deploying.
-    ssl_certificate_public_content: "{{ ssl_org_wildcard_certificate_public_content }}"
-    ssl_certificate_intermediate_content: "{{ ssl_org_wildcard_certificate_intermediate_content }}"
-    ssl_certificate_key_content: "{{ ssl_org_wildcard_certificate_key_content }}"
+    # See private vars for certificate content
     # Server path to SSL public certificate
     ssl_certificate_public_path: /etc/pki/tls/certs/star_openmicroscopy_org.crt
     # Server path to SSL intermediate certificate(s)
