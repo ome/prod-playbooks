@@ -27,6 +27,8 @@
       lvm_lvsize: "{{ provision_rootsize }}"
       lvm_lvfilesystem: "{{ provision_root_filesystem }}"
 
+    - role: openmicroscopy.nginx
+
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
       omero_web_release: 5.4.9
@@ -171,24 +173,10 @@
       notify:
         - restart omero-web
 
-    - name: NGINX - Configuration - Custom Paper Redirect
-      tags: redirect
-      become: yes
-      blockinfile:
-        marker: "# {mark} ANSIBLE MANAGED BLOCK - Custom Redirects"
-        path: /etc/nginx/conf.d/omero-web.conf
-        # Before last line in conf file
-        insertbefore: '^\}$'
-        block: |2+
-              location /pub/schleicher-et-al-2017 {
-                  return 307 /webclient/?show=project-27936;
-              }
-      when: "'ns-web-pub.openmicroscopy.org' in inventory_hostname"
-      notify:
-        - restart nginx
-
   vars:
     omero_web_config_set: "{{ omero_web_config_set_for_group | combine(omero_web_config_set_for_host) }}"
+
+    nginx_version: 1.14.2
 
     # Server path to SSL public certificate
     ssl_certificate_public_path: /etc/nginx/ssl/server.crt
