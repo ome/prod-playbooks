@@ -17,4 +17,5 @@
     lvm_lvmount: /var/log
     lvm_lvsize: "{{ varlog_size }}"
     lvm_lvfilesystem: "{{ root_filesystem }}"
+  - role: openmicroscopy.ssl-certificate
   - role: openmicroscopy.nginx-proxy
