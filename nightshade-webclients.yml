@@ -125,6 +125,14 @@
       notify:
         - restart nginx
 
+    - name: NGINX - Custom Paper Redirect
+      become: yes
+      template:
+        src: templates/nginx-confdnestedincludes-ns-pub-redirects-conf.j2
+        dest: /etc/nginx/conf.d-nested-includes/ns-pub-redirects.conf
+      notify:
+        - restart nginx
+
     # Config for OMERO.web plugins, loaded into OMERO.web by the
     # omero.web systemd restart.
     - name:
