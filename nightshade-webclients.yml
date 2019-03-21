@@ -27,6 +27,9 @@
       lvm_lvsize: "{{ provision_rootsize }}"
       lvm_lvfilesystem: "{{ provision_root_filesystem }}"
 
+    - role: openmicroscopy.ssl-certificate
+      # Configuration for this role in `vars`
+
     - role: openmicroscopy.nginx
 
     # OMERO.web configuration in host_vars in different repository
@@ -38,9 +41,6 @@
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
     - role: openmicroscopy.system-monitor-agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
-
-    - role: openmicroscopy.ssl-certificate
-      # Configuration for this role in `vars`
 
   post_tasks:
 
