@@ -279,15 +279,7 @@
       Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints }}"
       omero.data.dir: "{{ omero_server_datadir  }}"
 
-    # Server path to SSL public certificate
-    ssl_certificate_public_path: /etc/nginx/ssl/server.crt
-    # Server path to SSL intermediate certificate(s)
-    ssl_certificate_intermediate_path: /etc/nginx/ssl/intermediate.crt
-    # Server path to SSL bundled public and intermediate certificates
-    ssl_certificate_bundled_path: /etc/nginx/ssl/bundled.crt
-    # Server path to SSL certificate key
-    ssl_certificate_key_path: /etc/nginx/ssl/server.key
-    # Server path to SSL combined certificate and key, set to empty to disable
+    # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
 
     nginx_version: 1.14.2
