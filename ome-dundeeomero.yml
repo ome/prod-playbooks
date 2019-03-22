@@ -64,6 +64,9 @@
         - python-reportlab
         - python-markdown
         - mencoder # For the 'make movie' script
+        # Current server proxies to a decoupled OMERO.web server
+        # Initially replicate this setup, to minimise changes.
+        - nginx
 
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
@@ -126,9 +129,12 @@
     - role: openmicroscopy.ssl-certificate
       # Configuration for this role in `vars`
 
-    - role: openmicroscopy.nginx
-
   post_tasks:
+    - name: NGINX - enable service / start on boot
+      become: yes
+      systemd:
+        name: nginx
+        enabled: yes
 
     # post 2.3 'dest' should be renamed 'path'
     - name: NGINX - Performance tuning - worker processes
@@ -152,14 +158,6 @@
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
-
-    - name: NGINX - SSL Configuration
-      become: yes
-      template:
-        src: templates/nginx-confdnestedincludes-ssl-conf.j2
-        dest: /etc/nginx/conf.d-nested-includes/ssl.conf
-      notify:
-        - restart nginx
 
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - Configuration
@@ -281,5 +279,3 @@
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
-
-    nginx_version: 1.14.2
