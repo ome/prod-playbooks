@@ -18,8 +18,7 @@ server {
     # Add perfect forward secrecy
     ssl_prefer_server_ciphers on;
 
-    # Add HSTS
-    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+    # Don't add HSTS header, already added by backend server
 
     # ciphers
     # Based on https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=nginx-1.10.2&openssl=1.0.1e&hsts=yes&profile=intermediate
