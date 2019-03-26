@@ -14,7 +14,8 @@
       blockinfile:
         block: |
           CSRF_COOKIE_SECURE = True
-          CSRF_COOKIE_HTTPONLY = True
+          # Disabled: breaks several OMERO web apps
+          # CSRF_COOKIE_HTTPONLY = True
           SESSION_COOKIE_HTTPONLY = True
           X_FRAME_OPTIONS = 'SAMEORIGIN'
         path: /opt/omero/web/OMERO.web/lib/python/omeroweb/settings.py
