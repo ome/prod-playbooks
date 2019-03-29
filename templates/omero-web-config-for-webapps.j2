@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 # Add web-extension OMERO.web configuration
 # after web already installed and running via role
+# and set iviewer as a default viewer
 
 # omero-figure
 config append -- omero.web.apps '"omero_figure"'
@@ -14,6 +15,8 @@ config append -- omero.web.open_with '["omero_fpbioimage", "fpbioimage_index", {
 # iviewer
 config append -- omero.web.apps '"omero_iviewer"'
 config append -- omero.web.open_with '["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]'
+# set iviewer as a default viewer
+omero.web.viewer.view: omero_iviewer.views.index
 
 # Autotag
 config append -- omero.web.apps '"omero_webtagging_autotag"'
