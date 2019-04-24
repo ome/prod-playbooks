@@ -1,0 +1,8 @@
+# Install iproute for ansible network vars
+- hosts: outreach.openmicroscopy.org
+  tasks:
+  - name: Install iproute
+    become: yes
+    yum:
+      name: iproute
+      state: present
