@@ -1,0 +1,32 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: ome-demoserver
+    image: centos:7
+    groups:
+      - ome-demoservers
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../../ome-demoserver.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: ome-demoserver
+  test_sequence:
+    - lint
+    - dependency
+    - syntax
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
