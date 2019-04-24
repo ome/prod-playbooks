@@ -12,8 +12,6 @@ lint:
 platforms:
   - name: omedev
     image: centos:7
-    groups:
-      - web-proxies
 provisioner:
   name: ansible
   playbooks:
