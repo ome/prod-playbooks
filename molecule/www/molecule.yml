@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: www
+    image: centos/systemd
+    image_version: latest
+    command: /sbin/init
+    privileged: true
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../../www/www-deploy.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: www
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
