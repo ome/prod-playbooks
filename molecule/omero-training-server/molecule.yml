@@ -36,7 +36,7 @@ provisioner:
         # firewalld isn't installed, don't attempt to disable
         iptables_raw_disable_firewalld: False
   playbooks:
-    prepare: prepare.yml
+    prepare: ../resources/prepare-iproute.yml
     converge: ../../site.yml
   lint:
     name: ansible-lint
@@ -44,18 +44,18 @@ scenario:
   name: omero-training-server
   test_sequence:
     # dependency must come first so that ansible-lint will see a custom module
+    # This might be fixed by https://github.com/ansible/molecule/pull/1739
     - dependency
     - lint
     - destroy
     - syntax
     - create
+    - prepare
     - converge
     # FIXME: Some tasks are not idempotent
     #- idempotence
     - verify
     - destroy
-  converge_sequence:
-    - converge
 verifier:
   name: testinfra
   lint:
