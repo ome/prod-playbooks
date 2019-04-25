@@ -15,6 +15,7 @@ script:
 
 env:
   - SCENARIO=bootstrap
+  - SCENARIO=jupyterhub
   - SCENARIO=k8s-postgres
   - SCENARIO=nightshade-webclients
   - SCENARIO=ome-demoserver

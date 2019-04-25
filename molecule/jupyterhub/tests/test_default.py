@@ -1,8 +1,9 @@
-import testinfra.utils.ansible_runner
+import os
 import re
+import testinfra.utils.ansible_runner
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    '.molecule/ansible_inventory').get_hosts('all')
+    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 
 def test_services_running_and_enabled(Service):
@@ -10,8 +11,8 @@ def test_services_running_and_enabled(Service):
     assert Service('jupyterhub').is_enabled
 
 
-def test_tmplogin(Command):
-    out = Command.check_output(
+def test_tmplogin(host):
+    out = host.check_output(
         'curl --dump-header - -k https://localhost/training/hub/tmplogin')
     pattern = re.compile(
         r'location: /training/user/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}')
