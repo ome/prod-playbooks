@@ -37,3 +37,4 @@ env:
   - DIRECTORY=web-proxy PLAYBOOK=
   - DIRECTORY=www PLAYBOOK=
   - DIRECTORY=k8s/postgres PLAYBOOK=
+  - DIRECTORY=jupyterhub PLAYBOOK=

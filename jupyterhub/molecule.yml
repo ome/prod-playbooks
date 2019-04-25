@@ -1,0 +1,47 @@
+# Syntax check only
+---
+dependency:
+  name: galaxy
+  requirements_file: ../requirements.yml
+
+driver:
+  name: docker
+
+vagrant:
+  platforms:
+  - name: centos7
+    box: centos/7
+  providers:
+  - name: virtualbox
+    type: virtualbox
+    options:
+      memory: 512
+      cpus: 1
+  instances:
+  - name: ome-training-jh.openmicroscopy.org
+
+docker:
+  containers:
+  - name: ome-training-jh.openmicroscopy.org
+    image: openmicroscopy/centos-systemd-ip
+    image_version: latest
+    privileged: True
+    ansible_groups:
+    - docker-hosts
+
+ansible:
+  playbook: ../site.yml
+  diff: True
+  group_vars:
+    docker-hosts:
+      # This should allow docker-in-docker to work
+      docker_storage_driver: vfs
+      # Docker in docker bug with newer versions
+      docker_version: 17.09.1.ce-1.el7.centos
+      # firewalld isn't installed, don't attempt to disable
+      iptables_raw_disable_firewalld: False
+      # Use a small notebook image when testing in Docker (e.g. on Travis)
+      idr_jupyter_notebook_image_override: "jupyter/base-notebook:latest"
+
+verifier:
+  name: testinfra
