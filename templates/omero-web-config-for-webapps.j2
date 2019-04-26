@@ -16,7 +16,7 @@ config append -- omero.web.open_with '["omero_fpbioimage", "fpbioimage_index", {
 config append -- omero.web.apps '"omero_iviewer"'
 config append -- omero.web.open_with '["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]'
 # set iviewer as a default viewer
-config set -- omero.web.viewer.view: omero_iviewer.views.index
+config set -- omero.web.viewer.view omero_iviewer.views.index
 
 # Autotag
 config append -- omero.web.apps '"omero_webtagging_autotag"'
