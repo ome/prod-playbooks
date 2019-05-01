@@ -7,34 +7,19 @@ services:
   - docker
 
 install:
-  - pip install ome-ansible-molecule-dependencies
+  - pip install "ome-ansible-molecule<0.5"
   - pip install jmespath
 
 script:
-  # If PLAYBOOK is not defined assume that directory has a full
-  # molecule.yml configuration file, otherwise use the default
-  - >
-      if [ -n "$PLAYBOOK" ]; then
-          mv molecule-syntaxcheck.yml $DIRECTORY/molecule.yml;
-          cd $DIRECTORY;
-          mv $PLAYBOOK playbook.yml;
-      else
-          cd $DIRECTORY;
-      fi
-  - molecule test;
-  # molecule-syntaxcheck.yml this doesn't run ansible-lint)
-  - >
-      if [ -n "$PLAYBOOK" ]; then
-          ansible-lint playbook.yml;
-      fi
+  - molecule test -s $SCENARIO
 
 env:
-  - DIRECTORY="." PLAYBOOK=nightshade-webclients.yml
-  - DIRECTORY="." PLAYBOOK=ome-demoserver.yml
-  - DIRECTORY="." PLAYBOOK=ome-dundeeomero.yml
-  - DIRECTORY=omero/training-server PLAYBOOK=
-  - DIRECTORY=bootstrap PLAYBOOK=
-  - DIRECTORY=web-proxy PLAYBOOK=
-  - DIRECTORY=www PLAYBOOK=
-  - DIRECTORY=k8s/postgres PLAYBOOK=
-  - DIRECTORY=jupyterhub PLAYBOOK=
+  - SCENARIO=bootstrap
+  - SCENARIO=jupyterhub
+  - SCENARIO=k8s-postgres
+  - SCENARIO=nightshade-webclients
+  - SCENARIO=ome-demoserver
+  - SCENARIO=ome-dundeeomero
+  - SCENARIO=omero-training-server
+  - SCENARIO=web-proxy
+  - SCENARIO=www

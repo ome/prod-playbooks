@@ -5,12 +5,24 @@
 # networking and initial partitions:
 #- include: bootstrap/playbook.yml
 
+# deployment of two OMERO.web instances for hosting Dundee's production OMERO.
+# One of the two instances is for publication data ("ns-web-pub").
 - include: nightshade-webclients.yml
-- include: ome-demoserver.yml
+
+# nightshade.openmicroscopy.org OMERO.server
 - include: ome-dundeeomero.yml
+
+# https://demo.openmicroscopy.org OMERO.server and OMERO.web
+- include: ome-demoserver.yml
+
+# https://outreach.openmicroscopy.org
 - include: omero/training-server/playbook.yml
 
+# Firewall configuration for all UoD OMERO servers
 - include: omero/omero-firewall.yml
+
+# Internal monitoring configuration for all UoD OMERO servers
 - include: omero/omero-monitoring-agents.yml
 
+# https://outreach-analysis.openmicroscopy.org backup JupyterHub server
 - include: jupyterhub/playbook.yml

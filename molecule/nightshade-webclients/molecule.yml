@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: nightshade-webclients
+    image: centos:7
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../../nightshade-webclients.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: nightshade-webclients
+  test_sequence:
+    - lint
+    - dependency
+    - syntax
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

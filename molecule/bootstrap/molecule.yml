@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: omedev
+    image: centos:7
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../../bootstrap/playbook.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: bootstrap
+  test_sequence:
+    - lint
+    - dependency
+    - syntax
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

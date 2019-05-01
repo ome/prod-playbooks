@@ -1,0 +1,56 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: ome-training-jh.openmicroscopy.org
+    image: centos/systemd
+    image_version: latest
+    command: /sbin/init
+    privileged: true
+    groups:
+      - docker-hosts
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      docker-hosts:
+        # This should allow docker-in-docker to work
+        docker_storage_driver: vfs
+        # Docker in docker bug with newer versions
+        docker_version: 17.09.1.ce-1.el7.centos
+        # firewalld isn't installed, don't attempt to disable
+        iptables_raw_disable_firewalld: False
+        # Use a small notebook image when testing in Docker (e.g. on Travis)
+        idr_jupyter_notebook_image_override: "jupyter/base-notebook:latest"
+  playbooks:
+    prepare: ../resources/prepare-iproute.yml
+    converge: ../../site.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: jupyterhub
+  test_sequence:
+    - destroy
+    # dependency must come first so that ansible-lint will see a custom module
+    # This might be fixed by https://github.com/ansible/molecule/pull/1739
+    - dependency
+    - lint
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - destroy
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

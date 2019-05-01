@@ -1,0 +1,62 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: outreach.openmicroscopy.org
+    image: centos/systemd
+    image_version: latest
+    command: /sbin/init
+    privileged: true
+    groups:
+      - docker-hosts
+      - omero-server
+      - omero-web
+      - monitored
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        molecule_test: True
+      docker-hosts:
+        omero_server_systemd_require_network: False
+        # This should allow docker-in-docker to work
+        docker_storage_driver: vfs
+        # Latest version 17.12.1.ce-1.el7.centos has a bug that prevents
+        # testing on travis: https://github.com/docker/for-linux/issues/219
+        docker_version: 17.09.1.ce-1.el7.centos
+        # firewalld isn't installed, don't attempt to disable
+        iptables_raw_disable_firewalld: False
+  playbooks:
+    prepare: ../resources/prepare-iproute.yml
+    converge: ../../site.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: omero-training-server
+  test_sequence:
+    - destroy
+    # dependency must come first so that ansible-lint will see a custom module
+    # This might be fixed by https://github.com/ansible/molecule/pull/1739
+    - dependency
+    - lint
+    - syntax
+    - create
+    - prepare
+    - converge
+    # FIXME: Some tasks are not idempotent
+    #- idempotence
+    - verify
+    - destroy
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

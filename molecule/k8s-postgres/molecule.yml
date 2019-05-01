@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: ome-k8s-pg-01.openmicroscopy.org
+    image: centos/systemd
+    image_version: latest
+    command: /sbin/init
+    privileged: true
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+    converge: ../../k8s/postgres/playbook.yml
+  lint:
+    name: ansible-lint
+scenario:
+  name: k8s-postgres
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

@@ -212,9 +212,7 @@
       notify:
         - restart nginx
 
-    # Config for OMERO.web plugins, loaded into OMERO.web by the
-    # omero.web systemd restart.
-    - name:
+    - name: Config for OMERO.web plugins
       become: yes
       template:
         src: templates/omero-web-config-for-webapps.j2
@@ -225,8 +223,7 @@
       notify:
         - restart omero-web
 
-    # OMERO.web config for CORS
-    - name:
+    - name: OMERO.web config for CORS
       become: yes
       template:
         src: templates/omero-web-config-for-cors.j2

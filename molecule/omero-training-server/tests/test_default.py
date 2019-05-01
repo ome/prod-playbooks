@@ -1,8 +1,9 @@
-import testinfra.utils.ansible_runner
+import os
 import pytest
+import testinfra.utils.ansible_runner
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    '.molecule/ansible_inventory').get_hosts('all')
+    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 OMERO = '/opt/omero/server/OMERO.server/bin/omero'
 OMERO_LOGIN = '-C -s localhost -u root -w omero'
@@ -23,9 +24,9 @@ def test_service_running_and_enabled(Service, name):
     assert service.is_enabled
 
 
-def test_omero_login(Command, Sudo):
-    with Sudo('fm1'):
-        Command.check_output(
+def test_omero_login(host):
+    with host.sudo('fm1'):
+        host.check_output(
             '/opt/omero/server/OMERO.server/bin/omero '
             'login -C -s localhost -u root -w omero')
 
@@ -34,24 +35,24 @@ def test_omero_login(Command, Sudo):
     'localhost:9449/metrics',
     '-u monitoring:monitoring localhost/metrics/9449',
 ])
-def test_omero_metrics(Command, curl):
-    out = Command.check_output('curl -f %s' % curl)
+def test_omero_metrics(host, curl):
+    out = host.check_output('curl -f %s' % curl)
     assert 'omero_sessions_active' in out
 
 
-def test_omero_metrics_auth_fail(Command):
-    out = Command(
+def test_omero_metrics_auth_fail(host):
+    out = host.run(
         'curl -f -u monitoring:incorrect localhost/metrics/9449')
     assert out.rc == 22
     assert '401' in out.stderr
 
 
-def test_local_ldap(Command):
-    initialised = Command.check_output(
+def test_local_ldap(host):
+    initialised = host.check_output(
         '/home/ldap/ldapmanager get dc=openmicroscopy,dc=org')
     if len(initialised.strip()) == 0:
-        Command.check_output('/home/ldap/ldapmanager init')
+        host.check_output('/home/ldap/ldapmanager init')
 
-    out = Command.check_output(
+    out = host.check_output(
         '/home/ldap/ldapmanager get dc=openmicroscopy,dc=org')
     assert 'dn: dc=openmicroscopy,dc=org' in out
