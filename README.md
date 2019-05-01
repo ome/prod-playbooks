@@ -1,35 +1,22 @@
-Server-state playbooks
-----------------------
+OME production services playbooks
+=================================
 
-These playbooks encapsulate the running of various
-production servers run by the OME team. The initial
-template for these playbooks is now contained in:
+These playbooks encapsulate the running of various production servers run by the OME team.
+If you are looking for examples of running your own production OMERO.server see
 
-  https://github.com/openmicroscopy/ansible-public-omero-example
+  https://github.com/ome/omero-deployment-examples
 
 
 Details
 -------
 
-- playbooks set up to run from localhost rather than remotely
+- Install `Ansible` and dependencies using the [ome-ansible-molecule package](https://pypi.org/project/ome-ansible-molecule/).
+- Install required roles: `ansible-galaxy install -r requirements.yml`
+- Run the [`site.yml` playbook](site.yml).
 
-- after installing ansible and ansible-galaxy,
-    ansible-galaxy install -r requirements.yml -p roles
+For details of individual playbooks see the comments in [`site.yml`](site.yml).
 
-- to install e.g. OMERO, or OMERO.web, and configure
-  the server, depending on the requirements of that system,
-    ansible-playbook playbook.yml
+Testing
+-------
 
-Playbooks
----------
-
- - [nightshade-webclients.yml](nightshade-webclients.yml):
-   deployment of two OMERO.web instances for hosting Dundee's
-   production OMERO. One of the two instances is for
-   publication data ("ns-web-pub").
- - [ome-dundeeomero.yml](ome-dundeeomero.yml):
-   deployment of the OMERO.server in Dundee
- - [ome-demoserver.yml](ome-demoserver.yml):
-   deployment of https://demo.openmicroscopy.org
- - [training-server.yml](training-server.yml)
-   deployment of https://outreach.openmicroscopy.org
+All server playbooks have a corresponding [molecule](https://molecule.readthedocs.io/) test scenario under [`molecule`](molecule).
