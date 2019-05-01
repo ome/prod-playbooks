@@ -10,10 +10,10 @@
 - include: nightshade-webclients.yml
 
 # nightshade.openmicroscopy.org OMERO.server
-- include: ome-demoserver.yml
+- include: ome-dundeeomero.yml
 
 # https://demo.openmicroscopy.org OMERO.server and OMERO.web
-- include: ome-dundeeomero.yml
+- include: ome-demoserver.yml
 
 # https://outreach.openmicroscopy.org
 - include: omero/training-server/playbook.yml
