@@ -49,6 +49,8 @@
         databases: [omero]
       postgresql_version: "9.6"
 
+    - role: openmicroscopy.versioncontrol-utils
+
     - role: openmicroscopy.nfs-mount
 
     - role: openmicroscopy.omero-server
