@@ -106,6 +106,8 @@
       dest: /products
 
     # community
+    - match: "/forums"
+      dest: https://forums.image.sc/tags/ome
     - match: "~/site/community/?$"
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
