@@ -108,3 +108,7 @@ def test_external_redirects(host, path, redirect):
     out = host.check_output('curl -I http://localhost%s' % path)
     assert 'HTTP/1.1 302' in out
     assert 'Location: %s' % redirect in out
+
+    out = host.check_output('curl -I http://localhost%s/' % path)
+    assert 'HTTP/1.1 302' in out
+    assert 'Location: %s' % redirect in out
