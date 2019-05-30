@@ -43,6 +43,8 @@
       code: 302
     - location: "~ ^/(info)($|/)"
       code: 302
+    - location: "~ ^/(forums)($|/)"
+      code: 302
 
     nginx_proxy_redirect_map:
     # by default redirect to the 404 page
@@ -106,6 +108,8 @@
       dest: /products
 
     # community
+    - match: "~/forums/?$"
+      dest: https://forum.image.sc/tags/ome
     - match: "~/site/community/?$"
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
