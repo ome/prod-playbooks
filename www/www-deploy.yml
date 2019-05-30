@@ -37,6 +37,12 @@
 
     nginx_proxy_redirect_map_locations:
     # TODO: change to 301 when we're happy
+    - location: "~ ^/(BIO-FORMATS)($|/)"
+      code: 302
+    - location: "~ ^/(OME-FILES)($|/)"
+      code: 302
+    - location: "~ ^/(OMERO)($|/)"
+      code: 302
     - location: "~ ^/(site)($|/)"
       code: 302
     - location: "~ ^/(omero-blog)($|/)"
@@ -205,6 +211,20 @@
       dest: https://docs.openmicroscopy.org
     - match: "~/site/support/ome-artwork(/.*)?$"
       dest: /artwork
+
+    # uppercase alias
+    - match: "~/BIO-FORMATS$"
+      dest: /bio-formats
+    - match: "~/BIO-FORMATS/(?<link>.*)$"
+      dest: /bio-formats/$link
+    - match: "~/OME-FILES$"
+      dest: /ome-files
+    - match: "~/OME-FILES/(?<link>.*)$"
+      dest: /ome-files/$link
+    - match: "~/OMERO$"
+      dest: /omero
+    - match: "~/OMERO/(?<link>.*)$"
+      dest: /omero/$link
 
     # info
     - match: "~/info/vulnerabilities/?$"
