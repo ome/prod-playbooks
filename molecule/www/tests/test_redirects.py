@@ -6,7 +6,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 external_uris = [
-    ('/forums', 'https://forum.image.sc/tags/ome'),
+    ('/forums', 'https://forum.image.sc/c/data-management'),
     ('/omero-blog', 'http://blog.openmicroscopy.org'),
     ('/site/about/development-teams/glencoe-software',
      'https://www.glencoesoftware.com/team.html'),

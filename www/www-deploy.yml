@@ -115,7 +115,7 @@
 
     # community
     - match: "~/forums/?$"
-      dest: https://forum.image.sc/tags/ome
+      dest: https://forum.image.sc/c/data-management
     - match: "~/site/community/?$"
       dest: /support
     - match: "~/site/community/mailing-lists/?$"
