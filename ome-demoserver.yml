@@ -156,7 +156,7 @@
         - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
-        - "django-cors-headers"
+        - "django-cors-headers=={{ django_cors_headers_release }}"
         editable: False
         state: present
         # variable comes from role openmicroscopy.omero-web
@@ -297,6 +297,7 @@
         force: yes
 
   vars:
+    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.4.0') }}"
     omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
