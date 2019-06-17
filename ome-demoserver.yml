@@ -289,7 +289,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_script_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0755
         owner: "omero-server"
@@ -299,6 +299,7 @@
   vars:
     django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.4.0') }}"
     omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
+    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.0.2') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
