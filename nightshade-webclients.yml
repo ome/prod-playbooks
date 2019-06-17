@@ -20,7 +20,7 @@
 
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
-      omero_web_release: "{{ omero_web_release }}"
+      omero_web_release: "{{ omero_web_release_version }}"
       omero_web_systemd_limit_nofile: 16384
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
@@ -125,7 +125,7 @@
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.4.10') }}"
+    omero_web_release_version: "{{ omero_web_release_version_override | default('5.4.10') }}"
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
