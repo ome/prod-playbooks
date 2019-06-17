@@ -32,6 +32,14 @@
         - gcc
         - python-ldap
 
+    - name: Prerequisites for CLI
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - zsh
+
   roles:
 
     - role: openmicroscopy.postgresql-3
