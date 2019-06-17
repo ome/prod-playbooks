@@ -1,20 +1,6 @@
 # Install OMERO.web with a public user on localhost
 
-# To allow the OMERO.webapps to upgrade, pass `--extra-vars upgrade_webapps=True`
-# to ansible-playbook on the command line.
-
 - hosts: ns-webclients
-
-  pre_tasks:
-
-    # Set desired state of webapps (upgrade v.s. install/keep current version)
-    - name: OMERO.web plugin upgrade | set default state "installed"
-      set_fact:
-        webapps_state: present
-    - name: OMERO.web plugin upgrade | if --extra-vars upgrade_webapps == True, allow web plugin(s) to upgrade.
-      set_fact:
-        webapps_state: latest
-      when: upgrade_webapps is defined and upgrade_webapps == "True"
 
   roles:
 
@@ -34,7 +20,7 @@
 
     # OMERO.web configuration in host_vars in different repository
     - role: openmicroscopy.omero-web
-      omero_web_release: 5.4.9
+      omero_web_release: "{{ omero_web_release }}"
       omero_web_systemd_limit_nofile: 16384
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
@@ -48,26 +34,14 @@
       become: yes
       pip:
         name:
-        - "omero-figure{{ omero_figure_version_req | default('') }}"
-        - "omero-webtagging-autotag"
-        - "omero-webtagging-tagsearch"
+        - "omero-figure=={{ omero_figure_release }}"
+        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+        - "omero-iviewer=={{ omero_iviewer_release }}"
+        - "omero-parade=={{ omero_parade_release }}"
+        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
         editable: False
-        state: "{{ webapps_state }}"
-        # variable comes from role openmicroscopy.omero-web
-        virtualenv: "{{ omero_web_basedir }}/venv"
-        virtualenv_site_packages: yes
-      notify:
-        - restart omero-web
-
-    - name: Omero.web plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        name:
-        - "omero-fpbioimage"
-        - "omero-iviewer"
-        - "omero-parade"
-        editable: False
-        state: "{{ webapps_state }}"
+        state: present
         # variable comes from role openmicroscopy.omero-web
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
@@ -145,8 +119,13 @@
 
   vars:
     omero_web_config_set: "{{ omero_web_config_set_for_group | combine(omero_web_config_set_for_host) }}"
-
-    nginx_version: 1.14.2
+    omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.4.10') }}"
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
