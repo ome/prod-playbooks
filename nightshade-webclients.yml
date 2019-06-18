@@ -126,7 +126,7 @@
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
     omero_web_release_version: "{{ omero_web_release_version_override | default('5.4.10') }}"
-
+    nginx_version: 1.14.2
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
 
