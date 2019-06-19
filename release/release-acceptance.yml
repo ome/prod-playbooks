@@ -2,12 +2,22 @@
 - hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
-    - name: Check that the release component exists
+    - name: Check mandatory variables are defined
+      fail:
+        msg: Please pass 'product' and 'version variables'
+      when: product is not defined and version is not defined
+
+    - name: Check the release component exist
       stat:
-        path: "/uod/idr/www/downloads.openmicroscopy.org/\
-          {{ product }}/{{ version }}/"
+        path: "{{ item }}/{{ product }}/{{ version }}/"
       register: s
-      when: product is defined and version is defined
+      with_items: "{{ www_folders }}"
+
+    - name: Check the release component exist
+      fail:
+        msg: "{{ item }} does not exist"
+      with_items: "{{ s.results }}"
+      when: item.stat is not defined or not item.stat.exists
 
     - name: Define minor and major versions
       set_fact:
@@ -18,7 +28,6 @@
       file:
         path: "{{ item }}/{{ product }}/{{ version }}/.htaccess"
         state: absent
-      when: s.stat is defined and s.stat.exists
       with_items: "{{ www_folders }}"
 
     - name: Make release folders read-only and owned by root
@@ -29,7 +38,6 @@
         group: root
         recurse: true
         mode: 01555
-      when: s.stat is defined and s.stat.exists
       with_items: "{{ www_folders }}"
 
     - name: Create minor version symlink
@@ -37,7 +45,6 @@
         src: "{{ item }}/{{ product }}/{{ version }}"
         dest: "{{ item }}/{{ product }}/{{ minorversion }}"
         state: link
-      when: s.stat is defined and s.stat.exists
       with_items: "{{ www_folders }}"
 
     - name: Create major version symlink
@@ -45,7 +52,6 @@
         src: "{{ item }}/{{ product }}/{{ version }}"
         dest: "{{ item }}/{{ product }}/{{ majorversion }}"
         state: link
-      when: s.stat is defined and s.stat.exists
       with_items: "{{ www_folders }}"
 
     - name: Create latest version symlink
@@ -53,5 +59,4 @@
         src: "{{ item }}/{{ product }}/{{ version }}"
         dest: "{{ item }}/{{ product }}/latest"
         state: link
-      when: s.stat is defined and s.stat.exists
       with_items: "{{ www_folders }}"
