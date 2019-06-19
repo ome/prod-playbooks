@@ -8,16 +8,26 @@ lint:
   # TODO: enable
   enabled: False
 platforms:
-  - name: idr0-slot3.openmicroscopy.org
+  - name: release
     image: centos:7
+    groups:
+      - idr0-slot3.openmicroscopy.org
+  - name: prerelease
+    image: centos:7
+    groups:
+      - idr0-slot3.openmicroscopy.org
 provisioner:
   name: ansible
   playbooks:
     converge: ../../release/release-acceptance.yml
   inventory:
-    host_vars:
+    group_vars:
       idr0-slot3.openmicroscopy.org:
         product: component
+    host_vars:
+      prerelease:
+        version: '3.2.0-rc1'
+      release:
         version: 3.2.0
   lint:
     name: ansible-lint

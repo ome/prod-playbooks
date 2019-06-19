@@ -1,9 +1,12 @@
 ---
-- hosts: idr0-slot3.openmicroscopy.org
+- hosts: all
   vars:
     www_folders:
       - /uod/idr/www/docs.openmicroscopy.org
       - /uod/idr/www/downloads.openmicroscopy.org
+    releases:
+      - 3.2.0
+      - 3.2.0-rc1
   tasks:
   - name: Create existing released components
     file:
@@ -33,18 +36,24 @@
     with_items: "{{ www_folders }}"
   - name: Create new release components
     file:
-     path: "{{ item }}/component/3.2.0"
+     path: "{{ item[0] }}/component/{{ item[1] }}"
      state: directory
      mode: 01777
-    with_items: "{{ www_folders }}"
+    with_nested:
+      - "{{ www_folders }}"
+      - "{{ releases }}"
   - name: Create .htaccess file
     file:
-     path: "{{ item }}/component/3.2.0/.htaccess"
+     path: "{{ item[0] }}/component/{{ item[1] }}/.htaccess"
      state: touch
-    with_items: "{{ www_folders }}"
+    with_nested:
+      - "{{ www_folders }}"
+      - "{{ releases }}"
   - name: Create mock content
     file:
-     path: "{{ item }}/component/3.2.0/test"
+     path: "{{ item[0] }}/component/{{ item[1] }}/test"
      state: touch
      mode: 01777
-    with_items: "{{ www_folders }}"
+    with_nested:
+      - "{{ www_folders }}"
+      - "{{ releases }}"
