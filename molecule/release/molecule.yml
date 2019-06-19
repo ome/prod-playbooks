@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: idr0-slot3.openmicroscopy.org
+    image: centos:7
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../../release/release-acceptance.yml
+  inventory:
+    host_vars:
+      idr0-slot3.openmicroscopy.org:
+        product: component
+        version: 3.2.10
+  lint:
+    name: ansible-lint
+scenario:
+  name: release
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

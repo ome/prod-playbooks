@@ -1,0 +1,19 @@
+---
+- hosts: idr0-slot3.openmicroscopy.org
+  vars:
+    www_folders:
+      - /uod/idr/www/docs.openmicroscopy.org
+      - /uod/idr/www/downloads.openmicroscopy.org
+  tasks:
+  - file:
+     path: "{{ item }}/component/3.2.10"
+     state: directory
+    with_items: "{{ www_folders }}"
+  - file:
+     path: "{{ item }}//component/3.2.10/.htaccess"
+     state: touch
+    with_items: "{{ www_folders }}"
+  - file:
+     path: "{{ item }}//component/3.2.10/test"
+     state: touch
+    with_items: "{{ www_folders }}"
