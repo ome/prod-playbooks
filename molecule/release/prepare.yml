@@ -5,15 +5,46 @@
       - /uod/idr/www/docs.openmicroscopy.org
       - /uod/idr/www/downloads.openmicroscopy.org
   tasks:
-  - file:
-     path: "{{ item }}/component/3.2.10"
+  - name: Create existing released components
+    file:
+     path: "{{ item }}/component/3.1.8"
      state: directory
+     owner: root
+     group: root
+     mode: 01555
     with_items: "{{ www_folders }}"
-  - file:
-     path: "{{ item }}//component/3.2.10/.htaccess"
+  - name: Create existing minor version symlinks
+    file:
+     src: "{{ item }}/component/3.1.8"
+     dest: "{{ item }}/component/3.1"
+     state: link
+    with_items: "{{ www_folders }}"
+  - name: Create existing major version symlinks
+    file:
+     src: "{{ item }}/component/3.1.8"
+     dest: "{{ item }}/component/3"
+     state: link
+    with_items: "{{ www_folders }}"
+  - name: Create existing latest version symlinks
+    file:
+     src: "{{ item }}/component/3.1.8"
+     dest: "{{ item }}/component/latest"
+     state: link
+    with_items: "{{ www_folders }}"
+  - name: Create new release components
+    file:
+     path: "{{ item }}/component/3.2.0"
+     state: directory
+     mode: 01777
+    with_items: "{{ www_folders }}"
+  - name: Create .htaccess file
+    file:
+     path: "{{ item }}/component/3.2.0/.htaccess"
      state: touch
     with_items: "{{ www_folders }}"
-  - file:
-     path: "{{ item }}//component/3.2.10/test"
+  - name: Create mock content
+    file:
+     path: "{{ item }}/component/3.2.0/test"
      state: touch
+     mode: 01777
     with_items: "{{ www_folders }}"
