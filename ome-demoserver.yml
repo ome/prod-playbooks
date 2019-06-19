@@ -157,6 +157,7 @@
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
+        - https://gitlab.com/openmicroscopy/incubator/omero-signup/-/archive/v0.0.4/omero-signup-v0.0.4.zip
         editable: False
         state: present
         # variable comes from role ome.omero_web
@@ -224,6 +225,18 @@
         mode: "u=rw,go=r"
       notify:
         - restart omero-web
+
+    - name: OMERO.web config for signup app
+      become: yes
+      template:
+        src: templates/omero-web-config-signup.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+        - restart omero-web
+      no_log: true
 
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
