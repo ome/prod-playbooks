@@ -21,8 +21,7 @@
 
     - name: Check pre-release
       set_fact:
-        prelease: True
-      when: "'-' in version"
+        prerelease: "{{ '-' in version }}"
 
     - name: Define minor and major versions
       set_fact:
@@ -51,7 +50,7 @@
         dest: "{{ item }}/{{ product }}/{{ minorversion }}"
         state: link
       with_items: "{{ www_folders }}"
-      when: prelease is not defined
+      when: not prerelease
 
     - name: Create major version symlink
       file:
@@ -59,7 +58,7 @@
         dest: "{{ item }}/{{ product }}/{{ majorversion }}"
         state: link
       with_items: "{{ www_folders }}"
-      when: prelease is not defined
+      when: not prerelease
 
     - name: Create latest version symlink
       file:
@@ -67,4 +66,4 @@
         dest: "{{ item }}/{{ product }}/latest"
         state: link
       with_items: "{{ www_folders }}"
-      when: prelease is not defined
+      when: not prerelease
