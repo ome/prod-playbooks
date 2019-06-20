@@ -4,7 +4,7 @@
   tasks:
     - name: Check mandatory variables are defined
       fail:
-        msg: Please pass 'product' and 'version variables'
+        msg: Please pass 'product' and 'version' variables
       when: product is not defined and version is not defined
 
     - name: Check the release component exist
