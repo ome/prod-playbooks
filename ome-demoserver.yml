@@ -47,15 +47,6 @@
         - python-markdown
         - mencoder # For the 'make movie' script
 
-    # Set desired state of webapps (upgrade v.s. install/keep current version)
-    - name: OMERO.web plugin upgrade | set default state "installed"
-      set_fact:
-        webapps_state: present
-    - name: OMERO.web plugin upgrade | if --extra-vars upgrade_webapps == True, allow web plugin(s) to upgrade.
-      set_fact:
-        webapps_state: latest
-      when: upgrade_webapps is defined and upgrade_webapps == "True"
-
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
@@ -159,15 +150,15 @@
       become: yes
       pip:
         name:
-        - "omero-figure{{ omero_figure_version_req | default('') }}"
-        - "omero-fpbioimage"
-        - "omero-webtagging-autotag"
-        - "omero-webtagging-tagsearch"
-        - "omero-iviewer"
-        - "omero-parade"
-        - "django-cors-headers"
+        - "omero-figure=={{ omero_figure_release }}"
+        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+        - "omero-iviewer=={{ omero_iviewer_release }}"
+        - "omero-parade=={{ omero_parade_release }}"
+        - "django-cors-headers=={{ django_cors_headers_release }}"
         editable: False
-        state: "{{ webapps_state }}"
+        state: present
         # variable comes from role openmicroscopy.omero-web
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
@@ -298,13 +289,25 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_tag | default("master") }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_script_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
-        mode: 0644
-        owner: root
-        checksum: "{{ omero_figure_pdfscript_checksum | default(omit) }}"
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
 
   vars:
+    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.4.0') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
+    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.0.2') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+
+    omero_server_release: "{{ omero_server_release_override | default('5.5.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.5.0') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
 
