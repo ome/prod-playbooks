@@ -59,6 +59,8 @@
         # Manually configure to avoid conflicts between Docker and system rules
         iptables: false
 
+    - role: ome.cli_utils
+
   post_tasks:
 
     - name: Create additional nginx include directory
