@@ -2,23 +2,68 @@
 - hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
-    - stat:
-        path: "/uod/idr/www/downloads.openmicroscopy.org/{{ product }}/{{ version }}/"
-      register: s
-      when: product is defined and version is defined
+    - name: Check mandatory variables are defined
+      fail:
+        msg: Please pass 'product' and 'version' variables
+      when: product is not defined and version is not defined
 
-    - file:
-        path: "{{ item }}/{{ product }}/{{ version }}/.htaccess"
-        state: absent
-      when: s.stat is defined and s.stat.exists
+    - name: Check the release component exist
+      stat:
+        path: "{{ item }}/{{ product }}/{{ version }}/"
+      register: s
       with_items: "{{ www_folders }}"
 
-    - file:
+    - name: Check the release component exist
+      fail:
+        msg: "{{ item }} does not exist"
+      with_items: "{{ s.results }}"
+      when: item.stat is not defined or not item.stat.exists
+
+    - name: Check pre-release
+      set_fact:
+        prerelease: "{{ '-' in version }}"
+
+    - name: Define minor and major versions
+      set_fact:
+        minorversion: "{{ version.split('.')[:2] | join('.') }}"
+        majorversion: "{{ version.split('.')[:1] | join('.') }}"
+
+    - name: Remove .htaccess file
+      file:
+        path: "{{ item }}/{{ product }}/{{ version }}/.htaccess"
+        state: absent
+      with_items: "{{ www_folders }}"
+
+    - name: Make release folders read-only and owned by root
+      file:
         path: "{{ item }}/{{ product }}/{{ version }}"
         state: directory
         owner: root
         group: root
         recurse: true
         mode: 01555
-      when: s.stat is defined and s.stat.exists
       with_items: "{{ www_folders }}"
+
+    - name: Create minor version symlink
+      file:
+        src: "{{ item }}/{{ product }}/{{ version }}"
+        dest: "{{ item }}/{{ product }}/{{ minorversion }}"
+        state: link
+      with_items: "{{ www_folders }}"
+      when: not prerelease
+
+    - name: Create major version symlink
+      file:
+        src: "{{ item }}/{{ product }}/{{ version }}"
+        dest: "{{ item }}/{{ product }}/{{ majorversion }}"
+        state: link
+      with_items: "{{ www_folders }}"
+      when: not prerelease
+
+    - name: Create latest version symlink
+      file:
+        src: "{{ item }}/{{ product }}/{{ version }}"
+        dest: "{{ item }}/{{ product }}/latest"
+        state: link
+      with_items: "{{ www_folders }}"
+      when: not prerelease

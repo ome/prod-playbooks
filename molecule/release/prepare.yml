@@ -1,0 +1,59 @@
+---
+- hosts: all
+  vars:
+    www_folders:
+      - /uod/idr/www/docs.openmicroscopy.org
+      - /uod/idr/www/downloads.openmicroscopy.org
+    releases:
+      - 3.2.0
+      - 3.2.0-rc1
+  tasks:
+  - name: Create existing released components
+    file:
+     path: "{{ item }}/component/3.1.8"
+     state: directory
+     owner: root
+     group: root
+     mode: 01555
+    with_items: "{{ www_folders }}"
+  - name: Create existing minor version symlinks
+    file:
+     src: "{{ item }}/component/3.1.8"
+     dest: "{{ item }}/component/3.1"
+     state: link
+    with_items: "{{ www_folders }}"
+  - name: Create existing major version symlinks
+    file:
+     src: "{{ item }}/component/3.1.8"
+     dest: "{{ item }}/component/3"
+     state: link
+    with_items: "{{ www_folders }}"
+  - name: Create existing latest version symlinks
+    file:
+     src: "{{ item }}/component/3.1.8"
+     dest: "{{ item }}/component/latest"
+     state: link
+    with_items: "{{ www_folders }}"
+  - name: Create new release components
+    file:
+     path: "{{ item[0] }}/component/{{ item[1] }}"
+     state: directory
+     mode: 01777
+    with_nested:
+      - "{{ www_folders }}"
+      - "{{ releases }}"
+  - name: Create .htaccess file
+    file:
+     path: "{{ item[0] }}/component/{{ item[1] }}/.htaccess"
+     state: touch
+    with_nested:
+      - "{{ www_folders }}"
+      - "{{ releases }}"
+  - name: Create mock content
+    file:
+     path: "{{ item[0] }}/component/{{ item[1] }}/test"
+     state: touch
+     mode: 01777
+    with_nested:
+      - "{{ www_folders }}"
+      - "{{ releases }}"
