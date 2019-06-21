@@ -146,6 +146,16 @@
       # Configuration for this role in `vars`
 
   post_tasks:
+
+    - name: Omero.web plugins | additional distro dependencies
+      become: yes
+      yum:
+        name:
+          # python-jwt is present in CentOS7 but not RHEL7 so instead install
+          # libffi-devel so it can be pip installed later
+          - libffi-devel
+        state: installed
+
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
       pip:
@@ -158,6 +168,11 @@
         - "omero-parade=={{ omero_parade_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
         - https://gitlab.com/openmicroscopy/incubator/omero-signup/-/archive/v0.0.4/omero-signup-v0.0.4.zip
+        # omero-oauth has jsonschema as a dependency
+        # jsonchema has functools32 as a dependency but it's not brought in,
+        # possibly due to an old version of pip
+        - functools32
+        - https://gitlab.com/openmicroscopy/incubator/omero-oauth/-/archive/v0.0.2/omero-oauth-v0.0.2.zip
         editable: False
         state: present
         # variable comes from role ome.omero_web
@@ -226,14 +241,28 @@
       notify:
         - restart omero-web
 
-    - name: OMERO.web config for signup app
+    - name: OMERO.web config for signup apps
       become: yes
       template:
         src: templates/omero-web-config-signup.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
+        # Contains sensitive info
         owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
+        group: "omero-web"
+        mode: "u=rw,g=r"
+      notify:
+        - restart omero-web
+      no_log: true
+
+    - name: OMERO.web config for oauth providers
+      become: yes
+      template:
+        src: templates/omero-oauth-config-multiauth.yaml.j2
+        dest: "{{ omero_web_basedir }}/config/omero-oauth-config-multiauth.yaml"
+        # Contains sensitive info
+        owner: "root"
+        group: "omero-web"
+        mode: "u=rw,g=r"
       notify:
         - restart omero-web
       no_log: true

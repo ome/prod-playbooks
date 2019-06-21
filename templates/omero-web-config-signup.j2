@@ -1,10 +1,20 @@
 # {{ ansible_managed }}
 # Allow self-signups
-# https://gitlab.com/openmicroscopy/incubator/omero-signup/tree/v0.0.4
 
+# https://gitlab.com/openmicroscopy/incubator/omero-signup/tree/v0.0.4
 config append -- omero.web.apps '"omero_signup"'
-config set -- omero.web.signup.admin.password {{ omero_server_rootpassword }}
+config set -- omero.web.signup.host localhost
 config set -- omero.web.signup.admin.user root
+config set -- omero.web.signup.admin.password {{ omero_server_rootpassword }}
 config set -- omero.web.signup.group.name %Y-%m
 config set -- omero.web.signup.group.templatetime true
-config set -- omero.web.signup.host localhost
+
+
+# https://gitlab.com/openmicroscopy/incubator/omero-oauth/tree/v0.0.2
+config append -- omero.web.apps '"omero_oauth"'
+config set -- omero.web.oauth.host localhost
+config set -- omero.web.oauth.admin.user root
+config set -- omero.web.oauth.admin.password {{ omero_server_rootpassword }}
+config set -- omero.web.oauth.group.name %Y-%m
+config set -- omero.web.oauth.group.templatetime true
+config set -- omero.web.oauth.providers /opt/omero/web/config/omero-oauth-config-multiauth.yaml
