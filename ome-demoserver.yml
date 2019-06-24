@@ -147,15 +147,6 @@
 
   post_tasks:
 
-    - name: Omero.web plugins | additional distro dependencies
-      become: yes
-      yum:
-        name:
-          # python-jwt is present in CentOS7 but not RHEL7 so instead install
-          # libffi-devel so it can be pip installed later
-          - libffi-devel
-        state: installed
-
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
       pip:
@@ -167,12 +158,7 @@
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
-        - https://gitlab.com/openmicroscopy/incubator/omero-signup/-/archive/v0.0.4/omero-signup-v0.0.4.zip
-        # omero-oauth has jsonschema as a dependency
-        # jsonchema has functools32 as a dependency but it's not brought in,
-        # possibly due to an old version of pip
-        - functools32
-        - https://gitlab.com/openmicroscopy/incubator/omero-oauth/-/archive/v0.0.2/omero-oauth-v0.0.2.zip
+        - https://gitlab.com/openmicroscopy/incubator/omero-signup/-/archive/v{{ omero_signup_release }}/omero-signup-v{{ omero_signup_release }}.zip
         editable: False
         state: present
         # variable comes from role ome.omero_web
@@ -241,24 +227,11 @@
       notify:
         - restart omero-web
 
-    - name: OMERO.web config for signup apps
+    - name: OMERO.web config for signup app
       become: yes
       template:
         src: templates/omero-web-config-signup.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
-        # Contains sensitive info
-        owner: "root"
-        group: "omero-web"
-        mode: "u=rw,g=r"
-      notify:
-        - restart omero-web
-      no_log: true
-
-    - name: OMERO.web config for oauth providers
-      become: yes
-      template:
-        src: templates/omero-oauth-config-multiauth.yaml.j2
-        dest: "{{ omero_web_basedir }}/config/omero-oauth-config-multiauth.yaml"
         # Contains sensitive info
         owner: "root"
         group: "omero-web"
@@ -347,6 +320,7 @@
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_signup_release: '0.0.7'
 
     omero_server_release: "{{ omero_server_release_override | default('5.5.0') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.5.0') }}"
