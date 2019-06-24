@@ -111,6 +111,7 @@
         name:
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
+        - "omero-metadata=={{ omero_metadata_release }}"
         state: present
 
     - name: Create a figure scripts directory
@@ -343,6 +344,7 @@
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
+    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.3.1') }}"
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
     # The os_system_users_password default is "ome".
     # You may wish to change this variable,
