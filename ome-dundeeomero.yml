@@ -249,8 +249,6 @@
     #omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
     ice_version: "3.6"
-    ice_install_devel: False
-    ice_python_wheel: "https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl"
     postgresql_version: "9.6"
     filesystem: "xfs"
     omero_figure_release: "{{ omero_figure_release_override | default('v4.0.2') }}"
