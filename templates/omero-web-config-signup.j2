@@ -1,12 +1,13 @@
 # {{ ansible_managed }}
 # Allow self-signups
 
-# https://gitlab.com/openmicroscopy/incubator/omero-signup/tree/v0.0.7
+# https://gitlab.com/openmicroscopy/incubator/omero-signup/tree/v0.0.8
 config append -- omero.web.apps '"omero_signup"'
 config set -- omero.web.signup.host localhost
 config set -- omero.web.signup.admin.user root
-config set -- omero.web.signup.admin.password {{ omero_server_rootpassword }}
+config set -- omero.web.signup.admin.password {{ omero_server_rootpassword | default('omero') }}
 config set -- omero.web.signup.group.name %Y-%m
 config set -- omero.web.signup.group.templatetime true
 config set -- omero.web.signup.email.enabled true
+config set -- omero.web.signup.helpmessage 'If you have trouble creating an account please contact {{ omero_server_mail_from | default('help@example.org') }}'
 config set -- omero.web.signup.email.body 'Your login details for {{ inventory_hostname }} are:\n\nusername: {username}\npassword: {password}\n'

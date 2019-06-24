@@ -235,7 +235,7 @@
         # Contains sensitive info
         owner: "root"
         group: "omero-web"
-        mode: "u=rw,g=r"
+        mode: "0640"
       notify:
         - restart omero-web
       no_log: true
@@ -320,7 +320,7 @@
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_signup_release: '0.0.7'
+    omero_signup_release: '0.0.8'
 
     omero_server_release: "{{ omero_server_release_override | default('5.5.0') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.5.0') }}"
