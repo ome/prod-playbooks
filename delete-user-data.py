@@ -26,6 +26,7 @@ from omero.callbacks import CmdCallbackI
 from omero.gateway import BlitzGateway
 from omero.rtypes import rlong
 from omero.sys import ParametersI
+from omero.cli import CLI
 from omero.cmd import \
     Delete2, Delete2Response, \
     DiskUsage2, DiskUsage2Response, \
@@ -38,6 +39,7 @@ from copy import copy
 from time import time
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--local", "-l", default=False, action="store_true")
 parser.add_argument("--username", "-u", default="mtbcarroll")
 parser.add_argument("--password", "-p", default="XXXXXXXXXX")
 parser.add_argument("--host", "-H", default="demo.openmicroscopy.org")
@@ -47,9 +49,18 @@ parser.add_argument("--gigabytes", "-g", type=int, default=100)
 parser.add_argument("--force", "-f", default=False, action="store_true")
 ns = parser.parse_args()
 
+if ns.local:
+    # Refactor to use with statement
+    cli = CLI()
+    cli.loadplugins()
+    cli.onecmd(["-q", "login"])
+    conn = BlitzGateway(client_obj=cli.get_client())
 
 # Fill in administrator login credentials.
-conn = BlitzGateway(ns.username, ns.password, host=ns.host)
+else:
+    cli = None
+    conn = BlitzGateway(ns.username, ns.password, host=ns.host)
+    conn.connect()
 
 # Do not delete data of users who logged out within recent days.
 minimum_days = ns.days
@@ -83,9 +94,8 @@ if dry_run:
 else:
     print('Running for real: will actually delete data.')
 
-# Obtain gateway connection and query service.
+# Obtain query service.
 
-conn.connect()
 query_service = conn.getQueryService()
 
 
@@ -342,4 +352,7 @@ for user in choose_users(excess_file_count, excess_file_size, user_stats):
     print('Deleting data of "{}" (#{}).'.format(user.name, user.id))
     delete_data(user.id)
 
-conn._closeSession()
+if cli:
+    cli.close()
+else:
+    conn._closeSession()
