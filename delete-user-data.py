@@ -32,24 +32,36 @@ from omero.cmd import \
     LegalGraphTargets, LegalGraphTargetsResponse
 
 import sys
+import argparse
 
 from copy import copy
 from time import time
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--username", "-u", default="mtbcarroll")
+parser.add_argument("--password", "-p", default="XXXXXXXXXX")
+parser.add_argument("--host", "-H", default="demo.openmicroscopy.org")
+parser.add_argument("--days", "-d", type=int, default=90)
+parser.add_argument("--count", "-c", type=int, default=10000)
+parser.add_argument("--gigabytes", "-g", type=int, default=100)
+parser.add_argument("--force", "-f", default=False, action="store_true")
+ns = parser.parse_args()
+
+
 # Fill in administrator login credentials.
-conn = BlitzGateway('mtbcarroll', 'XXXXXXX', host='demo.openmicroscopy.org')
+conn = BlitzGateway(ns.username, ns.password, host=ns.host)
 
 # Do not delete data of users who logged out within recent days.
-minimum_days = 90
+minimum_days = ns.days
 
 # How many inodes need to be removed, can be 0.
-excess_file_count = 10000
+excess_file_count = ns.count
 
 # How many bytes need to be deleted, can be 0; written as n * 1GB.
-excess_file_size = 100 * 1024**3
+excess_file_size = ns.gigabytes * 1024**3
 
 # Leave this as True except when running the script for real.
-dry_run = True
+dry_run = not ns.force
 
 # -=-=- Users need not adjust code below -=-=-
 
