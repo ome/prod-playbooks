@@ -145,8 +145,12 @@ def choose_users(file_count, file_size, user_stats):
 def submit(conn, request, expected):
     # Submit a request and wait for it to complete.
     # Returns with the response only if it was of the given type.
-    prx = conn.c.sf.submit(request)
-    rsp = CmdCallbackI(conn.c, prx).loop(500, 500)
+    cb = conn.c.submit(request)
+    try:
+        rsp = cb.getResponse()
+    finally:
+        cb.close(True)
+
     if not isinstance(rsp, expected):
         conn._closeSession()
         sys.exit('unexpected response: {}'.format(rsp))
