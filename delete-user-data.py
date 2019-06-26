@@ -47,20 +47,8 @@ parser.add_argument("--days", "-d", type=int, default=90)
 parser.add_argument("--count", "-c", type=int, default=10000)
 parser.add_argument("--gigabytes", "-g", type=int, default=100)
 parser.add_argument("--force", "-f", default=False, action="store_true")
+parser.add_argument("--test", "-t", default=False, action="store_true")
 ns = parser.parse_args()
-
-if ns.local:
-    # Refactor to use with statement
-    cli = CLI()
-    cli.loadplugins()
-    cli.onecmd(["-q", "login"])
-    conn = BlitzGateway(client_obj=cli.get_client())
-
-# Fill in administrator login credentials.
-else:
-    cli = None
-    conn = BlitzGateway(ns.username, ns.password, host=ns.host)
-    conn.connect()
 
 # Do not delete data of users who logged out within recent days.
 minimum_days = ns.days
@@ -94,9 +82,6 @@ if dry_run:
 else:
     print('Running for real: will actually delete data.')
 
-# Obtain query service.
-
-query_service = conn.getQueryService()
 
 
 class UserStats:
@@ -157,7 +142,7 @@ def choose_users(file_count, file_size, user_stats):
     return to_delete
 
 
-def submit(request, expected):
+def submit(conn, request, expected):
     # Submit a request and wait for it to complete.
     # Returns with the response only if it was of the given type.
     prx = conn.c.sf.submit(request)
@@ -168,43 +153,46 @@ def submit(request, expected):
     return rsp
 
 
-# Find which model object types to query and target in deleting users' data.
+def get_delete_classes(conn):
+    # Find which model object types to query and target in deleting users' data.
 
-delete_classes = []
+    delete_classes = []
 
-rsp = submit(LegalGraphTargets(request=Delete2()), LegalGraphTargetsResponse)
+    rsp = submit(conn, LegalGraphTargets(request=Delete2()), LegalGraphTargetsResponse)
 
-params = ParametersI()
-params.addId(rlong(0))
-params.page(0, 1)
+    params = ParametersI()
+    params.addId(rlong(0))
+    params.page(0, 1)
 
-for delete_class in rsp.targets:
-    if delete_class.endswith('Link'):
-        continue
-    # TODO: Skipping these only to prevent console output.
-    if delete_class in ['ome.model.meta.GroupExperimenterMap',
-                        'ome.model.meta.Namespace',
-                        'ome.model.meta.ShareMember']:
-        continue
-    try:
-        query_service.projection(
-            "SELECT 1 FROM {} WHERE details.owner.id = :id"
-            .format(delete_class), params)
-        delete_classes.append(delete_class)
-    except omero.QueryException:
-        # TODO: Suppress console warning output.
-        pass
+    for delete_class in rsp.targets:
+        if delete_class.endswith('Link'):
+            continue
+        # TODO: Skipping these only to prevent console output.
+        if delete_class in ['ome.model.meta.GroupExperimenterMap',
+                            'ome.model.meta.Namespace',
+                            'ome.model.meta.ShareMember']:
+            continue
+        try:
+            con.getQueryService().projection(
+                "SELECT 1 FROM {} WHERE details.owner.id = :id"
+                .format(delete_class), params)
+            delete_classes.append(delete_class)
+        except omero.QueryException:
+            # TODO: Suppress console warning output.
+            pass
+    return delete_classes
 
 
-def delete_data(user_id):
+
+def delete_data(conn, user_id):
     # Delete all the data of the given user. Respects the state of dry_run.
     all_groups = {'omero.group': '-1'}
     params = ParametersI()
     params.addId(rlong(user_id))
     delete = Delete2(dryRun=dry_run, targetObjects={})
-    for delete_class in delete_classes:
+    for delete_class in get_delete_classes():
         object_ids = []
-        for result in query_service.projection(
+        for result in conn.getQueryService().projection(
                 "SELECT id FROM {} WHERE details.owner.id = :id"
                 .format(delete_class), params, all_groups):
             object_id = result[0].val
@@ -212,147 +200,183 @@ def delete_data(user_id):
         if object_ids:
             delete.targetObjects[delete_class] = object_ids
     if delete.targetObjects:
-        submit(delete, Delete2Response)
+        submit(conn, delete, Delete2Response)
 
 
-# Determine which users' data to consider deleting.
 
-users = {}
+def find_users(conn):
+    # Determine which users' data to consider deleting.
 
-for result in query_service.projection(
-        "SELECT id, omeName FROM Experimenter", None):
-    user_id = result[0].val
-    user_name = result[1].val
-    users[user_id] = user_name
+    users = {}
 
-for result in query_service.projection(
-        "SELECT DISTINCT owner.id FROM Session WHERE closed IS NULL", None):
-    user_id = result[0].val
-    print('Ignoring "{}" (#{}) who is logged in.'
-          .format(users[user_id], user_id))
-    del users[user_id]
+    for result in conn.getQueryService().projection(
+            "SELECT id, omeName FROM Experimenter", None):
+        user_id = result[0].val
+        user_name = result[1].val
+        users[user_id] = user_name
 
-now = time()
-
-logouts = {}
-
-for result in query_service.projection(
-        "SELECT owner.id, MAX(closed) FROM Session GROUP BY owner.id", None):
-    user_id = result[0].val
-    if user_id not in users:
-        continue
-
-    if result[1] is None:
-        # never logged in
-        user_logout = 0
-    else:
-        # note time in seconds since epoch
-        user_logout = result[1].val / 1000
-
-    days = (now - user_logout) / (60 * 60 * 24)
-    if (days < minimum_days):
-        print('Ignoring "{}" (#{}) who logged in recently.'
+    for result in conn.getQueryService().projection(
+            "SELECT DISTINCT owner.id FROM Session WHERE closed IS NULL", None):
+        user_id = result[0].val
+        print('Ignoring "{}" (#{}) who is logged in.'
               .format(users[user_id], user_id))
         del users[user_id]
 
-    logouts[user_id] = user_logout
+    now = time()
 
-# Note users' resource usage.
-# DiskUsage2.targetClasses remains too inefficient so iterate.
+    logouts = {}
 
-user_stats = []
+    for result in conn.getQueryService().projection(
+            "SELECT owner.id, MAX(closed) FROM Session GROUP BY owner.id", None):
+        user_id = result[0].val
+        if user_id not in users:
+            continue
 
-for user_id, user_name in users.items():
-    print('Finding disk usage of "{}" (#{}).'.format(user_name, user_id))
-    user = {'Experimenter': [user_id]}
-    rsp = submit(DiskUsage2(targetObjects=user), DiskUsage2Response)
+        if result[1] is None:
+            # never logged in
+            user_logout = 0
+        else:
+            # note time in seconds since epoch
+            user_logout = result[1].val / 1000
 
-    file_count = 0
-    file_size = 0
+        days = (now - user_logout) / (60 * 60 * 24)
+        if (days < minimum_days):
+            print('Ignoring "{}" (#{}) who logged in recently.'
+                  .format(users[user_id], user_id))
+            del users[user_id]
 
-    for who, usage in rsp.totalFileCount.items():
-        if who.first == user_id:
-            file_count += usage
-    for who, usage in rsp.totalBytesUsed.items():
-        if who.first == user_id:
-            file_size += usage
-
-    if file_count > 0 or file_size > 0:
-        user_stats.append(UserStats(user_id, user_name, file_count, file_size,
-                                    logouts[user_id]))
-
-# Run tests on "choose_users".
-
-alice = UserStats(0, 'Alice', 0, 0, 0)
-chloe = UserStats(0, 'Chloe', 0, 1, 0)
-daisy = UserStats(0, 'Daisy', 0, 2, 0)
-elsie = UserStats(0, 'Elsie', 1, 0, 0)
-emily = UserStats(0, 'Emily', 1, 1, 0)
-ethan = UserStats(0, 'Ethan', 1, 2, 0)
-freya = UserStats(0, 'Freya', 2, 0, 0)
-grace = UserStats(0, 'Grace', 2, 1, 0)
-henry = UserStats(0, 'Henry', 2, 2, 0)
-isaac = UserStats(0, 'Isaac', 0, 0, 1)
-jacob = UserStats(0, 'Jacob', 0, 1, 1)
-james = UserStats(0, 'James', 0, 2, 1)
-logan = UserStats(0, 'Logan', 1, 0, 1)
-lucas = UserStats(0, 'Lucas', 1, 1, 1)
-mason = UserStats(0, 'Mason', 1, 2, 1)
-oscar = UserStats(0, 'Oscar', 2, 0, 1)
-poppy = UserStats(0, 'Poppy', 2, 1, 1)
-sofia = UserStats(0, 'Sofia', 2, 2, 1)
-
-test_users = [alice, chloe, daisy, elsie, emily, ethan, freya, grace, henry,
-              isaac, jacob, james, logan, lucas, mason, oscar, poppy, sofia]
-
-test_cases = [
-    (0, 0, set()),
-    (1, 1, {'Henry'}),
-    (2, 2, {'Henry'}),
-    (6, 0, {'Freya', 'Grace', 'Henry'}),
-    (6, 2, {'Freya', 'Grace', 'Henry'}),
-    (0, 6, {'Daisy', 'Ethan', 'Henry'}),
-    (2, 6, {'Daisy', 'Ethan', 'Henry'}),
-    (6, 6, {'Ethan', 'Grace', 'Henry', 'Sofia'}),
-    (7, 7, {'Ethan', 'Grace', 'Henry', 'Sofia'}),
-    (6, 8, {'Daisy', 'Ethan', 'Grace', 'Henry', 'Sofia'}),
-    (6, 9, {'Daisy', 'Ethan', 'Grace', 'Henry', 'Sofia'}),
-    (8, 6, {'Ethan', 'Freya', 'Grace', 'Henry', 'Sofia'}),
-    (9, 6, {'Ethan', 'Freya', 'Grace', 'Henry', 'Sofia'}),
-    (2, 15, {'Chloe', 'Daisy', 'Emily', 'Ethan', 'Grace', 'Henry',
-             'James', 'Mason', 'Sofia'}),
-    (6, 15, {'Chloe', 'Daisy', 'Emily', 'Ethan', 'Grace', 'Henry',
-             'James', 'Mason', 'Sofia'}),
-    (15, 2, {'Elsie', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
-             'Oscar', 'Poppy', 'Sofia'}),
-    (15, 6, {'Elsie', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
-             'Oscar', 'Poppy', 'Sofia'}),
-    (13, 13, {'Daisy', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
-              'Mason', 'Poppy', 'Sofia'})]
-
-case_number = 0
+        logouts[user_id] = user_logout
+    return users
 
 
-def test():
-    global case_number
-    for file_count, file_size, expected_names in test_cases:
-        case_number += 1
-        chosen = choose_users(file_count, file_size, map(copy, test_users))
-        actual_names = set([user.name for user in chosen])
-        assert actual_names == expected_names
+def resource_usage(conn):
+    # Note users' resource usage.
+    # DiskUsage2.targetClasses remains too inefficient so iterate.
+
+    user_stats = []
+
+    for user_id, user_name in find_users(conn).items():
+        print('Finding disk usage of "{}" (#{}).'.format(user_name, user_id))
+        user = {'Experimenter': [user_id]}
+        rsp = submit(conn, DiskUsage2(targetObjects=user), DiskUsage2Response)
+
+        file_count = 0
+        file_size = 0
+
+        for who, usage in rsp.totalFileCount.items():
+            if who.first == user_id:
+                file_count += usage
+        for who, usage in rsp.totalBytesUsed.items():
+            if who.first == user_id:
+                file_size += usage
+
+        if file_count > 0 or file_size > 0:
+            user_stats.append(UserStats(user_id, user_name, file_count, file_size,
+                                        logouts[user_id]))
+    return user_stats
+
+def run_tests():
+    # Run tests on "choose_users".
+
+    alice = UserStats(0, 'Alice', 0, 0, 0)
+    chloe = UserStats(0, 'Chloe', 0, 1, 0)
+    daisy = UserStats(0, 'Daisy', 0, 2, 0)
+    elsie = UserStats(0, 'Elsie', 1, 0, 0)
+    emily = UserStats(0, 'Emily', 1, 1, 0)
+    ethan = UserStats(0, 'Ethan', 1, 2, 0)
+    freya = UserStats(0, 'Freya', 2, 0, 0)
+    grace = UserStats(0, 'Grace', 2, 1, 0)
+    henry = UserStats(0, 'Henry', 2, 2, 0)
+    isaac = UserStats(0, 'Isaac', 0, 0, 1)
+    jacob = UserStats(0, 'Jacob', 0, 1, 1)
+    james = UserStats(0, 'James', 0, 2, 1)
+    logan = UserStats(0, 'Logan', 1, 0, 1)
+    lucas = UserStats(0, 'Lucas', 1, 1, 1)
+    mason = UserStats(0, 'Mason', 1, 2, 1)
+    oscar = UserStats(0, 'Oscar', 2, 0, 1)
+    poppy = UserStats(0, 'Poppy', 2, 1, 1)
+    sofia = UserStats(0, 'Sofia', 2, 2, 1)
+
+    test_users = [alice, chloe, daisy, elsie, emily, ethan, freya, grace, henry,
+                  isaac, jacob, james, logan, lucas, mason, oscar, poppy, sofia]
+
+    test_cases = [
+        (0, 0, set()),
+        (1, 1, {'Henry'}),
+        (2, 2, {'Henry'}),
+        (6, 0, {'Freya', 'Grace', 'Henry'}),
+        (6, 2, {'Freya', 'Grace', 'Henry'}),
+        (0, 6, {'Daisy', 'Ethan', 'Henry'}),
+        (2, 6, {'Daisy', 'Ethan', 'Henry'}),
+        (6, 6, {'Ethan', 'Grace', 'Henry', 'Sofia'}),
+        (7, 7, {'Ethan', 'Grace', 'Henry', 'Sofia'}),
+        (6, 8, {'Daisy', 'Ethan', 'Grace', 'Henry', 'Sofia'}),
+        (6, 9, {'Daisy', 'Ethan', 'Grace', 'Henry', 'Sofia'}),
+        (8, 6, {'Ethan', 'Freya', 'Grace', 'Henry', 'Sofia'}),
+        (9, 6, {'Ethan', 'Freya', 'Grace', 'Henry', 'Sofia'}),
+        (2, 15, {'Chloe', 'Daisy', 'Emily', 'Ethan', 'Grace', 'Henry',
+                 'James', 'Mason', 'Sofia'}),
+        (6, 15, {'Chloe', 'Daisy', 'Emily', 'Ethan', 'Grace', 'Henry',
+                 'James', 'Mason', 'Sofia'}),
+        (15, 2, {'Elsie', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
+                 'Oscar', 'Poppy', 'Sofia'}),
+        (15, 6, {'Elsie', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
+                 'Oscar', 'Poppy', 'Sofia'}),
+        (13, 13, {'Daisy', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
+                  'Mason', 'Poppy', 'Sofia'})]
+    
+    case_number = 0
+
+    def test(case_number):
+        for file_count, file_size, expected_names in test_cases:
+            case_number += 1
+            chosen = choose_users(file_count, file_size, map(copy, test_users))
+            actual_names = set([user.name for user in chosen])
+            assert actual_names == expected_names
+        return case_number
+
+    case_number = test(case_number)
+    test_users.reverse()
+    case_number = test(case_number)
 
 
-test()
-test_users.reverse()
-test()
+def perform_delete(conn):
+    # Perform data deletion.
+    users = choose_users(excess_file_count, excess_file_size, resource_usage(conn))
+    print('Found {} user(s) for deletion.'.format(len(users)))
+    for user in users:
+        print('Deleting data of "{}" (#{}).'.format(user.name, user.id))
+        delete_data(conn, user.id)
 
-# Perform data deletion.
 
-for user in choose_users(excess_file_count, excess_file_size, user_stats):
-    print('Deleting data of "{}" (#{}).'.format(user.name, user.id))
-    delete_data(user.id)
+def main():
 
-if cli:
-    cli.close()
-else:
-    conn._closeSession()
+    if ns.test:
+        run_tests()
+        return  # EARLY EXIT
+
+    if ns.local:
+        # Refactor to use with statement
+        cli = CLI()
+        cli.loadplugins()
+        cli.onecmd(["-q", "login"])
+        conn = BlitzGateway(client_obj=cli.get_client())
+    # Fill in administrator login credentials.
+    else:
+        cli = None
+        conn = BlitzGateway(ns.username, ns.password, host=ns.host)
+        conn.connect()
+
+    try:
+        perform_delete(conn)
+    except KeyboardInterrupt:
+        pass  # ignore
+    finally:
+        if cli:
+            cli.close()
+        else:
+            conn._closeSession()
+
+
+if __name__ == "__main__":
+    main()
