@@ -1,0 +1,8 @@
+- name: SLS LDAP TLS certificate is installed
+  become: yes
+  java_cert:
+    cert_url: ldap.lifesci.dundee.ac.uk
+    cert_port: 636
+    keystore_path: "/etc/pki/java/cacerts"
+    keystore_pass: changeit
+    state: present

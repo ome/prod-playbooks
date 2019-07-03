@@ -1,0 +1,7 @@
+- name: install OMERO.web apps
+  become: yes
+  pip:
+    name: "omero-{{ item }}"
+    state: present
+    virtualenv: "/opt/omero/web/venv"
+  loop: "{{ omero_web_app_names }}"
