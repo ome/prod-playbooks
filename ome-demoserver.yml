@@ -165,6 +165,15 @@
       notify:
         - restart omero-web
 
+    - name: Omero.cli plugins | plugin install via pip & pypi
+      become: yes
+      pip:
+        name:
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+        - "omero-cli-metadata=={{ omero_cli_metadata_release }}"
+        - "omero-cli-render=={{ omero_cli_render_release }}"
+        state: present
+
     - name: NGINX - Performance tuning - worker processes
       become: yes
       replace:
@@ -319,6 +328,11 @@
     # Backup folder for PostgreSQL 'folder' format dump
     omero_server_db_dumpdir_parent: /tmp
     omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
+
+    # Pip versions
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
+    omero_cli_metadata_release: "{{ omero_cli_metadata_release_override | default('0.4.0') }}"
 
     postgresql_version: "9.6"
     filesystem: "xfs"
