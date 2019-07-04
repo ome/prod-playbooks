@@ -177,7 +177,7 @@ def get_delete_classes(conn):
                             'ome.model.meta.ShareMember']:
             continue
         try:
-            con.getQueryService().projection(
+            conn.getQueryService().projection(
                 "SELECT 1 FROM {} WHERE details.owner.id = :id"
                 .format(delete_class), params)
             delete_classes.append(delete_class)
@@ -250,7 +250,7 @@ def find_users(conn):
             del users[user_id]
 
         logouts[user_id] = user_logout
-    return users
+    return users, logouts
 
 
 def resource_usage(conn):
@@ -258,8 +258,8 @@ def resource_usage(conn):
     # DiskUsage2.targetClasses remains too inefficient so iterate.
 
     user_stats = []
-
-    for user_id, user_name in find_users(conn).items():
+    users, logouts = find_users(conn)
+    for user_id, user_name in users.items():
         print('Finding disk usage of "{}" (#{}).'.format(user_name, user_id))
         user = {'Experimenter': [user_id]}
         rsp = submit(conn, DiskUsage2(targetObjects=user), DiskUsage2Response)
