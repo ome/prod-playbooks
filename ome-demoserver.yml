@@ -170,8 +170,8 @@
       pip:
         name:
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
-        - "omero-cli-metadata=={{ omero_cli_metadata_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
+        - "omero-metadata=={{ omero_metadata_release }}"
         state: present
 
     - name: NGINX - Performance tuning - worker processes
@@ -332,7 +332,7 @@
     # Pip versions
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
-    omero_cli_metadata_release: "{{ omero_cli_metadata_release_override | default('0.4.0') }}"
+    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.4.0') }}"
 
     postgresql_version: "9.6"
     filesystem: "xfs"
