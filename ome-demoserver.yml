@@ -98,7 +98,7 @@
       # Defaults overridden in private configuration
       # nginx_version:
 
-    - role: openmicroscopy.postgresql-3
+    - role: ome.postgresql
       #no_log: true
       postgresql_databases:
         - name: omero
