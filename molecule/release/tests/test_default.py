@@ -22,24 +22,27 @@ def test_permissions(host, base_folder):
 
 
 @pytest.mark.parametrize('base_folder', [DOWNLOADS_URL, DOCS_URL])
-def test_symlinks(host, base_folder):
+def test_redirects(host, base_folder):
     v = host.ansible.get_variables()
     hostname = host.backend.get_hostname()
-    f = host.file('%s/component/3.2' % base_folder)
+    f = host.file('%s/component/3.2/.htaccess' % base_folder)
     if hostname == 'release':
-        assert f.is_symlink
-        assert f.linked_to == '%s/component/%s' % (base_folder, v['version'])
+        assert f.exists
+        assert f.content == (
+            'Redirect 301 /component/3.2 /component/%s' % v['version'])
     elif hostname == 'prelease':
         assert not f.exists
-    f = host.file('%s/component/3' % base_folder)
-    assert f.is_symlink
+    f = host.file('%s/component/3/.htaccess' % base_folder)
+    assert f.exists
     if hostname == 'release':
-        assert f.linked_to == '%s/component/%s' % (base_folder, v['version'])
+        assert f.content == (
+            'Redirect 301 /component/3 /component/%s' % v['version'])
     elif hostname == 'prelease':
-        assert f.linked_to == '%s/component/3.1.8' % base_folder
+        assert f.content == 'Redirect 301 /component/3 /component/3.1.8'
     f = host.file('%s/component/latest' % base_folder)
-    assert f.is_symlink
+    assert f.exists
     if hostname == 'release':
-        assert f.linked_to == '%s/component/%s' % (base_folder, v['version'])
+        assert f.content == (
+            'Redirect 301 /component/latest /component/%s' % v['version'])
     elif hostname == 'prelease':
-        assert f.linked_to == '%s/component/3.1.8' % base_folder
+        assert f.content == 'Redirect 301 /component/latest /component/3.1.8'
