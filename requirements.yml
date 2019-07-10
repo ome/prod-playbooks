@@ -69,9 +69,8 @@
 - src: openmicroscopy.postgresql
   version: 2.0.0
 
-- name: openmicroscopy.postgresql-3
-  src: openmicroscopy.postgresql
-  version: 3.0.1
+- src: ome.postgresql
+  version: 3.2.0
 
 - src: openmicroscopy.postgresql_backup
   version: 0.1.0
