@@ -48,12 +48,6 @@
         name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
         state: present
 
-    - name: Install Make Movie script Prerequisite | MEncoder - Package
-      become: yes
-      yum:
-        name: mencoder
-        state: present
-
     - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
       become: yes
       yum:
@@ -103,7 +97,7 @@
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: openmicroscopy.omero-server
-      omero_server_release: 5.4.9
+      omero_server_release: 5.5.0
       # install-mock set for inital provision, then playbook re-run with correct accounts.
       #omero_server_dbuser: install-mock
       #omero_server_dbname:  install-mock
@@ -234,11 +228,11 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_tag | default("master") }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0644
         owner: root
-        checksum: "{{ omero_figure_pdfscript_checksum | default(omit) }}"
+        force: yes
 
   vars:
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
@@ -254,9 +248,10 @@
     #omero_server_db_dumpdir_parent: /tmp
     #omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
+    ice_version: "3.6"
     postgresql_version: "9.6"
     filesystem: "xfs"
-
+    omero_figure_release: "{{ omero_figure_release_override | default('v4.0.2') }}"
     omero_server_config_set:
       omero.db.poolsize: 60
       omero.jvmcfg.percent.blitz: 50
