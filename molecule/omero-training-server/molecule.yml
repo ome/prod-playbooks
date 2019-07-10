@@ -26,6 +26,10 @@ provisioner:
     group_vars:
       all:
         molecule_test: True
+        # Temporary workaround for
+        # https://forum.image.sc/t/fyi-not-possible-to-create-new-omero-instance-with-latest-postgresql-versions/26929
+        # Only affects new OMERO databases, existing ones should be OK
+        postgresql_package_version: 9.6.13
       docker-hosts:
         omero_server_systemd_require_network: False
         # This should allow docker-in-docker to work
