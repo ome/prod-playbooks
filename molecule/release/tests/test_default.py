@@ -39,7 +39,7 @@ def test_redirects(host, base_folder):
             'Redirect 301 /component/3 /component/%s' % v['version'])
     elif hostname == 'prelease':
         assert f.content == 'Redirect 301 /component/3 /component/3.1.8'
-    f = host.file('%s/component/latest' % base_folder)
+    f = host.file('%s/component/latest/.htaccess' % base_folder)
     assert f.exists
     if hostname == 'release':
         assert f.content == (
