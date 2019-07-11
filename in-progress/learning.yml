@@ -94,8 +94,6 @@
           redirect:
             - webindex
           viewname: "webindex_custom"
-          query_string: ""
-          args: []
         omero.web.ui.top_links:
           - ["Virtual Microscope", "webindex", {"title": "Virtual Microscope"}]
           - ["HELP", "https://help.openmicroscopy.org/virtual-microscope.html", {"title": "Help", "target": "new"}]
