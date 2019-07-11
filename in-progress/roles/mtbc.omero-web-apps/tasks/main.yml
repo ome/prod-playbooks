@@ -2,6 +2,6 @@
   become: yes
   pip:
     name: "omero-{{ item }}"
-    state: present
+    state: latest
     virtualenv: "/opt/omero/web/venv"
   loop: "{{ omero_web_app_names }}"
