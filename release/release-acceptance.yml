@@ -44,26 +44,47 @@
         mode: 01555
       with_items: "{{ www_folders }}"
 
-    - name: Create minor version symlink
+    - name: Create minor version directory
       file:
-        src: "{{ item }}/{{ product }}/{{ version }}"
-        dest: "{{ item }}/{{ product }}/{{ minorversion }}"
-        state: link
+        path: "{{ item }}/{{ product }}/{{ minorversion }}"
+        state: directory
       with_items: "{{ www_folders }}"
       when: not prerelease
 
-    - name: Create major version symlink
-      file:
-        src: "{{ item }}/{{ product }}/{{ version }}"
-        dest: "{{ item }}/{{ product }}/{{ majorversion }}"
-        state: link
+    - name: Create minor version redirects
+      copy:
+        dest: "{{ item }}/{{ product }}/{{ minorversion }}/.htaccess"
+        content: "Redirect 301 /{{ product }}/{{ minorversion }} \
+          /{{ product }}/{{ version }}"
       with_items: "{{ www_folders }}"
       when: not prerelease
 
-    - name: Create latest version symlink
+    - name: Create minor version directory
       file:
-        src: "{{ item }}/{{ product }}/{{ version }}"
-        dest: "{{ item }}/{{ product }}/latest"
-        state: link
+        path: "{{ item }}/{{ product }}/{{ majorversion }}"
+        state: directory
+      with_items: "{{ www_folders }}"
+      when: not prerelease
+
+    - name: Create major version redirects
+      copy:
+        dest: "{{ item }}/{{ product }}/{{ majorversion }}/.htaccess"
+        content: "Redirect 301 /{{ product }}/{{ majorversion }} \
+          /{{ product }}/{{ version }}"
+      with_items: "{{ www_folders }}"
+      when: not prerelease
+
+    - name: Create latest version directory
+      file:
+        path: "{{ item }}/{{ product }}/latest"
+        state: directory
+      with_items: "{{ www_folders }}"
+      when: not prerelease
+
+    - name: Create latest version redirect
+      copy:
+        dest: "{{ item }}/{{ product }}/latest/.htaccess"
+        content: "Redirect 301 /{{ product }}/latest \
+          /{{ product }}/{{ version }}"
       with_items: "{{ www_folders }}"
       when: not prerelease
