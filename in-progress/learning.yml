@@ -68,7 +68,7 @@
         omero.ldap.urls: ldaps://ldap.lifesci.dundee.ac.uk:636
         omero.mail.config: true
         omero.mail.from: "qa@openmicroscopy.org.uk"
-        omero.mail.host: "smtp.lifesci.dundee.ac.uk"
+        omero.mail.host: "smtp.dundee.ac.uk"
         omero.policy.binary_access: "+read,+write,-image,-plate"
         omero.security.ignore_case: True
         omero.security.keyStore: "/etc/pki/java/cacerts"
