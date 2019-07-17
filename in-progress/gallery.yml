@@ -103,6 +103,9 @@
         omero.web.session_engine: django.contrib.sessions.backends.cache
         omero.web.apps:
           - "omero_iviewer"
+        omero.web.open_with:
+          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
+          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
         omero.web.viewer.view: omero_iviewer.views.index
 
     - role: mtbc.omero-web-apps
