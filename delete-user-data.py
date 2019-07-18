@@ -43,7 +43,7 @@ parser.add_argument("--username", "-u", default="mtbcarroll")
 parser.add_argument("--password", "-p", default="XXXXXXXXXX")
 parser.add_argument("--host", "-H", default="demo.openmicroscopy.org")
 parser.add_argument("--days", "-d", type=int, default=90)
-parser.add_argument("--count", "-c", type=int, default=0)
+parser.add_argument("--inodes", "-i", type=int, default=0)
 parser.add_argument("--gigabytes", "-g", type=int, default=0)
 parser.add_argument("--force", "-f", default=False, action="store_true")
 parser.add_argument("--test", "-t", default=False, action="store_true")
@@ -53,7 +53,7 @@ ns = parser.parse_args()
 minimum_days = ns.days
 
 # How many inodes need to be removed, can be 0.
-excess_file_count = ns.count
+excess_file_count = ns.inodes
 
 # How many bytes need to be deleted, can be 0; written as n * 1GB.
 excess_file_size = ns.gigabytes * 1024**3
