@@ -32,14 +32,15 @@ from omero.cmd import \
     LegalGraphTargets, LegalGraphTargetsResponse
 
 import sys
-import argparse
 
+from argparse import ArgumentParser
 from copy import copy
+from getpass import getuser
 from time import time
 
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument("--local", "-l", default=False, action="store_true")
-parser.add_argument("--username", "-u", default="mtbcarroll")
+parser.add_argument("--username", "-u", default=getuser())
 parser.add_argument("--password", "-p")
 parser.add_argument("--host", "-H", default="demo.openmicroscopy.org")
 parser.add_argument("--days", "-d", type=int, default=90)
