@@ -82,6 +82,8 @@ else:
     print('Running for real: will actually delete data.')
 
 
+# If adjusting UserStats, find_worst, choose_users then check with "--test".
+
 class UserStats:
     # Represents a user and their resource usage.
     # "is_worse_than" defines a strict partial order.
@@ -358,6 +360,7 @@ def perform_delete(conn):
 def main():
 
     if ns.test:
+        print('Running tests, will then exit.')
         run_tests()
         return  # EARLY EXIT
 
