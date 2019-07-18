@@ -7,16 +7,20 @@ www_folders:
 # have a subfolder called public containing the public sample images
 public_folders:
   amira: 'AmiraMesh'
+  bdv: 'BDV'
   becker-hickl-spc: 'SPC-FIFO'
   cellomics: 'Cellomics'
+  cellh5: 'CellH5'
   cellworx: 'CellWorX'
   columbus: 'PerkinElmer-Columbus'
   deltavision: 'DV'
   dicom: 'DICOM'
   ecat7: 'ECAT7'
+  flex: 'Flex'
   gatan: 'Gatan'
   hamamatsu: 'Hamamatsu-NDPI'
   hamamatsu-vms: 'Hamamatsu-VMS'
+  ics: 'ICS'
   incell3000: 'InCell3000'
   incell: 'InCell2000'
   imaris: 'Imaris-IMS'
@@ -35,7 +39,9 @@ public_folders:
   svs: 'SVS'
   tiff: 'TIFF'
   trestle: 'Trestle'
+  ventana: 'Ventana'
   vectra-qptiff: 'Vectra-QPTIFF'
+  zeiss-czi: 'Zeiss-CZI'
 # List containing special public images/folders that do not meet the standard
 # layout above
 special_public_folders:
