@@ -51,7 +51,7 @@
 
     - role: openmicroscopy.nfs-mount
 
-    - role: ome.omero_server
+    - role: ome.omero_server_venv
 
     - role: ome.omero_web
       # omero_web_config_set:
@@ -117,6 +117,11 @@
         - "omero-cli-render=={{ omero_cli_render_release }}"
         - "omero-metadata=={{ omero_metadata_release }}"
         state: present
+        # variable comes from role openmicroscopy.omero-server
+        virtualenv: "{{ omero_server_basedir }}/venv"
+        virtualenv_site_packages: yes
+      notify:
+        - restart omero-server
 
     - name: Create a figure scripts directory
       become: yes
