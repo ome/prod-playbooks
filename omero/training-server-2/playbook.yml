@@ -41,7 +41,11 @@
       - user: omero
         password: omero
         databases: [omero]
-      postgresql_version: "9.6"
+      postgresql_version: "10"
+      # Temporary workaround for
+      # https://forum.image.sc/t/fyi-not-possible-to-create-new-omero-instance-with-latest-postgresql-versions/26929
+      # Only affects new OMERO databases, existing ones should be OK
+      postgresql_package_version: "10.8"
 
     - role: openmicroscopy.versioncontrol-utils
 
