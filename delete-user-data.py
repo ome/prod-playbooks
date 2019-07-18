@@ -22,6 +22,7 @@
 
 import omero
 
+from omero.callbacks import CmdCallbackI
 from omero.gateway import BlitzGateway
 from omero.rtypes import rlong
 from omero.sys import ParametersI
@@ -148,9 +149,10 @@ def choose_users(file_count, file_size, user_stats):
 def submit(conn, request, expected):
     # Submit a request and wait for it to complete.
     # Returns with the response only if it was of the given type.
-    cb = conn.c.submit(request)
+    prx = conn.c.sf.submit(request)
+    cb = CmdCallbackI(conn.c, prx)
     try:
-        rsp = cb.getResponse()
+        rsp = cb.loop(500, 500)
     finally:
         cb.close(True)
 
