@@ -1,0 +1,3 @@
+#!/bin/sh
+. /opt/omero/server/venv/bin/activate
+/opt/omero/server/OMERO.server/bin/omero "$@"
