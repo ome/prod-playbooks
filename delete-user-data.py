@@ -22,7 +22,6 @@
 
 import omero
 
-from omero.callbacks import CmdCallbackI
 from omero.gateway import BlitzGateway
 from omero.rtypes import rlong
 from omero.sys import ParametersI
@@ -81,7 +80,6 @@ if dry_run:
     print('Despite output, will not actually delete any data.')
 else:
     print('Running for real: will actually delete data.')
-
 
 
 class UserStats:
@@ -158,11 +156,12 @@ def submit(conn, request, expected):
 
 
 def get_delete_classes(conn):
-    # Find which model object types to query and target in deleting users' data.
+    # Find the model object types to query and target in deleting users' data.
 
     delete_classes = []
 
-    rsp = submit(conn, LegalGraphTargets(request=Delete2()), LegalGraphTargetsResponse)
+    rsp = submit(conn, LegalGraphTargets(request=Delete2()),
+                 LegalGraphTargetsResponse)
 
     params = ParametersI()
     params.addId(rlong(0))
@@ -187,7 +186,6 @@ def get_delete_classes(conn):
     return delete_classes
 
 
-
 def delete_data(conn, user_id):
     # Delete all the data of the given user. Respects the state of dry_run.
     all_groups = {'omero.group': '-1'}
@@ -207,7 +205,6 @@ def delete_data(conn, user_id):
         submit(conn, delete, Delete2Response)
 
 
-
 def find_users(conn):
     # Determine which users' data to consider deleting.
 
@@ -220,7 +217,8 @@ def find_users(conn):
         users[user_id] = user_name
 
     for result in conn.getQueryService().projection(
-            "SELECT DISTINCT owner.id FROM Session WHERE closed IS NULL", None):
+            "SELECT DISTINCT owner.id FROM Session WHERE closed IS NULL",
+            None):
         user_id = result[0].val
         print('Ignoring "{}" (#{}) who is logged in.'
               .format(users[user_id], user_id))
@@ -231,7 +229,8 @@ def find_users(conn):
     logouts = {}
 
     for result in conn.getQueryService().projection(
-            "SELECT owner.id, MAX(closed) FROM Session GROUP BY owner.id", None):
+            "SELECT owner.id, MAX(closed) FROM Session GROUP BY owner.id",
+            None):
         user_id = result[0].val
         if user_id not in users:
             continue
@@ -275,9 +274,10 @@ def resource_usage(conn):
                 file_size += usage
 
         if file_count > 0 or file_size > 0:
-            user_stats.append(UserStats(user_id, user_name, file_count, file_size,
-                                        logouts[user_id]))
+            user_stats.append(UserStats(
+                user_id, user_name, file_count, file_size, logouts[user_id]))
     return user_stats
+
 
 def run_tests():
     # Run tests on "choose_users".
@@ -301,8 +301,9 @@ def run_tests():
     poppy = UserStats(0, 'Poppy', 2, 1, 1)
     sofia = UserStats(0, 'Sofia', 2, 2, 1)
 
-    test_users = [alice, chloe, daisy, elsie, emily, ethan, freya, grace, henry,
-                  isaac, jacob, james, logan, lucas, mason, oscar, poppy, sofia]
+    test_users = [alice, chloe, daisy, elsie, emily, ethan,
+                  freya, grace, henry, isaac, jacob, james,
+                  logan, lucas, mason, oscar, poppy, sofia]
 
     test_cases = [
         (0, 0, set()),
@@ -328,7 +329,7 @@ def run_tests():
                  'Oscar', 'Poppy', 'Sofia'}),
         (13, 13, {'Daisy', 'Emily', 'Ethan', 'Freya', 'Grace', 'Henry',
                   'Mason', 'Poppy', 'Sofia'})]
-    
+
     case_number = 0
 
     def test(case_number):
@@ -346,7 +347,8 @@ def run_tests():
 
 def perform_delete(conn):
     # Perform data deletion.
-    users = choose_users(excess_file_count, excess_file_size, resource_usage(conn))
+    users = choose_users(excess_file_count, excess_file_size,
+                         resource_usage(conn))
     print('Found {} user(s) for deletion.'.format(len(users)))
     for user in users:
         print('Deleting data of "{}" (#{}).'.format(user.name, user.id))
