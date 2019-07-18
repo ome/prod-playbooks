@@ -40,7 +40,7 @@ from time import time
 parser = argparse.ArgumentParser()
 parser.add_argument("--local", "-l", default=False, action="store_true")
 parser.add_argument("--username", "-u", default="mtbcarroll")
-parser.add_argument("--password", "-p", default="XXXXXXXXXX")
+parser.add_argument("--password", "-p")
 parser.add_argument("--host", "-H", default="demo.openmicroscopy.org")
 parser.add_argument("--days", "-d", type=int, default=90)
 parser.add_argument("--inodes", "-i", type=int, default=0)
