@@ -61,8 +61,6 @@ excess_file_size = ns.gigabytes * 1024**3
 # Leave this as True except when running the script for real.
 dry_run = not ns.force
 
-# -=-=- Users need not adjust code below -=-=-
-
 # Report configuration.
 
 print('Ignoring users who have logged out within the past {} days.'
