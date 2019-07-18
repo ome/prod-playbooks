@@ -61,6 +61,10 @@ excess_file_size = ns.gigabytes * 1024**3
 # Leave this as True except when running the script for real.
 dry_run = not ns.force
 
+# https://bugs.python.org/issue11588 would allow argparse to do this.
+if not ns.test and excess_file_count == 0 and excess_file_size == 0:
+    parser.error("specify how much to delete")
+
 # Report configuration.
 
 print('Ignoring users who have logged out within the past {} days.'
