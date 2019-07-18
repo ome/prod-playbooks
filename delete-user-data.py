@@ -199,7 +199,7 @@ def delete_data(conn, user_id):
     params = ParametersI()
     params.addId(rlong(user_id))
     delete = Delete2(dryRun=dry_run, targetObjects={})
-    for delete_class in get_delete_classes():
+    for delete_class in get_delete_classes(conn):
         object_ids = []
         for result in conn.getQueryService().projection(
                 "SELECT id FROM {} WHERE details.owner.id = :id"
