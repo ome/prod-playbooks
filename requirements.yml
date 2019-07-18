@@ -62,6 +62,10 @@
 - src: ome.omero_server
   version: 2.0.6
 
+- name: openmicroscopy.omero-web
+  src: https://github.com/ome/ansible-role-omero-web/archive/b5646f2f6a929afbe97e5a04bec6307cd3887d2d.tar.gz
+  version: b5646f2f6a929afbe97e5a04bec6307cd3887d2d
+
 - src: ome.omero_user
   version: 0.1.2
 
