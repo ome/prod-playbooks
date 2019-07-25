@@ -26,6 +26,7 @@ provisioner:
     group_vars:
       all:
         molecule_test: True
+        postgresql_version: "9.6"
         # Temporary workaround for
         # https://forum.image.sc/t/fyi-not-possible-to-create-new-omero-instance-with-latest-postgresql-versions/26929
         # Only affects new OMERO databases, existing ones should be OK
