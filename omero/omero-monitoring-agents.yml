@@ -43,7 +43,7 @@
   - role: openmicroscopy.prometheus-node
 
   # Autodetect whether selinux is enabled
-  - role: openmicroscopy.selinux-utils
+  - role: ome.selinux_utils
 
   tasks:
 

@@ -164,7 +164,7 @@
 
   # This is needed because we attempt to stop/start nginx in certbot, so
   # it needs to be installed even if it's not used
-  - role: openmicroscopy.nginx
+  - role: ome.nginx
 
   # Lets encrypt with automatic renewal
   # This will stop nginx when the certificate is first created
@@ -188,7 +188,7 @@
     #   rm -rf /etc/letsencrypt/*
     when: https_letsencrypt_enabled | default(False)
 
-  - role: openmicroscopy.nginx-proxy
+  - role: ome.nginx_proxy
     #nginx_proxy_force_ssl: True
     nginx_proxy_ssl: True
     nginx_proxy_ssl_certificate: "{{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/fullchain.pem', ssl_certificate_public_path) }}"

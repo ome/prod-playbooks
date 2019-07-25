@@ -16,10 +16,10 @@
     - role: openmicroscopy.ssl-certificate
       # Configuration for this role in `vars`
 
-    - role: openmicroscopy.nginx
+    - role: ome.nginx
 
     # OMERO.web configuration in host_vars in different repository
-    - role: openmicroscopy.omero-web
+    - role: ome.omero_web
       omero_web_release: "{{ omero_web_release_version }}"
       omero_web_systemd_limit_nofile: 16384
 
@@ -42,7 +42,7 @@
         - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
         editable: False
         state: present
-        # variable comes from role openmicroscopy.omero-web
+        # variable comes from role ome.omero_web
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
       notify:
