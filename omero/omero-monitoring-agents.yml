@@ -10,7 +10,7 @@
     prometheus_postgres_dbname: omero
 
   # For restart handlers
-  - role: openmicroscopy.omero-common
+  - role: ome.omero_common
 
   - role: openmicroscopy.omero_prometheus_exporter
     omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
