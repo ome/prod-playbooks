@@ -26,3 +26,9 @@
 
 # https://outreach-analysis.openmicroscopy.org backup JupyterHub server
 - include: jupyterhub/playbook.yml
+
+# https://www.openmicroscopy.org/
+- include: www/playbook.yml
+
+# OME proxied service
+- include: web-proxy/playbook.yml
