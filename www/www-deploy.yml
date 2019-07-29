@@ -4,7 +4,7 @@
 
   roles:
     - role: openmicroscopy.ssl-certificate
-    - role: openmicroscopy.nginx-proxy
+    - role: ome.nginx_proxy
       tags: nginxconf
 
   vars:

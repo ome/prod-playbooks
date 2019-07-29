@@ -94,7 +94,7 @@
       lvm_lvfilesystem: "{{ filesystem }}"
       lvm_shrink: False
 
-    - role: openmicroscopy.nginx
+    - role: ome.nginx
       # Defaults overridden in private configuration
       # nginx_version:
 
@@ -108,7 +108,7 @@
         databases:
           - omero
 
-    - role: openmicroscopy.omero-server
+    - role: ome.omero_server
       # Defaults overridden in private configuration
       # omero_server_release:
       # omero_server_dbuser:
@@ -117,13 +117,13 @@
       omero_server_dbname: omero
       omero_server_systemd_limit_nofile: 16384
 
-    - role: openmicroscopy.omero-web
+    - role: ome.omero_web
       # Defaults overridden in private configuration
       # omero_web_release:
       omero_web_systemd_limit_nofile: 16384
 
     # This role only works on OMERO 5.3+
-    - role: openmicroscopy.omero-user
+    - role: ome.omero_user
       no_log: true
       omero_user_bin_omero: /opt/omero/server/OMERO.server/bin/omero
       omero_user_system: omero-server
@@ -159,7 +159,7 @@
         - "django-cors-headers=={{ django_cors_headers_release }}"
         editable: False
         state: present
-        # variable comes from role openmicroscopy.omero-web
+        # variable comes from role ome.omero_web
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
       notify:

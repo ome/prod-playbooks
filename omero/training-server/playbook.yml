@@ -47,9 +47,9 @@
 
     - role: openmicroscopy.nfs-mount
 
-    - role: openmicroscopy.omero-server
+    - role: ome.omero_server
 
-    - role: openmicroscopy.omero-web
+    - role: ome.omero_web
       # omero_web_config_set:
 
     - role: openmicroscopy.iptables-raw

@@ -10,9 +10,9 @@
     prometheus_postgres_dbname: omero
 
   # For restart handlers
-  - role: openmicroscopy.omero-common
+  - role: ome.omero_common
 
-  - role: openmicroscopy.omero_prometheus_exporter
+  - role: ome.omero_prometheus_exporter
     omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
     omero_prometheus_exporter_omero_password: "{{ secret_omero_prometheus_exporter_omero_password | default('omero') }}"
 
@@ -31,7 +31,7 @@
 
   roles:
 
-  - role: openmicroscopy.omero-web-django-prometheus
+  - role: ome.omero_web_django_prometheus
 
 
 # NOTE: This assumes omero-web.conf is present and includes
@@ -43,7 +43,7 @@
   - role: openmicroscopy.prometheus-node
 
   # Autodetect whether selinux is enabled
-  - role: openmicroscopy.selinux-utils
+  - role: ome.selinux_utils
 
   tasks:
 

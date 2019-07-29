@@ -5,7 +5,7 @@
 
   roles:
     # Needed for handlers
-    - role: openmicroscopy.omero-common
+    - role: ome.omero_common
 
   tasks:
 
