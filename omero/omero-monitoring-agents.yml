@@ -12,7 +12,7 @@
   # For restart handlers
   - role: ome.omero_common
 
-  - role: openmicroscopy.omero_prometheus_exporter
+  - role: ome.omero_prometheus_exporter
     omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
     omero_prometheus_exporter_omero_password: "{{ secret_omero_prometheus_exporter_omero_password | default('omero') }}"
 
@@ -31,7 +31,7 @@
 
   roles:
 
-  - role: openmicroscopy.omero-web-django-prometheus
+  - role: ome.omero_web_django_prometheus
 
 
 # NOTE: This assumes omero-web.conf is present and includes
