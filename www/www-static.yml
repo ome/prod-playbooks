@@ -14,6 +14,12 @@
     deploy_archive_symlink: /var/www/{{ website_name }}/html
     tags: jekyll
 
+  - role: ome.deploy_archive
+    become: yes
+    deploy_archive_dest_dir: /var/www
+    deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/phpbbforum-20190718.tar.gz
+    deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
+
   vars:
     website_version: "2019.07.18"
     website_name: www.openmicroscopy.org
