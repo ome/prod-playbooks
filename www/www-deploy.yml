@@ -278,4 +278,4 @@
       index: index.html
 
 
-- include: www-jekyll.yml
+- include: www-static.yml
