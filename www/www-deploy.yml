@@ -3,7 +3,6 @@
 - hosts: www
 
   roles:
-    - role: ome.basedeps
     - role: openmicroscopy.ssl-certificate
     - role: ome.nginx_proxy
       tags: nginxconf

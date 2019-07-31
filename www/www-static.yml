@@ -31,9 +31,13 @@
   tasks:
   - name: Update static phpbb stylesheet
     become: yes
-    patch:
-      basedir: /var/www/phpbbforum
-      src: files/phpbb-static-style.patch
+    blockinfile:
+      block: |
+        form, ul.linklist.rightside, .quick-login, .buttons, #jumpbox~h3, #jumpbox~p .headerspace~h3, .headerspace~p, ul.linklist li.rightside {
+            display: none;
+        }
+      marker: "/* {mark} ANSIBLE MANAGED BLOCK */"
+      path: "{{ phpbbforum_style_file }}"
 
   vars:
     website_version: "2019.07.18"
