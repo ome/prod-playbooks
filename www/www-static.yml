@@ -2,6 +2,12 @@
 
 - hosts: www
 
+  pre_tasks:
+  - name: Check if phpbbforum already unzipped
+    stat:
+      path: "{{ phpbbforum_style_file }}"
+    register: _phpbbforum_style_file_st
+
   roles:
   - role: ome.deploy_archive
     become: yes
@@ -19,7 +25,17 @@
     deploy_archive_dest_dir: /var/www
     deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/phpbbforum-20190718.tar.gz
     deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
+    # This file is patched later so only unzip if it doesn't exist
+    when: not _phpbbforum_style_file_st.stat.exists
+
+  tasks:
+  - name: Update static phpbb stylesheet
+    become: yes
+    patch:
+      basedir: /var/www/phpbbforum
+      src: files/phpbb-static-style.patch
 
   vars:
     website_version: "2019.07.18"
     website_name: www.openmicroscopy.org
+    phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"
