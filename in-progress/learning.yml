@@ -59,13 +59,12 @@
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
         omero.ldap.config: True
-        omero.ldap.base: ou=lifesci,o=dundee
-        omero.ldap.username: cn=ldapuser,ou=system,o=dundee
+        omero.ldap.base: o=dundee
+        omero.ldap.username: cn=ldapomero,ou=users,o=dundee
+        omero.ldap.password: "{{ ldap_password }}"
         omero.ldap.user_filter: "(objectClass=person)"
-        omero.ldap.group_filter: "(&(objectClass=groupOfUniqueNames)(cn=omedev))"
-        omero.ldap.group_mapping: name=cn
         omero.ldap.new_user_group: Virtual Microscope
-        omero.ldap.urls: ldaps://ldap.lifesci.dundee.ac.uk:636
+        omero.ldap.urls: ldaps://ldap0.dundee.ac.uk:636
         omero.mail.config: true
         omero.mail.from: "qa@openmicroscopy.org.uk"
         omero.mail.host: "smtp.dundee.ac.uk"
@@ -78,7 +77,7 @@
         omero.sessions.timeout: 3600000
 
     - role: mtbc.ldap-cert
-      ldap_host: "ldap.lifesci.dundee.ac.uk"
+      ldap_host: "ldap0.dundee.ac.uk"
 
     - role: ome.redis
 
