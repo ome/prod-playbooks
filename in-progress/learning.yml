@@ -77,7 +77,8 @@
         omero.security.trustStorePassword: "changeit"
         omero.sessions.timeout: 3600000
 
-    - role: mtbc.sls-ldap-cert
+    - role: mtbc.ldap-cert
+      ldap_host: "ldap.lifesci.dundee.ac.uk"
 
     - role: ome.redis
 

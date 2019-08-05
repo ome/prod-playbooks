@@ -1,7 +1,7 @@
-- name: SLS LDAP TLS certificate is installed
+- name: LDAP TLS certificate is installed for JVM
   become: yes
   java_cert:
-    cert_url: ldap.lifesci.dundee.ac.uk
+    cert_url: "{{ ldap_host }}"
     cert_port: 636
     keystore_path: "/etc/pki/java/cacerts"
     keystore_pass: changeit

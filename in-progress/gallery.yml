@@ -72,7 +72,8 @@
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
 
-    - role: mtbc.sls-ldap-cert
+    - role: mtbc.ldap-cert
+      ldap_host: "ldap.lifesci.dundee.ac.uk"
 
     - role: ome.redis
 
