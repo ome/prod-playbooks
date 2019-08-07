@@ -158,7 +158,7 @@
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
-        - https://gitlab.com/openmicroscopy/incubator/omero-signup/-/archive/v{{ omero_signup_release }}/omero-signup-v{{ omero_signup_release }}.zip
+        - "omero-signup=={{ omero_signup_release }}"
         editable: False
         state: present
         # variable comes from role ome.omero_web
@@ -320,7 +320,7 @@
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_signup_release: '0.0.9'
+    omero_signup_release: "{{ omero_signup_release_override | default('0.1.0') }}"
 
     omero_server_release: "{{ omero_server_release_override | default('5.5.0') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.5.0') }}"

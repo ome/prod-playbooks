@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 # Allow self-signups
 
-# https://gitlab.com/openmicroscopy/incubator/omero-signup/tree/v0.0.8
+# https://pypi.org/project/omero-signup/
 config append -- omero.web.apps '"omero_signup"'
 config set -- omero.web.signup.host localhost
 config set -- omero.web.signup.admin.user {{ secret_omero_web_signup_admin_user | default('root') }}
