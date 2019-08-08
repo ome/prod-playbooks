@@ -59,8 +59,9 @@
 - src: ome.omero_user
   version: 0.1.2
 
-- src: ome.omero_web
-  version: 2.0.2
+- name: ome.omero_web
+  src: https://github.com/manics/ansible-role-omero-web
+  version: restorecon
 
 - src: ome.omero_web_django_prometheus
   version: 0.2.1
