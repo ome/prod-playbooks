@@ -355,7 +355,7 @@
     omero_server_config_set:
       #omero.fs.importUsers: "fm1"
       omero.fs.watchDir: "/home/DropBox"
-      omero.fs.importArgs: "-T Dataset:@name:from-Dropbox"
+      omero.fs.importArgs: "-T Dataset:name:from-Dropbox"
       omero.db.poolsize: 60
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
