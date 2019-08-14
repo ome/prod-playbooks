@@ -255,15 +255,6 @@
       notify:
       - restart omero-web
 
-    - name: Add facility manager operating system users
-      become: true
-      user:
-       name: "{{ item }}"
-       state: present
-       groups: "{{ omero_server_system_managedrepo_group }}"
-       password: "{{ os_system_users_password }}"
-      with_sequence: start=1 end=40 format=fm%d
-
     - name: Add operating system user "importer1"
       become: true
       user:
@@ -271,16 +262,6 @@
        state: present
        groups: "{{ omero_server_system_managedrepo_group }}"
        password: "{{ os_system_users_password }}"
-
-    - name: Add DropBox folders for fm1 through fm40
-      become: true
-      file:
-        path: /home/DropBox/{{ item }}
-        state: directory
-        mode: 0755
-        owner: "{{ item }}"
-        group: "{{ item }}"
-      with_sequence: start=1 end=40 format=fm%d
 
     - name: Allow managed repo group to login
       become: yes
