@@ -25,7 +25,7 @@ def test_service_running_and_enabled(Service, name):
 
 
 def test_omero_login(host):
-    with host.sudo('fm1'):
+    with host.sudo('importer1'):
         host.check_output(
             '/opt/omero/server/OMERO.server/bin/omero '
             'login -C -s localhost -u root -w omero')
