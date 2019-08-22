@@ -154,26 +154,6 @@
         group: "omero-server"
         force: yes
 
-    - name: Download the Kymograph.py script
-      become: yes
-      get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/Kymograph.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph.py
-        mode: 0755
-        owner: "omero-server"
-        group: "omero-server"
-        force: yes
-
-    - name: Download the Kymograph_Analysis.py script
-      become: yes
-      get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/Kymograph_Analysis.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Kymograph_Analysis.py
-        mode: 0755
-        owner: "omero-server"
-        group: "omero-server"
-        force: yes
-
     - name: Download the simple_frap.py script
       become: yes
       get_url:
