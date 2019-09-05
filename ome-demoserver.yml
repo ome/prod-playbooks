@@ -47,6 +47,42 @@
         - python-markdown
         - mencoder # For the 'make movie' script
 
+    - name: OMERO.server self-signed certificate directory
+      become: yes
+      file:
+        path: /opt/omero/server/selfsigned
+        state: directory
+
+    - name: OMERO.server self-signed certificate
+      become: yes
+      command: >-
+        openssl req
+        -new -nodes -x509
+        {{ omero_server_websocket_internal_cert_params }}
+        -keyout server.key
+        -out server.pem
+        -extensions v3_ca
+      args:
+        chdir: /opt/omero/server/selfsigned
+        creates: server.pem
+
+    # This self-signed cert is used to encrypt the websocket connection
+    # between Nginx and OMERO.server
+    - name: OMERO.server self-signed certificate pkcs12
+      become: yes
+      command: >-
+        openssl pkcs12
+        -export
+        -out server.p12
+        -inkey server.key
+        -in server.pem
+        -name server
+        -password pass:{{
+        omero_server_config_set['omero.glacier2.IceSSL.Password'] | quote }}
+      args:
+        chdir: /opt/omero/server/selfsigned
+        creates: server.p12
+
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
@@ -214,6 +250,22 @@
       notify:
         - restart nginx
 
+    - name: NGINX - OMERO websockets
+      become: yes
+      template:
+        src: templates/nginx-confdnestedincludes-omerows-conf.j2
+        dest: /etc/nginx/conf.d-nested-includes/omerows.conf
+      notify:
+        - restart nginx
+
+    - name: NGINX - websocket proxy support
+      become: yes
+      template:
+        src: templates/nginx-confd-websockets-conf.j2
+        dest: /etc/nginx/conf.d/websockets.conf
+      notify:
+        - restart nginx
+
     - name: Config for OMERO.web plugins
       become: yes
       template:
@@ -354,7 +406,14 @@
     filesystem: "xfs"
 
     omero_server_config_set:
+      omero.client.icetransports: ssl,wss,tcp
       omero.db.poolsize: 60
+      omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
+      omero.glacier2.IceSSL.DefaultDir: /opt/omero/server/selfsigned
+      omero.glacier2.IceSSL.CAs: server.pem
+      omero.glacier2.IceSSL.CertFile: server.p12
+      # This password doesn't need to be secret
+      omero.glacier2.IceSSL.Password: secret
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
@@ -385,6 +444,9 @@
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
+
+    # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
+    omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
 
 
 - include: omero/omero-web-patch-settings.yml
