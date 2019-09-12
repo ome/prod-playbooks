@@ -159,7 +159,7 @@
 
   roles:
 
-  - role: openmicroscopy.ssl-certificate
+  - role: ome.ssl_certificate
     when: not (https_letsencrypt_enabled | default(False))
 
   # This is needed because we attempt to stop/start nginx in certbot, so

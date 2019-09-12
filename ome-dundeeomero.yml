@@ -120,7 +120,7 @@
       - gpfs.service
       omero_server_system_user_manage: False
 
-    - role: openmicroscopy.ssl-certificate
+    - role: ome.ssl_certificate
       # Configuration for this role in `vars`
 
   post_tasks:

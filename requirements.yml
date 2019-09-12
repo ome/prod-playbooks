@@ -96,8 +96,8 @@
 - name: ome.selinux_utils
   version: 1.0.3
 
-- src: openmicroscopy.ssl-certificate
-  version: 0.2.2
+- src: ome.ssl_certificate
+  version: 0.3.2
 
 - src: openmicroscopy.sudoers
   version: 1.0.0

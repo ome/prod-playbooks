@@ -13,7 +13,7 @@
       lvm_lvsize: "{{ provision_rootsize }}"
       lvm_lvfilesystem: "{{ provision_root_filesystem }}"
 
-    - role: openmicroscopy.ssl-certificate
+    - role: ome.ssl_certificate
       # Configuration for this role in `vars`
 
     - role: ome.nginx
