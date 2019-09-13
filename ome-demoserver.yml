@@ -143,7 +143,14 @@
 
     - role: ome.ssl_certificate
       tags: ssl
-      # Configuration for this role in `vars`
+
+  handlers:
+    - name: reload web server
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   post_tasks:
 

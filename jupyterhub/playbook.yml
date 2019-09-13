@@ -206,6 +206,14 @@
       read_timeout: 86400
       host_header: "$host"
 
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
+
   vars:
     https_certificate_domain: outreach-analysis.openmicroscopy.org
     # This must match the expectations of certbot, do not change this:

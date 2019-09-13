@@ -19,3 +19,11 @@
     lvm_lvfilesystem: "{{ root_filesystem }}"
   - role: ome.ssl_certificate
   - role: ome.nginx_proxy
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded

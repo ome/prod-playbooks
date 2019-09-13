@@ -121,7 +121,14 @@
       omero_server_system_user_manage: False
 
     - role: ome.ssl_certificate
-      # Configuration for this role in `vars`
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   post_tasks:
     - name: NGINX - enable service / start on boot

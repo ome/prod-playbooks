@@ -7,6 +7,14 @@
     - role: ome.nginx_proxy
       tags: nginxconf
 
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
+
   vars:
     nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
     nginx_proxy_worker_connections: 65000
