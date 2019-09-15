@@ -1,7 +1,7 @@
 ---
 
-- name: openmicroscopy.certbot
-  src: https://github.com/openmicroscopy/ansible-role-certbot/archive/0.1.0.tar.gz
+- name: ome.certbot
+  src: https://github.com/ome/ansible-role-certbot/archive/0.1.0.tar.gz
   version: 0.1.0
 
 - src: ome.cli_utils
@@ -10,8 +10,8 @@
 - src: ome.deploy_archive
   version: 0.1.3
 
-- src: openmicroscopy.docker
-  version: 3.0.0
+- src: ome.docker
+  version: 3.0.2
 
 - src: ome.ice
   version: 3.0.0
@@ -19,15 +19,14 @@
 - src: ome.java
   version: 2.0.3
 
-- name: openmicroscopy.iptables-raw
-  src: https://github.com/openmicroscopy/ansible-role-iptables-raw/archive/0.2.0.tar.gz
-  version: 0.2.0
+- name: ome.iptables_raw
+  version: 0.2.1
 
-- src: openmicroscopy.lvm-partition
-  version: 1.1.0
+- src: ome.lvm_partition
+  version: 1.1.1
 
-- name: openmicroscopy.network
-  version: 1.1.2
+- name: ome.network
+  version: 1.1.3
 
 - src: ome.nginx
   version: 1.1.1
@@ -35,8 +34,8 @@
 - src: ome.nginx_proxy
   version: 1.12.0
 
-- src: openmicroscopy.nfs-mount
-  version: 1.0.0
+- src: ome.nfs_mount
+  version: 1.2.1
 
 - src: ome.omego
   version: 0.1.3
@@ -65,33 +64,23 @@
 - src: ome.omero_web_django_prometheus
   version: 0.2.1
 
-- src: openmicroscopy.lvm-partition
-  version: 1.1.0
-
-- src: openmicroscopy.postgresql
-  version: 2.0.0
-
 - src: ome.postgresql
   version: 3.2.0
 
-- src: openmicroscopy.postgresql_backup
-  version: 0.1.0
+- src: ome.postgresql_backup
+  version: 0.1.1
 
-- name: openmicroscopy.prometheus
-  src: openmicroscopy.ansible-role-prometheus
-  version: 0.3.0
+- src: ome.prometheus
+  version: 0.3.1
 
-- name: openmicroscopy.prometheus-jmx
-  src: openmicroscopy.ansible-role-prometheus-jmx
-  version: 0.2.0
+- src: ome.prometheus_jmx
+  version: 0.2.1
 
-- name: openmicroscopy.prometheus-node
-  src: openmicroscopy.ansible-role-prometheus-node
-  version: 0.2.0
+- src: ome.prometheus_node
+  version: 0.2.1
 
-- name: openmicroscopy.prometheus-postgres
-  src: openmicroscopy.ansible-role-prometheus-postgres
-  version: 0.2.0
+- src: ome.prometheus_postgres
+  version: 0.2.1
 
 - name: ome.selinux_utils
   version: 1.0.3
@@ -99,17 +88,17 @@
 - src: ome.ssl_certificate
   version: 0.3.2
 
-- src: openmicroscopy.sudoers
-  version: 1.0.0
-
-- src: openmicroscopy.system-monitor-agent
-  version: 0.1.0
-
-- src: openmicroscopy.upgrade-distpackages
-  version: 1.1.0
-
-- src: openmicroscopy.versioncontrol-utils
+- src: ome.sudoers
   version: 1.0.1
+
+- src: ome.system_monitor_agent
+  version: 0.1.1
+
+- src: ome.upgrade_distpackages
+  version: 1.1.1
+
+- src: ome.versioncontrol_utils
+  version: 1.0.2
 
 - name: idr.idr-jupyter
   src: idr.ansible-role-idr-jupyter

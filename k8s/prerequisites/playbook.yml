@@ -2,4 +2,4 @@
 - hosts: kubernetes-lochy-k8s
   roles:
   # No mounts are configured, this just installs required packages
-  - role: openmicroscopy.nfs-mount
+  - role: ome.nfs_mount

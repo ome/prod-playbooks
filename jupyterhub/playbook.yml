@@ -7,7 +7,7 @@
 
   roles:
 
-  - role: openmicroscopy.docker
+  - role: ome.docker
     docker_additional_options:
       # WARNING: This disables the default docker network forwarding rules
       # so we can restrict outgoinng connections from JupyterHub servers,
@@ -43,7 +43,7 @@
       Spawner.mem_limit: 2G
 
   # Setup up iptables to restrict anonymous jupyterhub users
-  - role: openmicroscopy.iptables-raw
+  - role: ome.iptables_raw
 
   tasks:
 
@@ -169,7 +169,7 @@
   # Lets encrypt with automatic renewal
   # This will stop nginx when the certificate is first created
   # For renewals we will configure Nginx to server the challenge
-  - role: openmicroscopy.certbot
+  - role: ome.certbot
     become: yes
     certbot_create_if_missing: yes
     certbot_admin_email: sysadmin@openmicroscopy.org

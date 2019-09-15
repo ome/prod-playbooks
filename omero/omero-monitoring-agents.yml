@@ -4,9 +4,9 @@
 
   roles:
 
-  - role: openmicroscopy.prometheus-jmx
+  - role: ome.prometheus_jmx
 
-  - role: openmicroscopy.prometheus-postgres
+  - role: ome.prometheus_postgres
     prometheus_postgres_dbname: omero
 
   # For restart handlers
@@ -40,7 +40,7 @@
 
   roles:
 
-  - role: openmicroscopy.prometheus-node
+  - role: ome.prometheus_node
 
   # Autodetect whether selinux is enabled
   - role: ome.selinux_utils

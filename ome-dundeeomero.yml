@@ -65,11 +65,11 @@
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server SLS` is checking for the SLS nameservers.
-    - role: openmicroscopy.system-monitor-agent
+    - role: ome.system_monitor_agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
     # Disk Layout - PostgreSQL | data dir
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: pgdata
       lvm_vgname: postgresql
@@ -78,7 +78,7 @@
       lvm_lvfilesystem: "{{ filesystem }}"
 
     # Disk Layout - OMERO | data dir
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: basedir
       lvm_vgname: omero
@@ -88,7 +88,7 @@
 
     #  Mock database user & creds, to allow Playbook to install
     #  OMERO, and allow for a manual PostgresSQL dump/restore.
-    - role: openmicroscopy.postgresql
+    - role: ome.postgresql
       postgresql_users_databases:
       - user: install-mock
         password: install-mock
