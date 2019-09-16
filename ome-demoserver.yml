@@ -141,9 +141,16 @@
         password: "{{ secret_omero_web_public_password | default('public') }}"
         groups: "--group-name public"
 
-    - role: openmicroscopy.ssl-certificate
+    - role: ome.ssl_certificate
       tags: ssl
-      # Configuration for this role in `vars`
+
+  handlers:
+    - name: reload web server
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   post_tasks:
 

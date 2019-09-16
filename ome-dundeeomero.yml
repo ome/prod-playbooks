@@ -120,8 +120,15 @@
       - gpfs.service
       omero_server_system_user_manage: False
 
-    - role: openmicroscopy.ssl-certificate
-      # Configuration for this role in `vars`
+    - role: ome.ssl_certificate
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   post_tasks:
     - name: NGINX - enable service / start on boot

@@ -159,7 +159,7 @@
 
   roles:
 
-  - role: openmicroscopy.ssl-certificate
+  - role: ome.ssl_certificate
     when: not (https_letsencrypt_enabled | default(False))
 
   # This is needed because we attempt to stop/start nginx in certbot, so
@@ -205,6 +205,14 @@
       websockets: True
       read_timeout: 86400
       host_header: "$host"
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   vars:
     https_certificate_domain: outreach-analysis.openmicroscopy.org

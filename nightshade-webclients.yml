@@ -13,8 +13,7 @@
       lvm_lvsize: "{{ provision_rootsize }}"
       lvm_lvfilesystem: "{{ provision_root_filesystem }}"
 
-    - role: openmicroscopy.ssl-certificate
-      # Configuration for this role in `vars`
+    - role: ome.ssl_certificate
 
     - role: ome.nginx
 
@@ -27,6 +26,15 @@
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
     - role: openmicroscopy.system-monitor-agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
+
 
   post_tasks:
 

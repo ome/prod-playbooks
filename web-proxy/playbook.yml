@@ -17,5 +17,13 @@
     lvm_lvmount: /var/log
     lvm_lvsize: "{{ varlog_size }}"
     lvm_lvfilesystem: "{{ root_filesystem }}"
-  - role: openmicroscopy.ssl-certificate
+  - role: ome.ssl_certificate
   - role: ome.nginx_proxy
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
