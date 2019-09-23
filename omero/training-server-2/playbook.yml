@@ -1,4 +1,7 @@
-# Install OMERO.server and OMERO.web on localhost
+---
+# The OME training server(s)
+# Set https_letsencrypt_enabled to True in production to ensure certbot
+# handles the letsencrypt certificate setup
 
 - hosts: ome-outreach
   pre_tasks:
@@ -48,6 +51,11 @@
     - role: openmicroscopy.nfs-mount
 
     - role: ome.omero_server_venv
+      omero_server_virtualenv: yes
+      omero_server_python_addons:
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+        - "omero-cli-render=={{ omero_cli_render_release }}"
+        - "omero-metadata=={{ omero_metadata_release }}"
 
     - role: ome.omero_web
       # omero_web_config_set:
@@ -104,20 +112,6 @@
       yum:
         name: docker-python
         state: present
-
-    - name: Omero.cli plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        name:
-        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
-        - "omero-cli-render=={{ omero_cli_render_release }}"
-        - "omero-metadata=={{ omero_metadata_release }}"
-        state: present
-        # variable comes from role openmicroscopy.omero-server
-        virtualenv: "{{ omero_server_basedir }}/venv"
-        virtualenv_site_packages: yes
-      notify:
-        - restart omero-server
 
     - name: Create a figure scripts directory
       become: yes
