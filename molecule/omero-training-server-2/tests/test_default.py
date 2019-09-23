@@ -13,7 +13,7 @@ OMERO_LOGIN = '-C -s localhost -u root -w omero'
     'nginx',
     'omero-server',
     'omero-web',
-    'postgresql-9.6',
+    'postgresql-10',
     'prometheus-node-exporter',
     'prometheus-omero-exporter',
     'prometheus-postgres-exporter',
