@@ -89,25 +89,22 @@
     #  Mock database user & creds, to allow Playbook to install
     #  OMERO, and allow for a manual PostgresSQL dump/restore.
     - role: ome.postgresql
-      postgresql_users_databases:
-      - user: install-mock
-        password: install-mock
-        databases: [install-mock]
+      postgresql_databases:
+        - name: "{{ omero_server_dbname | default('omero') }}"
+      postgresql_users:
+      - user: "{{ omero_server_dbuser | default('omero') }}"
+        password: "{{ omero_server_dbpassword | default('omero') }}"
+        databases:
+          - "{{ omero_server_dbname | default('omero') }}"
+
 
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: ome.omero_server
       omero_server_release: 5.5.0
-      # install-mock set for inital provision, then playbook re-run with correct accounts.
-      #omero_server_dbuser: install-mock
-      #omero_server_dbname:  install-mock
-      #omero_server_dbpassword: install-mock
-      omero_server_dbuser: "{{ vault.omero_server_os_user }}"
-      omero_server_dbname:  "{{ vault.omero_server_dbname }}"
-      omero_server_dbpassword: "{{ vault.omero_server_dbpassword }}"
       # Active Directory users not working with role.
       # Role requires to be manually modified to make it work with an AD user
-      omero_server_system_user: "{{ vault.omero_server_os_user }}"
+      omero_server_system_user: "{{ omero_server_dbuser | default('omero') }}"
       # Mocking omero_server_datadir for the first run.
       # Prod value to come from host vars
       # omero_server_datadir: "/tmp/install-mock_omero-server-datadir"
