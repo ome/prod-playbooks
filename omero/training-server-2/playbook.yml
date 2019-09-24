@@ -346,4 +346,3 @@
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
 - include: letsencrypt.yml
-  when: not (molecule_test | default(False))
