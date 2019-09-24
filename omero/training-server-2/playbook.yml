@@ -1,0 +1,341 @@
+# Install OMERO.server and OMERO.web on localhost
+
+- hosts: outreach.openmicroscopy.org
+  pre_tasks:
+
+    - name: Install Make Movie script Prerequisite | MEncoder - Repo
+      become: yes
+      yum:
+        name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+        state: present
+
+    - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - python-reportlab # For OMERO.figure
+        - python-markdown # For OMERO.figure
+        - mencoder # For the 'make movie' script
+        - scipy
+        - python-matplotlib # For "simple frap with figure" script
+
+    - name: Prerequisites for ldap
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - openldap-clients
+        - python-virtualenv
+        - gcc
+        - python-ldap
+
+  roles:
+
+    - role: ome.postgresql
+      postgresql_databases:
+      - name: omero
+      postgresql_users:
+      - user: omero
+        password: omero
+        databases: [omero]
+      postgresql_version: "9.6"
+
+    - role: openmicroscopy.versioncontrol-utils
+
+    - role: openmicroscopy.nfs-mount
+
+    - role: ome.omero_server
+
+    - role: ome.omero_web
+      # omero_web_config_set:
+
+    - role: openmicroscopy.iptables-raw
+
+    - role: openmicroscopy.docker
+      docker_additional_options:
+        # Manually configure to avoid conflicts between Docker and system rules
+        iptables: false
+
+    - role: ome.cli_utils
+
+  post_tasks:
+
+    - name: Create additional nginx include directory
+      become: yes
+      file:
+        path: /etc/nginx/conf.d-nested-includes
+        state: directory
+
+    # Inspired by
+    # https://github.com/openmicroscopy/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
+    - name: omero-web nginx nested include
+      become: yes
+      lineinfile:
+        destfile: /etc/nginx/conf.d/omero-web.conf
+        insertafter: 'server {'
+        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
+      notify:
+      - restart nginx
+
+    - name: Omero.web plugins | plugin install via pip & pypi
+      become: yes
+      pip:
+        name:
+        - "omero-figure=={{ omero_figure_release }}"
+        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+        - "omero-iviewer=={{ omero_iviewer_release }}"
+        - "omero-mapr=={{ omero_mapr_release }}"
+        - "omero-parade=={{ omero_parade_release }}"
+        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+        editable: False
+        state: present
+        # variable comes from role openmicroscopy.omero-web
+        virtualenv: "{{ omero_web_basedir }}/venv"
+        virtualenv_site_packages: yes
+      notify:
+        - restart omero-web
+
+    - name: Docker | python client
+      become: yes
+      yum:
+        name: docker-python
+        state: present
+
+    - name: Omero.cli plugins | plugin install via pip & pypi
+      become: yes
+      pip:
+        name:
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+        - "omero-cli-render=={{ omero_cli_render_release }}"
+        - "omero-metadata=={{ omero_metadata_release }}"
+        state: present
+
+    - name: Create a figure scripts directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Download the Figure_To_Pdf.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Create a workshop_scripts directory
+      become: yes
+      file:
+        path: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    - name: Download the Scipy_Gaussian_Filter.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Scipy_Gaussian_Filter.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the simple_frap.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the simple_frap_with_figure.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap_with_figure.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Create a directory for ldap scripts
+      become: yes
+      file:
+        path: /home/ldap
+        state: directory
+        mode: 0755
+        recurse: yes
+
+    - name: Download the ldap scripts
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{ apache_docker_release }}/bin/ldapmanager
+        dest: /home/ldap/ldapmanager
+        mode: 0755
+        force: yes
+
+    - name: Add DropBox folder for trainer-1
+      become: yes
+      file:
+        path: /home/DropBox/trainer-1
+        state: directory
+        mode: 0755
+        recurse: yes
+        owner: "omero-server"
+        group: "omero-server"
+
+    # Config for OMERO.web plugins, loaded into OMERO.web by the
+    # omero.web systemd restart.
+    - name: Config for OMERO.web plugins
+      become: yes
+      template:
+        src: ../../templates/omero-web-config-for-webapps.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+      - restart omero-web
+
+    - name: Outreach only config for OMERO.web plugins
+      become: yes
+      copy:
+        src: files/omero-web-outreach-webapps.omero
+        dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+      - restart omero-web
+
+    - name: Set default viewer in OMERO.web
+      become: yes
+      template:
+        src: ../../templates/omero-web-config-default-viewer.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+      - restart omero-web
+
+    - name: Add operating system user "importer1"
+      become: true
+      user:
+       name: "importer1"
+       state: present
+       groups: "{{ omero_server_system_managedrepo_group }}"
+       password: "{{ os_system_users_password }}"
+
+    - name: Allow managed repo group to login
+      become: yes
+      lineinfile:
+        path: /etc/security/access.conf
+        regexp: "{{ omero_server_system_managedrepo_group }}"
+        insertbefore: BOF
+        line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
+
+    - name: Run docker for ldap
+      become: yes
+      docker_container:
+        image: openmicroscopy/apacheds:{{ apache_docker_release }}
+        name: ldap
+        published_ports:
+        - "10389:10389"
+        state: started
+        restart_policy: always
+
+    # https://fralef.me/docker-and-iptables.html
+    # https://blog.daknob.net/debian-firewall-docker/
+    # Allow:
+    # - all outbound from Docker containers
+    # - incoming from host localhost
+
+    - name: Iptables Docker forward rules
+      become: yes
+      iptables_raw_25:
+        name: docker_outreach_rules
+        rules: |
+          -A FORWARD -i docker0 -o {{ external_nic }} -j ACCEPT
+          -A FORWARD -i {{ external_nic }} -o docker0 -j ACCEPT
+        state: present
+
+    - name: Iptables Docker nat rules
+      become: yes
+      iptables_raw_25:
+        name: docker_outreach_nat
+        table: nat
+        rules: |
+          -A POSTROUTING -o {{ external_nic }} -j MASQUERADE
+          # Allow world to access 10389?
+          -A INPUT -p tcp -m tcp --dport 10389 -s 0.0.0.0/0 -j ACCEPT
+        state: present
+
+  # Crypted passwords generated using
+  # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+  vars:
+    #omero_server_datadir_chown: True
+    omero_server_system_managedrepo_group: managed_repo_group
+    omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
+    omero_server_datadir_chown: False
+    omero_server_release: "{{ omero_server_release_override | default('5.5.1') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.5.1') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.0') }}"
+    omero_mapr_release: "{{ omero_mapr_release_override | default('0.2.3') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.1.3') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.0') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
+    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.4.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
+    # The os_system_users_password default is "ome".
+    # You may wish to change this variable,
+    # or override it by defining the private variable os_system_users_password_override.
+    os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
+    apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
+    ldap_password: "{{ ldap_password_override | default ('secret') }}"
+    omero_server_config_set:
+      #omero.fs.importUsers: "fm1"
+      omero.fs.watchDir: "/home/DropBox"
+      omero.fs.importArgs: "-T \"regex:^.*/(?<Container1>.*?)\""
+      omero.db.poolsize: 60
+      omero.jvmcfg.percent.blitz: 50
+      omero.jvmcfg.percent.indexer: 20
+      omero.jvmcfg.percent.pixeldata: 20
+      omero.fs.repo.path: "%user%_%userId%/%thread%//%year%-%month%/%day%/%time%"
+      omero.ldap.config: "true"
+      omero.ldap.urls: "ldap://localhost:10389"
+      omero.ldap.base: "dc=openmicroscopy,dc=org"
+      omero.ldap.group_filter: "(objectClass=groupOfUniqueNames)"
+      omero.ldap.group_mapping: "name=cn"
+      omero.ldap.new_user_group: "MyData"
+      omero.ldap.new_user_group_owner: "(owner=@{dn})"
+      omero.ldap.password: "{{ ldap_password }}"
+      omero.ldap.sync_on_login: "true"
+      omero.ldap.user_filter: "(objectClass=person)"
+      omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
+      omero.ldap.username: "uid=admin,ou=system"
+
+    external_nic: "{{ ansible_default_ipv4.interface }}"
+
+- include: letsencrypt.yml
+  when: not (molecule_test | default(False))
