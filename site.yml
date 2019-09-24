@@ -18,6 +18,9 @@
 # https://outreach.openmicroscopy.org
 - include: omero/training-server/playbook.yml
 
+# https://workshop.openmicroscopy.org
+- include: omero/training-server-2/playbook.yml
+
 # Firewall configuration for all UoD OMERO servers
 - include: omero/omero-firewall.yml
 

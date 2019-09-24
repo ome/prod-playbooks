@@ -17,6 +17,7 @@ env:
   - SCENARIO=ome-demoserver
   - SCENARIO=ome-dundeeomero
   - SCENARIO=omero-training-server
+  - SCENARIO=omero-training-server-2
   - SCENARIO=release
   - SCENARIO=web-proxy
   - SCENARIO=www
