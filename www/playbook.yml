@@ -55,7 +55,7 @@
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
-    - role: openmicroscopy.system-monitor-agent
+    - role: ome.system_monitor_agent
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
 

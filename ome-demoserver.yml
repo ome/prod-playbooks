@@ -86,12 +86,12 @@
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
-    - role: openmicroscopy.system-monitor-agent
+    - role: ome.system_monitor_agent
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
     # Disk Layout - PostgreSQL | data dir on separate VG (SSD)
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: pgdata
       lvm_vgname: "{{ provision_postgres_vgname }}"
@@ -101,7 +101,7 @@
       lvm_shrink: False
 
     # Disk Layout - OMERO | VG and LV (separate disk) for Binary Repository
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: datadir
       lvm_vgname: "{{ provision_omero_server_datadir_vgname }}"
@@ -111,7 +111,7 @@
       lvm_shrink: False
 
     # Disk Layout - OMERO.server | LV for dist & logs
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: omero_server_basedir
       lvm_vgname: VolGroup00
@@ -121,7 +121,7 @@
       lvm_shrink: False
 
     # Disk Layout - OMERO.web | LV for dist & logs
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: omero_web_basedir
       lvm_vgname: VolGroup00

@@ -3,15 +3,15 @@
 
 - hosts: web-proxies
   roles:
-  - role: openmicroscopy.network
+  - role: ome.network
     tags: network
-  - role: openmicroscopy.lvm-partition
+  - role: ome.lvm_partition
     tags: lvm
     lvm_lvname: root
     lvm_lvmount: /
     lvm_lvsize: "{{ root_size }}"
     lvm_lvfilesystem: "{{ root_filesystem }}"
-  - role: openmicroscopy.lvm-partition
+  - role: ome.lvm_partition
     tags: lvm
     lvm_lvname: var_log
     lvm_lvmount: /var/log

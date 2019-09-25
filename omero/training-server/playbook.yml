@@ -43,18 +43,18 @@
         databases: [omero]
       postgresql_version: "9.6"
 
-    - role: openmicroscopy.versioncontrol-utils
+    - role: ome.versioncontrol_utils
 
-    - role: openmicroscopy.nfs-mount
+    - role: ome.nfs_mount
 
     - role: ome.omero_server
 
     - role: ome.omero_web
       # omero_web_config_set:
 
-    - role: openmicroscopy.iptables-raw
+    - role: ome.iptables_raw
 
-    - role: openmicroscopy.docker
+    - role: ome.docker
       docker_additional_options:
         # Manually configure to avoid conflicts between Docker and system rules
         iptables: false

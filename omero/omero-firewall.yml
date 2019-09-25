@@ -4,7 +4,7 @@
 
   roles:
 
-  - role: openmicroscopy.iptables-raw
+  - role: ome.iptables_raw
 
   tasks:
 
