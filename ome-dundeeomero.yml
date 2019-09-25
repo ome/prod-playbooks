@@ -102,13 +102,6 @@
     # installation before changing config to restored DB from other system.
     - role: ome.omero_server
       omero_server_release: 5.5.0
-      # Active Directory users not working with role.
-      # Role requires to be manually modified to make it work with an AD user
-      omero_server_system_user: "{{ omero_server_dbuser | default('omero') }}"
-      # Mocking omero_server_datadir for the first run.
-      # Prod value to come from host vars
-      # omero_server_datadir: "/tmp/install-mock_omero-server-datadir"
-      # omero_server_datadir: overridden after inital role run via host vars
       omero_server_datadir_manage: False
       omero_server_systemd_limit_nofile: 16384
       omero_server_systemd_after:
