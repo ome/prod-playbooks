@@ -46,11 +46,11 @@
         databases: [omero]
       postgresql_version: "10"
 
-    - role: openmicroscopy.versioncontrol-utils
+    - role: ome.versioncontrol_utils
 
-    - role: openmicroscopy.nfs-mount
+    - role: ome.nfs_mount
 
-    - role: ome.omero_server_venv
+    - role: ome.omero_server
       omero_server_virtualenv: yes
       omero_server_python_addons:
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
@@ -60,9 +60,9 @@
     - role: ome.omero_web
       # omero_web_config_set:
 
-    - role: openmicroscopy.iptables-raw
+    - role: ome.iptables_raw
 
-    - role: openmicroscopy.docker
+    - role: ome.docker
       docker_additional_options:
         # Manually configure to avoid conflicts between Docker and system rules
         iptables: false
@@ -78,7 +78,7 @@
         state: directory
 
     # Inspired by
-    # https://github.com/openmicroscopy/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
+    # https://github.com/ome/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
     - name: omero-web nginx nested include
       become: yes
       lineinfile:
