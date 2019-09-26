@@ -52,15 +52,12 @@
 - src: ome.omero_python_deps
   version: 2.0.1
 
-- name: ome.omero_server_venv
-  src: https://github.com/ome/ansible-role-omero-server/archive/fdc352ba17ea864a8d97bd60cb86476e1e146b6a.tar.gz
-  version: fdc352ba17ea864a8d97bd60cb86476e1e146b6a
-
 - src: openmicroscopy.omero-user
   version: 0.1.1
 
-- src: ome.omero_server
-  version: 2.0.6
+- name: ome.omero_server
+  src: https://github.com/ome/ansible-role-omero-server/archive/fdc352ba17ea864a8d97bd60cb86476e1e146b6a.tar.gz
+  version: fdc352ba17ea864a8d97bd60cb86476e1e146b6a
 
 - src: ome.omero_user
   version: 0.1.2
