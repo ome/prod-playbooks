@@ -129,11 +129,11 @@
     omero_web_config_set: "{{ omero_web_config_set_for_group | combine(omero_web_config_set_for_host) }}"
     omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.0') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_web_release_version: "{{ omero_web_release_version_override | default('5.5.0') }}"
+    omero_web_release_version: "{{ omero_web_release_version_override | default('5.5.1') }}"
     nginx_version: 1.14.2
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
