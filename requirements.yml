@@ -64,8 +64,9 @@
 - src: ome.omero_web_django_prometheus
   version: 0.2.1
 
-- src: ome.postgresql
-  version: 3.2.0
+- name: ome.postgresql
+  src: https://github.com/sbesson/ansible-role-postgresql
+  version: psql_repos
 
 - src: ome.postgresql_backup
   version: 0.1.1
