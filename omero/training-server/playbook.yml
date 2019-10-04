@@ -298,15 +298,15 @@
     omero_web_release: "{{ omero_web_release_override | default('5.5.1') }}"
     omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.0') }}"
-    omero_mapr_release: "{{ omero_mapr_release_override | default('0.2.3') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.1') }}"
+    omero_mapr_release: "{{ omero_mapr_release_override | default('0.3.2') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.3') }}"
-    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.0') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
-    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.4.0') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
+    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.4.1') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.3') }}"
     # The os_system_users_password default is "ome".
     # You may wish to change this variable,
     # or override it by defining the private variable os_system_users_password_override.
