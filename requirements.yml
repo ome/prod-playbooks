@@ -56,8 +56,8 @@
   version: 0.1.1
 
 - name: ome.omero_server
-  src: https://github.com/ome/ansible-role-omero-server/archive/fdc352ba17ea864a8d97bd60cb86476e1e146b6a.tar.gz
-  version: fdc352ba17ea864a8d97bd60cb86476e1e146b6a
+  src: https://github.com/ome/ansible-role-omero-server/archive/1a9a0602c7abc91f8caf0919ebda8b70603337ab.tar.gz
+  version: 1a9a0602c7abc91f8caf0919ebda8b70603337ab
 
 - src: ome.omero_user
   version: 0.1.2
