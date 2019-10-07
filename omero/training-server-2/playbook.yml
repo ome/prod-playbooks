@@ -250,15 +250,6 @@
         insertbefore: BOF
         line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
 
-    - name: bin/omero wrapper
-      become: yes
-      copy:
-        src: files/bin-omero
-        dest: /usr/local/bin/omero
-        owner: "root"
-        group: "root"
-        mode: 0755
-
     - name: Run docker for ldap
       become: yes
       docker_container:
