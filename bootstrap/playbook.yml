@@ -29,6 +29,6 @@
     upgrade_distpackages_reboot_kernel: True
 
 
-- hosts: vlan-10ge-servers
+- hosts: vlan-10ge-servers, vlan-ome-idr-docker
   roles:
   - role: ome.network
