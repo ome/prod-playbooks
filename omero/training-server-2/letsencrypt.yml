@@ -3,6 +3,15 @@
 
 - hosts: ome-outreach
 
+  pre_tasks:
+
+    - name: lentsencrypt challenge directory
+      become: yes
+      file:
+        path: /srv/www/letsencrypt/.well-known/
+        recurse: yes
+        state: directory
+
   roles:
 
     # Assume Nginx is already installednginx in certbot
