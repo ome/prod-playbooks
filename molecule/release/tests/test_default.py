@@ -45,4 +45,5 @@ def test_redirects(host, base_folder):
         assert f.content_string == (
             'Redirect 301 /component/latest /component/%s' % v['version'])
     elif hostname == 'prelease':
-        assert f.content_string == 'Redirect 301 /component/latest /component/3.1.8'
+        assert (f.content_string ==
+                'Redirect 301 /component/latest /component/3.1.8')
