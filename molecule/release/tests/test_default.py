@@ -28,21 +28,21 @@ def test_redirects(host, base_folder):
     f = host.file('%s/component/3.2/.htaccess' % base_folder)
     if hostname == 'release':
         assert f.exists
-        assert f.content == (
+        assert f.content_string == (
             'Redirect 301 /component/3.2 /component/%s' % v['version'])
     elif hostname == 'prelease':
         assert not f.exists
     f = host.file('%s/component/3/.htaccess' % base_folder)
     assert f.exists
     if hostname == 'release':
-        assert f.content == (
+        assert f.content_string == (
             'Redirect 301 /component/3 /component/%s' % v['version'])
     elif hostname == 'prelease':
-        assert f.content == 'Redirect 301 /component/3 /component/3.1.8'
+        assert f.content_string == 'Redirect 301 /component/3 /component/3.1.8'
     f = host.file('%s/component/latest/.htaccess' % base_folder)
     assert f.exists
     if hostname == 'release':
-        assert f.content == (
+        assert f.content_string == (
             'Redirect 301 /component/latest /component/%s' % v['version'])
     elif hostname == 'prelease':
-        assert f.content == 'Redirect 301 /component/latest /component/3.1.8'
+        assert f.content_string == 'Redirect 301 /component/latest /component/3.1.8'
