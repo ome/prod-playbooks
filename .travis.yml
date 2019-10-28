@@ -2,9 +2,6 @@
 sudo: required
 language: python
 
-services:
-  - docker
-
 install:
   - pip install "ome-ansible-molecule<0.5"
   - pip install jmespath
