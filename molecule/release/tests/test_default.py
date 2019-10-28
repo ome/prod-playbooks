@@ -18,7 +18,7 @@ def test_permissions(host, base_folder):
     f = host.file('%s/component/%s' % (base_folder, v['version']))
     assert f.exists
     assert f.user == 'root'
-    assert oct(f.mode) == '01555'
+    assert oct(f.mode) == '0o1555'
 
 
 @pytest.mark.parametrize('base_folder', [DOWNLOADS_URL, DOCS_URL])
