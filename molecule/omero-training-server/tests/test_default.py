@@ -18,8 +18,8 @@ OMERO_LOGIN = '-C -s localhost -u root -w omero'
     'prometheus-omero-exporter',
     'prometheus-postgres-exporter',
 ])
-def test_service_running_and_enabled(Service, name):
-    service = Service(name)
+def test_service_running_and_enabled(host, name):
+    service = host.service(name)
     assert service.is_running
     assert service.is_enabled
 
