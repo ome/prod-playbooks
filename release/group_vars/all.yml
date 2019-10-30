@@ -34,6 +34,8 @@ public_folders:
   nifti: 'NIfTI'
   nrrd: 'NRRD'
   olympus-oir: 'Olympus-OIR'
+  ome-xml: 'OME-XML'
+  ome-tiff: 'OME-TIFF'
   perkinelmer-operetta: 'PerkinElmer-Operetta'
   png: 'PNG'
   svs: 'SVS'
@@ -52,6 +54,4 @@ special_public_folders:
   - { src: '../../../../repos/curated/cellomics/public/', dest: 'HCS/BBBC'}
   - { src: '../../../../repos/curated/incell/public/', dest: 'HCS/INCELL2000'}
   - { src: '../../../../repos/curated/perkinelmer-operetta/public/', dest: 'HCS/Operetta'}
-  - { src: '../../../repos/curated/ome-tiff/ome-schemas/', dest: 'OME-TIFF'}
-  - { src: '../../../repos/curated/ome-xml/ome-schemas/', dest: 'OME-XML'}
   - { src: '../../../repos/curated/zip/u-track/', dest: 'u-track'}
