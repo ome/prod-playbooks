@@ -15,14 +15,16 @@
 # https://demo.openmicroscopy.org OMERO.server and OMERO.web
 - include: ome-demoserver.yml
 
+# Firewall configuration for all UoD OMERO servers
+# The ome-outreach modifiy the firewall configuration so this MUST be run
+# first
+- include: omero/omero-firewall.yml
+
 # https://outreach.openmicroscopy.org
 - include: omero/training-server/playbook.yml
 
 # https://workshop.openmicroscopy.org
 - include: omero/training-server-2/playbook.yml
-
-# Firewall configuration for all UoD OMERO servers
-- include: omero/omero-firewall.yml
 
 # Internal monitoring configuration for all UoD OMERO servers
 - include: omero/omero-monitoring-agents.yml
