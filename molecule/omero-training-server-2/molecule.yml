@@ -12,7 +12,6 @@ lint:
 platforms:
   - name: ome-outreach
     image: centos/systemd
-    image_version: latest
     command: /sbin/init
     privileged: true
     groups:
