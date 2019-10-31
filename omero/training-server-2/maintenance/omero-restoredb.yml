@@ -1,0 +1,81 @@
+---
+# Restore the outreach OMERO database and data directory
+# Requires:
+# - data directory is in an uncompressed tar file
+# - postgres has been dumped into a single file in custom format
+#   e.g. with omego db dump
+# - ssh access to omero_restore_host from omero_restore_data_host
+#   for rsyncing files
+
+# This playbook will delete or overwrite existing data if necessary
+
+# Required runtime variables:
+# - omero_restore_host: The target training server
+# - omero_restore_data_host: The file server containing the archived repository
+
+# E.g.
+# ansible-playbook omero-restoredb.yml --step
+#   -e omero_restore_host=ome-training-1.openmicroscopy.org
+#   -e omero_restore_data_host=example.openmicroscopy.org
+
+
+- hosts: "{{ omero_restore_host }}"
+
+  vars:
+    omero_restore_data_dump_file: /uod/idr/repos/outreach/outreach-omero-20190710/outreach-OMERO-20190710-1550.tar
+    omero_restore_db_dump_file: /uod/idr/repos/outreach/outreach-omero-20190710/omero-database-omero-20190710-154903-139204.pgdump
+
+  tasks:
+
+  # This may take a long time with no output
+  - name: Copy files
+    # Don't become root, this should ensure ssh forwarding works
+    synchronize:
+      src: "{{ item }}"
+      dest: "/tmp/{{ item | basename }}"
+      partial: true
+    delegate_to: "{{ omero_restore_data_host }}"
+    with_items:
+      - "{{ omero_restore_data_dump_file }}"
+      - "{{ omero_restore_db_dump_file }}"
+
+  - name: Stop OMERO.server
+    become: true
+    service:
+      name: omero-server
+      state: stopped
+
+  # Assumes the owner and group information in the archive is correct
+  - name: Restore OMERO data directory
+    become: true
+    unarchive:
+      src: "/tmp/{{ omero_restore_data_dump_file | basename }}"
+      dest: /
+      remote_src: true
+
+  - name: Restore OMERO database
+    become: true
+    become_user: postgres
+    command: >-
+      pg_restore --clean -d omero
+      "/tmp/{{ omero_restore_db_dump_file | basename }}"
+
+  - name: Upgrade OMERO database
+    become: omero-server
+    command: >-
+      /opt/omero/omego/bin/omego db upgrade
+      --serverdir /opt/omero/server/OMERO.server
+
+  - name: Start OMERO.server
+    become: true
+    service:
+      name: omero-server
+      state: started
+
+  - name: Delete temporary files
+    file:
+      path: "/tmp/{{ item | basename }}"
+      state: absent
+    with_items:
+      - "{{ omero_restore_data_dump_file }}"
+      - "{{ omero_restore_db_dump_file }}"
