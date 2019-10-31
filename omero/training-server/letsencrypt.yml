@@ -5,7 +5,7 @@
 
   pre_tasks:
 
-    - name: lentsencrypt challenge directory
+    - name: letsencrypt challenge directory
       become: yes
       file:
         path: /srv/www/letsencrypt/.well-known/
@@ -14,7 +14,7 @@
 
   roles:
 
-    # Assume Nginx is already installednginx in certbot
+    # Assume Nginx is already installed
     # - role: ome.nginx
 
     # If we're not using letsencrypt assume this is CI so use a self-signed cert

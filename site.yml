@@ -16,8 +16,8 @@
 - include: ome-demoserver.yml
 
 # Firewall configuration for all UoD OMERO servers
-# The ome-outreach modifiy the firewall configuration so this MUST be run
-# first
+# The training-server playbooks modify the firewall configuration so this must
+# be run first to setup the basic rules
 - include: omero/omero-firewall.yml
 
 # https://outreach.openmicroscopy.org
