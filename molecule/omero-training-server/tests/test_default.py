@@ -13,7 +13,7 @@ OMERO_LOGIN = '-C -s localhost -u root -w omero'
     'nginx',
     'omero-server',
     'omero-web',
-    'postgresql-9.6',
+    'postgresql-10',
     'prometheus-node-exporter',
     'prometheus-omero-exporter',
     'prometheus-postgres-exporter',
@@ -33,7 +33,7 @@ def test_omero_login(host):
 
 @pytest.mark.parametrize("curl", [
     'localhost:9449/metrics',
-    '-u monitoring:monitoring localhost/metrics/9449',
+    '-u monitoring:monitoring -k https://localhost/metrics/9449',
 ])
 def test_omero_metrics(host, curl):
     out = host.check_output('curl -f %s' % curl)
@@ -42,9 +42,14 @@ def test_omero_metrics(host, curl):
 
 def test_omero_metrics_auth_fail(host):
     out = host.run(
-        'curl -f -u monitoring:incorrect localhost/metrics/9449')
+        'curl -f -u monitoring:incorrect -k https://localhost/metrics/9449')
     assert out.rc == 22
     assert '401' in out.stderr
+
+
+def test_omero_nginx_ssl(host):
+    out = host.check_output('curl -fkI https://localhost/')
+    assert 'Location: https://localhost/webclient/' in out
 
 
 def test_local_ldap(host):

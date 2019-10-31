@@ -1,7 +1,0 @@
-# omero-mapr
-config append -- omero.web.apps '"omero_mapr"'
-config set -- omero.web.mapr.config '[{"menu": "gene", "config": {"default": ["Gene Symbol"], "all": ["Gene Symbol", "Gene Identifier"], "ns": ["openmicroscopy.org/mapr/gene"], "label": "Gene"}}, {"menu": "keyvalue", "config": {"default": ["Any Value"], "all": [], "ns": ["openmicroscopy.org/omero/client/mapAnnotation"], "label": "KeyValue"}}]'
-
-config append -- omero.web.ui.top_links '["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]'
-
-config append -- omero.web.ui.top_links '["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]'

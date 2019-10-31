@@ -21,10 +21,8 @@
 - include: omero/omero-firewall.yml
 
 # https://outreach.openmicroscopy.org
-- include: omero/training-server/playbook.yml
-
 # https://workshop.openmicroscopy.org
-- include: omero/training-server-2/playbook.yml
+- include: omero/training-server/playbook.yml
 
 # Internal monitoring configuration for all UoD OMERO servers
 - include: omero/omero-monitoring-agents.yml
