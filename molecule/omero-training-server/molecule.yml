@@ -10,9 +10,8 @@ lint:
   # TODO: enable
   enabled: False
 platforms:
-  - name: outreach.openmicroscopy.org
+  - name: ome-outreach
     image: centos/systemd
-    image_version: latest
     command: /sbin/init
     privileged: true
     groups:

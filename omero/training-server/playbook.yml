@@ -1,6 +1,9 @@
-# Install OMERO.server and OMERO.web on localhost
+---
+# The OME training server(s)
+# Set https_letsencrypt_enabled to True in production to ensure certbot
+# handles the letsencrypt certificate setup
 
-- hosts: outreach.openmicroscopy.org
+- hosts: ome-outreach
   pre_tasks:
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
@@ -41,13 +44,18 @@
       - user: omero
         password: omero
         databases: [omero]
-      postgresql_version: "9.6"
+      postgresql_version: "10"
 
     - role: ome.versioncontrol_utils
 
     - role: ome.nfs_mount
 
     - role: ome.omero_server
+      omero_server_virtualenv: yes
+      omero_server_python_addons:
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+        - "omero-cli-render=={{ omero_cli_render_release }}"
+        - "omero-metadata=={{ omero_metadata_release }}"
 
     - role: ome.omero_web
       # omero_web_config_set:
@@ -70,7 +78,7 @@
         state: directory
 
     # Inspired by
-    # https://github.com/openmicroscopy/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
+    # https://github.com/ome/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
     - name: omero-web nginx nested include
       become: yes
       lineinfile:
@@ -103,15 +111,6 @@
       become: yes
       yum:
         name: docker-python
-        state: present
-
-    - name: Omero.cli plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        name:
-        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
-        - "omero-cli-render=={{ omero_cli_render_release }}"
-        - "omero-metadata=={{ omero_metadata_release }}"
         state: present
 
     - name: Create a figure scripts directory
@@ -338,4 +337,3 @@
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
 - include: letsencrypt.yml
-  when: not (molecule_test | default(False))
