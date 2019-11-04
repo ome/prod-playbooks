@@ -95,8 +95,8 @@
             - userdata
         omero.web.ui.top_links:
           - ["Image Gallery", "webindex", {"title": "Image Gallery"}]
-          - ["HELP", "https://help.openmicroscopy.org/web-client.html", {"title":"Help", "target": "new"}]
-          - ["SLS Homepage", "https://www.lifesci.dundee.ac.uk/", {"title":"SLS Homepage", "target": "new"}]
+          - ["HELP", "https://help.openmicroscopy.org/web-client.html", {"title": "Help", "target": "new"}]
+          - ["SLS Homepage", "https://www.lifesci.dundee.ac.uk/", {"title": "SLS Homepage", "target": "new"}]
         omero.web.caches:
           default:
             BACKEND: django_redis.cache.RedisCache
