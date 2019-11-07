@@ -16,7 +16,7 @@
     # Optional checksum. It should be safe to omit as long as you never
     # overwrite an existing archive. This should not be a problem when using
     # versioned directories.
-    deploy_archive_sha256: 65411ce950f0b46aed377d748f1bb58be2f4372dffaf08e0b64154ee1b4e8596
+    deploy_archive_sha256: "{{ website_sha256 }}"
     deploy_archive_symlink: /var/www/{{ website_name }}/html
     tags: jekyll
 
@@ -48,6 +48,8 @@
       path: "{{ phpbbforum_style_file }}"
 
   vars:
-    website_version: "2019.10.28"
+    website_version: "2019.11.07"
+    website_sha256: >-
+      2d92ad00307939a26f3e642c0b2032d7165a9f8503376ec2baa4c4b667e49fca
     website_name: www.openmicroscopy.org
     phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"
