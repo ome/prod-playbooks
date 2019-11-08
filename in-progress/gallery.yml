@@ -1,17 +1,12 @@
 # Installation notes:
 # - Set up OME RHEL 7 machine.
-# - Run playbook, maybe fails partway.
+# - Run playbook.
 # - systemctl stop omero-{server,web}
-# - Manually install:
-#   - /etc/nginx/conf.d/omero-web.conf
-#   - /etc/pki/tls/certs/star_openmicroscopy_org.crt+bundle
-#   - /etc/pki/tls/private/star_openmicroscopy_org.key
-# - systemctl reload nginx
 # - Migrate binary repository to /OMERO/ with rsync.
 # - Migrate database with pg_dump, pg_restore.
 # - Upgrade database.
 # - bin/omero db password for root user.
-# - Rerun playbook, should pass.
+# - systemctl start omero-{server,web}
 
 - hosts: omero-sls-gallery
   roles:
@@ -77,8 +72,14 @@
 
     - role: ome.redis
 
+    - role: ome.nginx
+
+    - role: mtbc.nginx-configure
+      omero_web_conf: "resources/gallery/omero-web.conf"
+
     - role: ome.omero-web
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
+      omero_web_setup_nginx: False
       omero_web_systemd_start: False
       omero_web_release: latest
       omero_web_config_set:
