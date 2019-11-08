@@ -1,5 +1,9 @@
 # Installation notes:
 # - Set up OME RHEL 7 machine.
+# - Set up web server TLS in resources/certificates:
+#   star_openmicroscopy_org.crt+bundle, star_openmicroscopy_org.key
+# - Set host variables:
+#   database_password, server_password
 # - Run playbook.
 # - systemctl stop omero-{server,web}
 # - Migrate binary repository to /OMERO/ with rsync.
