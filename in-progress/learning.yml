@@ -1,12 +1,7 @@
 # Installation notes:
 # - Set up OME RHEL 7 machine.
-# - Run playbook, maybe fails partway.
+# - Run playbook, maybe fails to start omero-web.
 # - systemctl stop omero-{server,web}
-# - Manually install:
-#   - /etc/nginx/conf.d/omero-web.conf
-#   - /etc/pki/tls/certs/star_openmicroscopy_org.crt+bundle
-#   - /etc/pki/tls/private/star_openmicroscopy_org.key
-# - systemctl reload nginx
 # - . ~omero-web/venv/bin/activate
 #   pip install https://github.com/ome/virtual-microscope/archive/master.tar.gz
 # - Migrate binary repository to /OMERO/ with rsync.
@@ -15,7 +10,7 @@
 #   Do run shape_color_argb_to_rgba.sql.
 #   UPDATE shape SET points = REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*', '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points LIKE 'points[%';
 # - bin/omero db password for root and public users.
-# - Rerun playbook, should pass.
+# - systemctl restart nginx omero-{server,web}
 
 - hosts: omero-learning
   roles:
@@ -81,8 +76,14 @@
 
     - role: ome.redis
 
+    - role: ome.nginx
+
+    - role: mtbc.nginx-configure
+      omero_web_conf: "resources/learning/omero-web.conf"
+
     - role: ome.omero-web
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
+      omero_web_setup_nginx: False
       omero_web_systemd_start: False
       omero_web_release: latest
       omero_web_config_set:
@@ -121,8 +122,3 @@
       omero_web_app_names:
         - gallery
         - iviewer
-
-    - role: mtbc.omero-services
-      omero_service_names:
-        - server
-        - web
