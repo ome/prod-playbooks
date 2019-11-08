@@ -1,7 +1,0 @@
-- name: restart OMERO services
-  become: yes
-  service:
-    name: "omero-{{ item }}"
-    enabled: yes
-    state: restarted
-  loop: "{{ omero_service_names }}"
