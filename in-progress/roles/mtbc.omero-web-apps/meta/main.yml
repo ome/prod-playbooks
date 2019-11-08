@@ -1,0 +1,2 @@
+dependencies:
+  - role: ome.omero_common

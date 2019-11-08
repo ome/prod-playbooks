@@ -112,8 +112,3 @@
     - role: mtbc.omero-web-apps
       omero_web_app_names:
         - iviewer
-
-    - role: mtbc.omero-services
-      omero_service_names:
-        - server
-        - web

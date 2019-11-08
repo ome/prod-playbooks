@@ -6,3 +6,4 @@
     keystore_path: "/etc/pki/java/cacerts"
     keystore_pass: changeit
     state: present
+  notify: restart omero-server
