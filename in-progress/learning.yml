@@ -4,17 +4,15 @@
 #   star_openmicroscopy_org.crt+bundle, star_openmicroscopy_org.key
 # - Set host variables:
 #   database_password, server_password, public_password, ldap_password
-# - Run playbook, maybe fails to start omero-web.
+# - Run playbook.
 # - systemctl stop omero-{server,web}
-# - . ~omero-web/venv/bin/activate
-#   pip install https://github.com/ome/virtual-microscope/archive/master.tar.gz
 # - Migrate binary repository to /OMERO/ with rsync.
 # - Migrate database with pg_dump, pg_restore.
 # - Upgrade database.
 #   Do run shape_color_argb_to_rgba.sql.
 #   UPDATE shape SET points = REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*', '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points LIKE 'points[%';
 # - bin/omero db password for root and public users.
-# - systemctl restart nginx omero-{server,web}
+# - systemctl start omero-{server,web}
 
 - hosts: omero-learning
   roles:
@@ -126,3 +124,4 @@
       omero_web_app_names:
         - gallery
         - iviewer
+        - virtual-microscope
