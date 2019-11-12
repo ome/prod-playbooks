@@ -35,6 +35,16 @@
         - gcc
         - python-ldap
 
+    # This separate file has been redundant for ages
+    # https://github.com/ome/prod-playbooks/blob/142d8c675c56d465686e792eb6d69668e408e537/templates/omero-web-config-for-webapps.j2#L19
+    - name: Remove old configuration file
+      become: yes
+      file:
+        path: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
+        state: absent
+      notify:
+      - restart omero-web
+
   roles:
 
     - role: ome.postgresql
@@ -217,17 +227,6 @@
       copy:
         src: files/omero-web-outreach-webapps.omero
         dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-      - restart omero-web
-
-    - name: Set default viewer in OMERO.web
-      become: yes
-      template:
-        src: ../../templates/omero-web-config-default-viewer.j2
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
         owner: "root"
         group: "root"
         mode: "u=rw,go=r"
