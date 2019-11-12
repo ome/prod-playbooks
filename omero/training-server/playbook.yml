@@ -79,6 +79,8 @@
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
         - "omero-metadata=={{ omero_metadata_release }}"
+        - reportlab
+        - markdown
 
     - role: ome.omero_web
       # omero_web_config_set:
@@ -332,10 +334,6 @@
       - "omero-parade=={{ omero_parade_release }}"
       # - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       # - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
-
-    omero_server_python_addons:
-      - reportlab
-      - markdown
 
     ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
