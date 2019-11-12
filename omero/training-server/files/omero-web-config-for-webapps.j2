@@ -4,19 +4,19 @@
 # and set iviewer as a default viewer
 
 # omero-figure
-#config append -- omero.web.apps '"omero_figure"'
-#config append -- omero.web.ui.top_links '["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]'
-#config append -- omero.web.open_with '["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]'
+config append -- omero.web.apps '"omero_figure"'
+config append -- omero.web.ui.top_links '["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]'
+config append -- omero.web.open_with '["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]'
 
 # omero-fpbioimage
 #config append -- omero.web.apps '"omero_fpbioimage"'
 #config append -- omero.web.open_with '["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]'
 
 # iviewer
-#config append -- omero.web.apps '"omero_iviewer"'
-#config append -- omero.web.open_with '["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]'
+config append -- omero.web.apps '"omero_iviewer"'
+config append -- omero.web.open_with '["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]'
 # set iviewer as a default viewer
-#config set -- omero.web.viewer.view {{ omeroweb_default_viewer_override | default('omero_iviewer.views.index') }}
+config set -- omero.web.viewer.view {{ omeroweb_default_viewer_override | default('omero_iviewer.views.index') }}
 
 # Autotag
 #config append -- omero.web.apps '"omero_webtagging_autotag"'
