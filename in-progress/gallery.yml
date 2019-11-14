@@ -54,13 +54,13 @@
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
         omero.ldap.config: True
-        omero.ldap.base: ou=lifesci,o=dundee
+        omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: cn=ldapuser,ou=system,o=dundee
         omero.ldap.user_filter: "(objectClass=person)"
         omero.ldap.group_filter: "(&(objectClass=groupOfUniqueNames)(cn=omedev))"
         omero.ldap.group_mapping: name=cn
         omero.ldap.new_user_group: :query:(uniqueMember=@{dn})
-        omero.ldap.urls: ldaps://ldap.lifesci.dundee.ac.uk:636
+        omero.ldap.urls: "{{ omero_server_ldap_urls }}"
         omero.mail.config: true
         omero.mail.from: "qa@openmicroscopy.org.uk"
         omero.mail.host: "smtp.dundee.ac.uk"
