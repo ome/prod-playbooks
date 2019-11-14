@@ -81,7 +81,7 @@
     - role: ome.nginx
 
     - role: mtbc.nginx-configure
-      omero_web_conf: "resources/learning/omero-web.conf"
+      omero_web_conf: "omero/files/learning-omero-web.conf"
 
     - role: ome.omero-web
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
