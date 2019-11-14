@@ -70,14 +70,14 @@
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
 
-    - role: mtbc.ldap-cert
+    - role: ome.ldap-cert
       ldap_host: "ldap.lifesci.dundee.ac.uk"
 
     - role: ome.redis
 
     - role: ome.nginx
 
-    - role: mtbc.nginx-configure
+    - role: ome.nginx-configure
       omero_web_conf: "omero/files/sls-gallery-omero-web.conf"
 
     - role: ome.omero-web
@@ -113,6 +113,6 @@
           - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
         omero.web.viewer.view: omero_iviewer.views.index
 
-    - role: mtbc.omero-web-apps
+    - role: ome.omero-web-apps
       omero_web_app_names:
         - iviewer

@@ -72,14 +72,14 @@
         omero.security.trustStorePassword: "changeit"
         omero.sessions.timeout: 3600000
 
-    - role: mtbc.ldap-cert
+    - role: ome.ldap-cert
       ldap_host: "ldap0.dundee.ac.uk"
 
     - role: ome.redis
 
     - role: ome.nginx
 
-    - role: mtbc.nginx-configure
+    - role: ome.nginx-configure
       omero_web_conf: "omero/files/learning-omero-web.conf"
 
     - role: ome.omero-web
@@ -119,7 +119,7 @@
         omero.web.public.url_filter: "/(webgateway|gallery)/"
         omero.web.public.user: public
 
-    - role: mtbc.omero-web-apps
+    - role: ome.omero-web-apps
       omero_web_app_names:
         - gallery
         - iviewer
