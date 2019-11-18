@@ -15,7 +15,7 @@
 
 - hosts: omero-learning
   roles:
-    - role: ome.lvm-partition
+    - role: ome.lvm_partition
       lvm_vgname: VolGroup00
       lvm_lvname: 'var_lib_psql'
       lvm_lvmount: '/var/lib/pgsql'
