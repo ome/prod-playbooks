@@ -30,7 +30,7 @@
           databases: [omero]
       postgresql_version: "10"
 
-    - role: ome.lvm-partition
+    - role: ome.lvm_partition
       lvm_vgname: VolGroup00
       lvm_lvname: 'omero'
       lvm_lvmount: '/OMERO'
