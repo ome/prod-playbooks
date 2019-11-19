@@ -119,7 +119,7 @@
         omero.web.public.url_filter: "/(webgateway|gallery)/"
         omero.web.public.user: public
 
-    - role: ome.omero-web-apps
+    - role: ome.omero_web_apps
       omero_web_app_names:
         - gallery
         - iviewer
