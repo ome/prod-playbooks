@@ -120,7 +120,7 @@
         omero.web.public.user: public
 
     - role: ome.omero_web_apps
-      omero_web_app_names:
-        - gallery
-        - iviewer
-        - virtual-microscope
+      omero_web_apps_packages:
+        - omero-gallery
+        - omero-iviewer
+        - omero-virtual-microscope

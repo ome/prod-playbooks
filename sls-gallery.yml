@@ -114,5 +114,5 @@
         omero.web.viewer.view: omero_iviewer.views.index
 
     - role: ome.omero_web_apps
-      omero_web_app_names:
-        - iviewer
+      omero_web_apps_packages:
+        - omero-iviewer
