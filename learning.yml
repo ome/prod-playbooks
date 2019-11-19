@@ -56,14 +56,14 @@
         omero.jvmcfg.percent.pixeldata: 30
         omero.ldap.config: True
         omero.ldap.base: "{{ omero_server_ldap_base }}"
-        omero.ldap.username: cn=ldapomero,ou=users,o=dundee
+        omero.ldap.username: "{{ omero_server_ldap_username }}"
         omero.ldap.password: "{{ ldap_password }}"
-        omero.ldap.user_filter: "(objectClass=person)"
-        omero.ldap.new_user_group: Virtual Microscope
+        omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
+        omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
         omero.ldap.urls: "{{ omero_server_ldap_urls }}"
         omero.mail.config: true
-        omero.mail.from: "qa@openmicroscopy.org.uk"
-        omero.mail.host: "smtp.dundee.ac.uk"
+        omero.mail.from: "{{ omero_server_mail_from }}"
+        omero.mail.host: "{{ omero_server_mail_host }}"
         omero.policy.binary_access: "+read,+write,-image,-plate"
         omero.security.ignore_case: True
         omero.security.keyStore: "/etc/pki/java/cacerts"
