@@ -89,7 +89,7 @@
       omero_web_release: latest
       omero_web_config_set:
         omero.web.server_list:
-          - ["{{ ansible_default_ipv4.address }}", 4064, "Virtual Microscope"]
+          - ["localhost", 4064, "Virtual Microscope"]
         omero.web.prefix: '/dundee'
         omero.web.static_url: '/dundee/static/'
         omero.web.login_redirect:
