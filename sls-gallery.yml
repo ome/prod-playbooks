@@ -59,7 +59,7 @@
         omero.ldap.group_filter: "{{ omero_server_ldap_group_filter }}"
         omero.ldap.group_mapping: "{{ omero_server_ldap_group_mapping }}"
         omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
-        omero.ldap.urls: "{{ omero_server_ldap_urls }}"
+        omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
         omero.mail.config: true
         omero.mail.from: "{{ omero_server_mail_from }}"
         omero.mail.host: "{{ omero_server_mail_host }}"
@@ -70,15 +70,18 @@
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
 
-    - role: ome.ldap-cert
-      ldap_host: "ldap.lifesci.dundee.ac.uk"
+    - role: mtbc.java_certificate
+      java_certificate_url: "{{ ldap_host }}"
+      java_certificate_port: 636
 
     - role: ome.redis
 
     - role: ome.nginx
 
-    - role: ome.nginx-configure
-      omero_web_conf: "omero/files/sls-gallery-omero-web.conf"
+    - role: mtbc.nginx_configure
+      nginx_configure_omero_web_conf_source: "omero/files/sls-gallery-omero-web.conf"
+      nginx_configure_tls_certificate_bundle_source: "{{ tls_certificate_bundle }}"
+      nginx_configure_tls_certificate_key_source: "{{ tls_certificate_key }}"
 
     - role: ome.omero_web
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
