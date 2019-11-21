@@ -252,8 +252,6 @@
         owner: "root"
         group: "root"
         mode: "u=rw,go=r"
-      # Mapr is broken
-      when: 'not (omero_web_python3 | default(False))'
       notify:
       - restart omero-web
 
@@ -330,7 +328,7 @@
       - "omero-figure=={{ omero_figure_release }}"
       # - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
       - "omero-iviewer=={{ omero_iviewer_release }}"
-      # - "omero-mapr=={{ omero_mapr_release }}"
+      - "omero-mapr=={{ omero_mapr_release }}"
       - "omero-parade=={{ omero_parade_release }}"
       # - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       # - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
