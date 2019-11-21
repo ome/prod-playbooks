@@ -4,7 +4,7 @@
 
   roles:
 
-  - role: openmicroscopy.iptables-raw
+  - role: ome.iptables_raw
 
   tasks:
 
@@ -49,7 +49,8 @@
   # All other ports that allow incoming connections:
   # - web
   # - omero
-  # - checkmk
+  # - GPFS
+  # - Check_MK
   - name: Iptables OME ports
     become: yes
     iptables_raw_25:
@@ -57,5 +58,6 @@
       rules: |
         -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
         -A INPUT -p tcp -m multiport --dports 4063,4064 -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 6556 -j ACCEPT
+        -A INPUT -p tcp -m tcp --dport 1191 -s 10.0.48.0/21 -j ACCEPT
+        -A INPUT -p tcp -m tcp --dport 6556 -s 10.2.1.0/24 -j ACCEPT
       state: present

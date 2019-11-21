@@ -47,15 +47,51 @@
         - python-markdown
         - mencoder # For the 'make movie' script
 
+    - name: OMERO.server self-signed certificate directory
+      become: yes
+      file:
+        path: /opt/omero/server/selfsigned
+        state: directory
+
+    - name: OMERO.server self-signed certificate
+      become: yes
+      command: >-
+        openssl req
+        -new -nodes -x509
+        {{ omero_server_websocket_internal_cert_params }}
+        -keyout server.key
+        -out server.pem
+        -extensions v3_ca
+      args:
+        chdir: /opt/omero/server/selfsigned
+        creates: server.pem
+
+    # This self-signed cert is used to encrypt the websocket connection
+    # between Nginx and OMERO.server
+    - name: OMERO.server self-signed certificate pkcs12
+      become: yes
+      command: >-
+        openssl pkcs12
+        -export
+        -out server.p12
+        -inkey server.key
+        -in server.pem
+        -name server
+        -password pass:{{
+        omero_server_config_set['omero.glacier2.IceSSL.Password'] | quote }}
+      args:
+        chdir: /opt/omero/server/selfsigned
+        creates: server.p12
+
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
-    - role: openmicroscopy.system-monitor-agent
+    - role: ome.system_monitor_agent
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
     # Disk Layout - PostgreSQL | data dir on separate VG (SSD)
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: pgdata
       lvm_vgname: "{{ provision_postgres_vgname }}"
@@ -65,7 +101,7 @@
       lvm_shrink: False
 
     # Disk Layout - OMERO | VG and LV (separate disk) for Binary Repository
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: datadir
       lvm_vgname: "{{ provision_omero_server_datadir_vgname }}"
@@ -75,7 +111,7 @@
       lvm_shrink: False
 
     # Disk Layout - OMERO.server | LV for dist & logs
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: omero_server_basedir
       lvm_vgname: VolGroup00
@@ -85,7 +121,7 @@
       lvm_shrink: False
 
     # Disk Layout - OMERO.web | LV for dist & logs
-    - role: openmicroscopy.lvm-partition
+    - role: ome.lvm_partition
       tags: lvm
       lvm_lvname: omero_web_basedir
       lvm_vgname: VolGroup00
@@ -94,11 +130,11 @@
       lvm_lvfilesystem: "{{ filesystem }}"
       lvm_shrink: False
 
-    - role: openmicroscopy.nginx
+    - role: ome.nginx
       # Defaults overridden in private configuration
       # nginx_version:
 
-    - role: openmicroscopy.postgresql-3
+    - role: ome.postgresql
       #no_log: true
       postgresql_databases:
         - name: omero
@@ -108,7 +144,7 @@
         databases:
           - omero
 
-    - role: openmicroscopy.omero-server
+    - role: ome.omero_server
       # Defaults overridden in private configuration
       # omero_server_release:
       # omero_server_dbuser:
@@ -117,13 +153,13 @@
       omero_server_dbname: omero
       omero_server_systemd_limit_nofile: 16384
 
-    - role: openmicroscopy.omero-web
+    - role: ome.omero_web
       # Defaults overridden in private configuration
       # omero_web_release:
       omero_web_systemd_limit_nofile: 16384
 
     # This role only works on OMERO 5.3+
-    - role: openmicroscopy.omero-user
+    - role: ome.omero_user
       no_log: true
       omero_user_bin_omero: /opt/omero/server/OMERO.server/bin/omero
       omero_user_system: omero-server
@@ -141,11 +177,19 @@
         password: "{{ secret_omero_web_public_password | default('public') }}"
         groups: "--group-name public"
 
-    - role: openmicroscopy.ssl-certificate
+    - role: ome.ssl_certificate
       tags: ssl
-      # Configuration for this role in `vars`
+
+  handlers:
+    - name: reload web server
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   post_tasks:
+
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
       pip:
@@ -157,13 +201,23 @@
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
+        - "omero-signup=={{ omero_signup_release }}"
         editable: False
         state: present
-        # variable comes from role openmicroscopy.omero-web
+        # variable comes from role ome.omero_web
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
       notify:
         - restart omero-web
+
+    - name: Omero.cli plugins | plugin install via pip & pypi
+      become: yes
+      pip:
+        name:
+        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+        - "omero-cli-render=={{ omero_cli_render_release }}"
+        - "omero-metadata=={{ omero_metadata_release }}"
+        state: present
 
     - name: NGINX - Performance tuning - worker processes
       become: yes
@@ -203,6 +257,22 @@
       notify:
         - restart nginx
 
+    - name: NGINX - OMERO websockets
+      become: yes
+      template:
+        src: templates/nginx-confdnestedincludes-omerows-conf.j2
+        dest: /etc/nginx/conf.d-nested-includes/omerows.conf
+      notify:
+        - restart nginx
+
+    - name: NGINX - websocket proxy support
+      become: yes
+      template:
+        src: templates/nginx-confd-websockets-conf.j2
+        dest: /etc/nginx/conf.d/websockets.conf
+      notify:
+        - restart nginx
+
     - name: Config for OMERO.web plugins
       become: yes
       template:
@@ -224,6 +294,19 @@
         mode: "u=rw,go=r"
       notify:
         - restart omero-web
+
+    - name: OMERO.web config for signup app
+      become: yes
+      template:
+        src: templates/omero-web-config-signup.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
+        # Contains sensitive info
+        owner: "root"
+        group: "omero-web"
+        mode: "0640"
+      notify:
+        - restart omero-web
+      no_log: true
 
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
@@ -305,9 +388,10 @@
     omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_signup_release: "{{ omero_signup_release_override | default('0.1.0') }}"
 
-    omero_server_release: "{{ omero_server_release_override | default('5.5.0') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.5.0') }}"
+    omero_server_release: "{{ omero_server_release_override | default('5.5.1') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.5.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
 
@@ -320,11 +404,23 @@
     omero_server_db_dumpdir_parent: /tmp
     omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
+    # Pip versions
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
+    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.4.0') }}"
+
     postgresql_version: "9.6"
     filesystem: "xfs"
 
     omero_server_config_set:
+      omero.client.icetransports: ssl,wss,tcp
       omero.db.poolsize: 60
+      omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
+      omero.glacier2.IceSSL.DefaultDir: /opt/omero/server/selfsigned
+      omero.glacier2.IceSSL.CAs: server.pem
+      omero.glacier2.IceSSL.CertFile: server.p12
+      # This password doesn't need to be secret
+      omero.glacier2.IceSSL.Password: secret
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
@@ -355,6 +451,9 @@
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
+
+    # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
+    omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
 
 
 - include: omero/omero-web-patch-settings.yml

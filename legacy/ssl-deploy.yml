@@ -7,7 +7,7 @@
 # openmicroscopy.org wildcard
 - hosts: legacy-ssl-org-wildcard
   roles:
-  - role: openmicroscopy.ssl-certificate
+  - role: ome.ssl_certificate
     # See private vars for certificate content
     # Server path to SSL public certificate
     ssl_certificate_public_path: /etc/pki/tls/certs/star_openmicroscopy_org.crt

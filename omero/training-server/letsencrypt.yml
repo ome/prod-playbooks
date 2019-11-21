@@ -1,115 +1,61 @@
 # Additional Nginx configuration including Let's Encrypt
 # Should be run when less than 30 days remain on the certificate
 
-- hosts: outreach.openmicroscopy.org
+- hosts: ome-outreach
+
+  pre_tasks:
+
+    - name: letsencrypt challenge directory
+      become: yes
+      file:
+        path: /srv/www/letsencrypt/.well-known/
+        recurse: yes
+        state: directory
+
+  roles:
+
+    # Assume Nginx is already installed
+    # - role: ome.nginx
+
+    # If we're not using letsencrypt assume this is CI so use a self-signed cert
+    - role: ome.ssl_certificate
+      when: not (https_letsencrypt_enabled | default(False))
+
+    # Lets encrypt with automatic renewal
+    # This will stop nginx when the certificate is first created
+    # For renewals we configure Nginx to serve the challenge
+    - role: ome.certbot
+      become: yes
+      certbot_create_if_missing: yes
+      certbot_admin_email: "{{ letsencrypt_email }}"
+      certbot_domains:
+        - "{{ https_certificate_domain }}"
+      certbot_create_standalone_stop_services:
+        - nginx
+      certbot_auto_renew_deploy_hooks:
+        - systemctl reload nginx
+      certbot_auto_renew_args: --webroot --webroot-path /srv/www/letsencrypt/
+      # May be useful for testing:
+      #certbot_create_args: --test-cert
+      #certbot_auto_renew_args: --test-cert --force-renewal --webroot --webroot-path /srv/www/letsencrypt/
+      # WARNING: If you have a test certificate and need to convert it to a
+      # real certificate you may need to run
+      #   rm -rf /etc/letsencrypt/*
+      when: https_letsencrypt_enabled | default(False)
 
   tasks:
 
-  - name: letsencrypt ssl directory
-    become: yes
-    file:
-      path: /etc/letsencrypt/private
-      owner: root
-      group: root
-      mode: 0700
-      recurse: yes
-      state: directory
-
-  - name: letsencrypt http challenge directory
-    become: yes
-    file:
-      path: /srv/www/letsencrypt/challenge
-      recurse: yes
-      state: directory
-      serole: _default
-      setype: _default
-      seuser: _default
-
-  - name: letsencrypt nginx challenge location
+  - name: letsencrypt nginx configuration
     become: yes
     copy:
       content: |
-        location /.well-known/acme-challenge/ {
-            alias /srv/www/letsencrypt/challenge/;
+        location /.well-known/ {
+            alias /srv/www/letsencrypt/.well-known/;
         }
-      dest: /etc/nginx/conf.d-nested-includes/letsencrypt.conf
-    notify:
-    - reload nginx
 
-  - name: Ensure nginx is reloaded
-    meta: flush_handlers
-
-  - name: letsencrypt account key
-    become: yes
-    command: openssl genrsa -out /etc/letsencrypt/private/account.key 2048
-    args:
-      creates: /etc/letsencrypt/private/account.key
-
-  - name: letsencrypt csr
-    become: yes
-    command: >
-      openssl req -new -newkey rsa:2048 -nodes
-      -out /etc/letsencrypt/private/domain.csr
-      -keyout /etc/letsencrypt/private/domain.key
-      -subj "{{ letsencrypt_subject }}"
-    args:
-      creates: /etc/letsencrypt/private/domain.csr
-
-  - name: letsencrypt get challenge
-    become: yes
-    letsencrypt:
-      account_email: "{{ letsencrypt_email }}"
-      account_key: /etc/letsencrypt/private/account.key
-      agreement: https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf
-      csr: /etc/letsencrypt/private/domain.csr
-      dest: /etc/letsencrypt/private/domain.crt
-      acme_directory: https://acme-v01.api.letsencrypt.org/directory
-      remaining_days: 30
-    register: letsencrypt_challenge
-
-  - name: letsencrypt answer challenge | fails in check mode
-    become: yes
-    copy:
-      # Should always begin .well-known/acme-challenge/
-      dest: /srv/www/letsencrypt/challenge/{{ letsencrypt_challenge.challenge_data[letsencrypt_cn]['http-01'].resource | basename }}
-      content: "{{ letsencrypt_challenge.challenge_data[letsencrypt_cn]['http-01'].resource_value }}"
-    when: 'letsencrypt_challenge | changed'
-
-  - name: letsencrypt get certificate
-    become: yes
-    letsencrypt:
-      account_email: "{{ letsencrypt_email }}"
-      account_key: /etc/letsencrypt/private/account.key
-      agreement: https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf
-      csr: /etc/letsencrypt/private/domain.csr
-      dest: /etc/letsencrypt/private/domain.crt
-      acme_directory: https://acme-v01.api.letsencrypt.org/directory
-      data: "{{ letsencrypt_challenge }}"
-      remaining_days: 30
-
-  - name: letsencrypt get certificate chain
-    become: yes
-    get_url:
-      dest: /etc/letsencrypt/private/zzzz-letsencrypt-chain.crt
-      url: https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt
-
-  - name: letsencrypt create full certificate chain
-    become: yes
-    assemble:
-      src: /etc/letsencrypt/private
-      dest: /etc/letsencrypt/full-chain.crt
-      regexp: 'crt$'
-      mode: '0600'
-    notify:
-    - reload nginx
-
-  - name: letsencrypt nginx certificate configuration
-    become: yes
-    copy:
-      content: |
         listen 443 ssl;
-        ssl_certificate /etc/letsencrypt/full-chain.crt;
-        ssl_certificate_key /etc/letsencrypt/private/domain.key;
+        ssl_certificate {{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/fullchain.pem', ssl_certificate_public_path) }};
+        ssl_certificate_key {{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/privkey.pem', ssl_certificate_key_path) }};
 
         if ($ssl_protocol = "") {
           rewrite ^/(.*) https://$host/$1 permanent;
@@ -126,6 +72,10 @@
       state: reloaded
 
   vars:
-    letsencrypt_cn: outreach.openmicroscopy.org
+    # Must be defined somewhere
+    # https_certificate_domain:
     letsencrypt_email: sysadmin@openmicroscopy.org
-    letsencrypt_subject: "/C=GB/ST=/L=Dundee/O=University of Dundee/OU=Open Microscopy Environment/CN={{ letsencrypt_cn }}"
+    # This must match the expectations of certbot, do not change this:
+    https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain | default('localhost') }}"
+    # In production set this to True:
+    # https_lets_encrypt_enabled:

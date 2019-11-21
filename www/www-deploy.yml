@@ -3,9 +3,17 @@
 - hosts: www
 
   roles:
-    - role: openmicroscopy.ssl-certificate
-    - role: openmicroscopy.nginx-proxy
+    - role: ome.ssl_certificate
+    - role: ome.nginx_proxy
       tags: nginxconf
+
+  handlers:
+    - name: reload nginx
+      listen: ssl certificate changed
+      become: true
+      service:
+        name: nginx
+        state: reloaded
 
   vars:
     nginx_proxy_worker_processes: "{{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }}"
@@ -19,9 +27,6 @@
     nginx_proxy_conf_http:
       - "client_max_body_size 2g"
     nginx_proxy_backends:
-      # Proxy for phpBB forums
-      - location: /community
-        server: https://www-legacy.openmicroscopy.org/community
       # Proxy for QA application
       - location: /qa2
         server: https://www-legacy.openmicroscopy.org/qa2
@@ -277,5 +282,29 @@
       root: "/var/www/www.openmicroscopy.org/html"
       index: index.html
 
+    # Static copy of old phpBB forums: treat query params as part of filename
+    - location: "~ ^/community/style.php.*"
+      root: /var/www/phpbbforum/www.openmicroscopy.org
+      custom:
+      - try_files $request_uri $uri =404
+      - default_type text/css
+    - location: "~ ^/community/?$"
+      redirect301: /community/index.php
+    - location: /community
+      root: /var/www/phpbbforum/www.openmicroscopy.org
+      custom:
+       # Need to exclude extra query parameters in incoming external links
+       # e.g. sid=
+       # If an exact match isn't found try just these parameters:
+       # [f, t, p], [f, t], [f]
+      - >-
+        try_files
+          $request_uri
+          $uri?f=$arg_f&t=$arg_t&p=$arg_p
+          $uri?f=$arg_f&t=$arg_t
+          $uri?f=$arg_f
+          =404
+      - default_type text/html
 
-- include: www-jekyll.yml
+
+- include: www-static.yml

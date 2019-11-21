@@ -1,0 +1,55 @@
+# Update the static website
+
+- hosts: www
+
+  pre_tasks:
+  - name: Check if phpbbforum already unzipped
+    stat:
+      path: "{{ phpbbforum_style_file }}"
+    register: _phpbbforum_style_file_st
+
+  roles:
+  - role: ome.deploy_archive
+    become: yes
+    deploy_archive_dest_dir: /var/www/{{ website_name }}/{{ website_version }}
+    deploy_archive_src_url: https://github.com/ome/{{ website_name }}/releases/download/{{ website_version }}/{{ website_name }}.tar.gz
+    # Optional checksum. It should be safe to omit as long as you never
+    # overwrite an existing archive. This should not be a problem when using
+    # versioned directories.
+    deploy_archive_sha256: "{{ website_sha256 }}"
+    deploy_archive_symlink: /var/www/{{ website_name }}/html
+    tags: jekyll
+
+  - role: ome.deploy_archive
+    become: yes
+    deploy_archive_dest_dir: /var/www
+    deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/phpbbforum-20190718.tar.gz
+    deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
+    # This file is patched later so only unzip if it doesn't exist
+    when: not _phpbbforum_style_file_st.stat.exists
+
+  tasks:
+  - name: Update static phpbb stylesheet
+    become: yes
+    blockinfile:
+      block: |
+        form,
+        .quick-login,
+        .buttons,
+        #jumpbox~h3,
+        #jumpbox~p,
+        .headerspace~h3,
+        .headerspace~p,
+        ul.linklist.rightside,
+        ul.linklist li.rightside {
+            display: none;
+        }
+      marker: "/* {mark} ANSIBLE MANAGED BLOCK */"
+      path: "{{ phpbbforum_style_file }}"
+
+  vars:
+    website_version: "2019.11.21"
+    website_sha256: >-
+      9b3be0d5ab3330789d06e64ca2563cb3024c9c9eaa59236db581aeda2bc43372
+    website_name: www.openmicroscopy.org
+    phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"

@@ -3,15 +3,15 @@
 - hosts: omedev
   roles:
 
-  - role: openmicroscopy.network
+  - role: ome.network
 
-  - role: openmicroscopy.lvm-partition
+  - role: ome.lvm_partition
     lvm_lvname: var_log
     lvm_lvmount: /var/log
     lvm_lvsize: 4g
     lvm_lvfilesystem: xfs
     lvm_vgname: VolGroup00
-  - role: openmicroscopy.lvm-partition
+  - role: ome.lvm_partition
     lvm_lvname: root
     lvm_lvmount: /
     lvm_lvsize: 100%FREE
@@ -19,16 +19,16 @@
     lvm_vgname: VolGroup00
     lvm_shrink: False
 
-  - role: openmicroscopy.sudoers
+  - role: ome.sudoers
     sudoers_individual_commands:
     - user: "%omedev"
       become: ALL
       command: "NOPASSWD: ALL"
 
-  - role: openmicroscopy.upgrade-distpackages
+  - role: ome.upgrade_distpackages
     upgrade_distpackages_reboot_kernel: True
 
 
-- hosts: vlan-10ge-servers
+- hosts: vlan-10ge-servers, vlan-ome-idr-docker
   roles:
-  - role: openmicroscopy.network
+  - role: ome.network

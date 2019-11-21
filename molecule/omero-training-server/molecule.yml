@@ -10,9 +10,8 @@ lint:
   # TODO: enable
   enabled: False
 platforms:
-  - name: outreach.openmicroscopy.org
+  - name: ome-outreach
     image: centos/systemd
-    image_version: latest
     command: /sbin/init
     privileged: true
     groups:
@@ -26,6 +25,7 @@ provisioner:
     group_vars:
       all:
         molecule_test: True
+        postgresql_version: "9.6"
       docker-hosts:
         omero_server_systemd_require_network: False
         # This should allow docker-in-docker to work

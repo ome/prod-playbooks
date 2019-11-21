@@ -16,23 +16,35 @@
      group: root
      mode: 01555
     with_items: "{{ www_folders }}"
-  - name: Create existing minor version symlinks
+  - name: Create minor version directory
     file:
-     src: "{{ item }}/component/3.1.8"
-     dest: "{{ item }}/component/3.1"
-     state: link
+     path: "{{ item }}/component/3.1"
+     state: directory
     with_items: "{{ www_folders }}"
-  - name: Create existing major version symlinks
-    file:
-     src: "{{ item }}/component/3.1.8"
-     dest: "{{ item }}/component/3"
-     state: link
+  - name: Create minor version redirects
+    copy:
+     dest: "{{ item }}/component/3.1/.htaccess"
+     content: "Redirect 301 /component/3.1 /component/3.1.8"
     with_items: "{{ www_folders }}"
-  - name: Create existing latest version symlinks
+  - name: Create major version directory
     file:
-     src: "{{ item }}/component/3.1.8"
-     dest: "{{ item }}/component/latest"
-     state: link
+     path: "{{ item }}/component/3"
+     state: directory
+    with_items: "{{ www_folders }}"
+  - name: Create major version redirects
+    copy:
+     dest: "{{ item }}/component/3/.htaccess"
+     content: "Redirect 301 /component/3 /component/3.1.8"
+    with_items: "{{ www_folders }}"
+  - name: Create latest version directory
+    file:
+     path: "{{ item }}/component/latest"
+     state: directory
+    with_items: "{{ www_folders }}"
+  - name: Create latest version redirects
+    copy:
+     dest: "{{ item }}/component/latest/.htaccess"
+     content: "Redirect 301 /component/latest /component/3.1.8"
     with_items: "{{ www_folders }}"
   - name: Create new release components
     file:

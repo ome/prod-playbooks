@@ -7,16 +7,20 @@ www_folders:
 # have a subfolder called public containing the public sample images
 public_folders:
   amira: 'AmiraMesh'
+  bdv: 'BDV'
   becker-hickl-spc: 'SPC-FIFO'
   cellomics: 'Cellomics'
+  cellh5: 'CellH5'
   cellworx: 'CellWorX'
   columbus: 'PerkinElmer-Columbus'
   deltavision: 'DV'
   dicom: 'DICOM'
   ecat7: 'ECAT7'
+  flex: 'Flex'
   gatan: 'Gatan'
   hamamatsu: 'Hamamatsu-NDPI'
   hamamatsu-vms: 'Hamamatsu-VMS'
+  ics: 'ICS'
   incell3000: 'InCell3000'
   incell: 'InCell2000'
   imaris: 'Imaris-IMS'
@@ -30,12 +34,16 @@ public_folders:
   nifti: 'NIfTI'
   nrrd: 'NRRD'
   olympus-oir: 'Olympus-OIR'
+  ome-xml: 'OME-XML'
+  ome-tiff: 'OME-TIFF'
   perkinelmer-operetta: 'PerkinElmer-Operetta'
   png: 'PNG'
   svs: 'SVS'
   tiff: 'TIFF'
   trestle: 'Trestle'
+  ventana: 'Ventana'
   vectra-qptiff: 'Vectra-QPTIFF'
+  zeiss-czi: 'Zeiss-CZI'
 # List containing special public images/folders that do not meet the standard
 # layout above
 special_public_folders:
@@ -46,6 +54,4 @@ special_public_folders:
   - { src: '../../../../repos/curated/cellomics/public/', dest: 'HCS/BBBC'}
   - { src: '../../../../repos/curated/incell/public/', dest: 'HCS/INCELL2000'}
   - { src: '../../../../repos/curated/perkinelmer-operetta/public/', dest: 'HCS/Operetta'}
-  - { src: '../../../repos/curated/ome-tiff/ome-schemas/', dest: 'OME-TIFF'}
-  - { src: '../../../repos/curated/ome-xml/ome-schemas/', dest: 'OME-XML'}
   - { src: '../../../repos/curated/zip/u-track/', dest: 'u-track'}
