@@ -1,8 +1,5 @@
 # Installation notes:
 # - Set up OME RHEL 7 machine.
-# - Set host variables:
-#   tls_certificate_bundle, tls_certificate_key,
-#   database_password, server_password
 # - Run playbook.
 # - systemctl stop omero-{server,web}
 # - Migrate binary repository to /OMERO/ with rsync.
@@ -80,8 +77,6 @@
 
     - role: mtbc.nginx_configure
       nginx_configure_omero_web_conf_source: "omero/files/sls-gallery-omero-web.conf"
-      nginx_configure_tls_certificate_bundle_source: "{{ tls_certificate_bundle }}"
-      nginx_configure_tls_certificate_key_source: "{{ tls_certificate_key }}"
 
     - role: ome.omero_web
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
