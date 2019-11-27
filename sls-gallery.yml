@@ -1,0 +1,116 @@
+# Installation notes:
+# - Set up OME RHEL 7 machine.
+# - Run playbook.
+# - systemctl stop omero-{server,web}
+# - Migrate binary repository to /OMERO/ with rsync.
+# - Migrate database with pg_dump, pg_restore.
+# - Upgrade database.
+# - bin/omero db password for root user.
+# - systemctl start omero-{server,web}
+
+- hosts: omero-sls-gallery
+  roles:
+    - role: ome.lvm_partition
+      lvm_vgname: VolGroup00
+      lvm_lvname: 'var_lib_psql'
+      lvm_lvmount: '/var/lib/pgsql'
+      lvm_lvsize: 8G
+      lvm_lvfilesystem: xfs
+      lvm_shrink: False
+
+    - role: ome.postgresql
+      postgresql_databases:
+        - name: omero
+      postgresql_users:
+        - user: omero
+          password: "{{ database_password }}"
+          databases: [omero]
+      postgresql_version: "10"
+
+    - role: ome.lvm_partition
+      lvm_vgname: VolGroup00
+      lvm_lvname: 'omero'
+      lvm_lvmount: '/OMERO'
+      lvm_lvsize: 80G
+      lvm_lvfilesystem: xfs
+      lvm_shrink: False
+
+    - role: ome.omero_server
+      ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
+      omero_server_systemd_start: False
+      omero_server_release: latest
+      omero_server_dbpassword: "{{ database_password }}"
+      omero_server_rootpassword: "{{ server_password }}"
+      omero_server_config_set:
+        omero.client.ui.menu.dropdown.colleagues.enabled: False
+        omero.client.ui.menu.dropdown.everyone.label: "All images"
+        omero.client.ui.menu.dropdown.leaders.label: "Gallery:"
+        omero.db.poolsize: 50
+        omero.jvmcfg.percent.blitz: 50
+        omero.jvmcfg.percent.indexer: 20
+        omero.jvmcfg.percent.pixeldata: 30
+        omero.ldap.config: True
+        omero.ldap.base: "{{ omero_server_ldap_base }}"
+        omero.ldap.username: "{{ omero_server_ldap_username }}"
+        omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
+        omero.ldap.group_filter: "{{ omero_server_ldap_group_filter }}"
+        omero.ldap.group_mapping: "{{ omero_server_ldap_group_mapping }}"
+        omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
+        omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
+        omero.mail.config: true
+        omero.mail.from: "{{ omero_server_mail_from }}"
+        omero.mail.host: "{{ omero_server_mail_host }}"
+        omero.pixeldata.max_plane_height: 5120
+        omero.pixeldata.max_plane_width: 5120
+        omero.security.keyStore: "/etc/pki/java/cacerts"
+        omero.security.trustStore: "/etc/pki/java/cacerts"
+        omero.security.keyStorePassword: "changeit"
+        omero.security.trustStorePassword: "changeit"
+
+    - role: mtbc.java_certificate
+      java_certificate_url: "{{ ldap_host }}"
+      java_certificate_port: 636
+
+    - role: ome.redis
+
+    - role: ome.nginx
+
+    - role: mtbc.nginx_configure
+      nginx_configure_omero_web_conf_source: "omero/files/sls-gallery-omero-web.conf"
+
+    - role: ome.omero_web
+      ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
+      omero_web_setup_nginx: False
+      omero_web_systemd_start: False
+      omero_web_release: latest
+      omero_web_config_set:
+        omero.web.server_list:
+          - ["localhost", 4064, "SLS Gallery"]
+        omero.web.prefix: '/ome-sls'
+        omero.web.static_url: '/ome-sls/static/'
+        omero.web.login_redirect:
+          redirect:
+            - webindex
+          viewname: "load_template"
+          query_string: "experimenter=-1"
+          args:
+            - userdata
+        omero.web.ui.top_links:
+          - ["Image Gallery", "webindex", {"title": "Image Gallery"}]
+          - ["HELP", "https://help.openmicroscopy.org/web-client.html", {"title": "Help", "target": "new"}]
+          - ["SLS Homepage", "https://www.lifesci.dundee.ac.uk/", {"title": "SLS Homepage", "target": "new"}]
+        omero.web.caches:
+          default:
+            BACKEND: django_redis.cache.RedisCache
+            LOCATION: redis://127.0.0.1:6379/0
+        omero.web.session_engine: django.contrib.sessions.backends.cache
+        omero.web.apps:
+          - "omero_iviewer"
+        omero.web.open_with:
+          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
+          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+        omero.web.viewer.view: omero_iviewer.views.index
+
+    - role: ome.omero_web_apps
+      omero_web_apps_packages:
+        - omero-iviewer

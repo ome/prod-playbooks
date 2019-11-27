@@ -61,6 +61,9 @@
 - src: ome.omero_web
   version: 2.0.3
 
+- src: ome.omero_web_apps
+  version: 0.2.0
+
 - src: ome.omero_web_django_prometheus
   version: 0.2.1
 
@@ -81,6 +84,9 @@
 
 - src: ome.prometheus_postgres
   version: 0.2.1
+
+- src: ome.redis
+  version: 1.1.1
 
 - name: ome.selinux_utils
   version: 1.0.3
@@ -103,3 +109,9 @@
 - name: idr.idr-jupyter
   src: idr.ansible-role-idr-jupyter
   version: 3.0.0
+
+- name: mtbc.java_certificate
+  version: 0.1.0
+
+- name: mtbc.nginx_configure
+  version: 0.1.1
