@@ -133,3 +133,13 @@
         src: "omero/files/learning-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
+
+    - name: services are started on boot
+      become: yes
+      service:
+        name: "{{ item }}.service"
+        enabled: true
+      loop:
+        - nginx
+        - omero-server
+        - omero-web
