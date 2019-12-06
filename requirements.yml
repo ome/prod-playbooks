@@ -109,9 +109,3 @@
 - name: idr.idr-jupyter
   src: idr.ansible-role-idr-jupyter
   version: 3.0.0
-
-- name: mtbc.java_certificate
-  version: 0.1.0
-
-- name: mtbc.nginx_configure
-  version: 0.1.1

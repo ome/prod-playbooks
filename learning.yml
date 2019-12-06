@@ -69,16 +69,9 @@
         omero.security.trustStorePassword: "changeit"
         omero.sessions.timeout: 3600000
 
-    - role: mtbc.java_certificate
-      java_certificate_url: "{{ ldap_host }}"
-      java_certificate_port: 636
-
     - role: ome.redis
 
     - role: ome.nginx
-
-    - role: mtbc.nginx_configure
-      nginx_configure_omero_web_conf_source: "omero/files/learning-omero-web.conf"
 
     - role: ome.omero_web
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
@@ -122,3 +115,21 @@
         - omero-gallery
         - omero-iviewer
         - omero-virtual-microscope
+
+  tasks:
+    - name: TLS certificate is installed for JVM
+      become: yes
+      java_cert:
+        cert_url: "{{ ldap_host }}"
+        cert_port: 636
+        keystore_path: "/etc/pki/java/cacerts"
+        keystore_pass: changeit
+        state: present
+      notify: restart omero-server
+
+    - name: OMERO.web configuration is installed
+      become: yes
+      copy:
+        src: "omero/files/learning-omero-web.conf"
+        dest: "/etc/nginx/conf.d/omero-web.conf"
+      notify: restart nginx
