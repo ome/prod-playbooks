@@ -40,7 +40,7 @@
     - role: ome.omero_server
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
       omero_server_systemd_start: False
-      omero_server_release: latest
+      omero_server_release: 5.5.1
       omero_server_dbpassword: "{{ database_password }}"
       omero_server_rootpassword: "{{ server_password }}"
       omero_server_config_set:
@@ -77,7 +77,7 @@
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
       omero_web_setup_nginx: False
       omero_web_systemd_start: False
-      omero_web_release: latest
+      omero_web_release: 5.5.1
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "Virtual Microscope"]
