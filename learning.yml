@@ -112,9 +112,9 @@
 
     - role: ome.omero_web_apps
       omero_web_apps_packages:
-        - omero-gallery
+        - omero-gallery==3.1.1
         - omero-iviewer==0.8.1
-        - omero-virtual-microscope
+        - omero-virtual-microscope==1.0.1
 
   tasks:
     - name: TLS certificate is installed for JVM
