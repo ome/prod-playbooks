@@ -47,7 +47,6 @@
 
     - role: ome.omero_server
       ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
-      omero_server_systemd_start: False
       omero_server_release: 5.5.1
       omero_server_dbpassword: "{{ database_password }}"
       omero_server_rootpassword: "{{ server_password }}"
@@ -141,3 +140,12 @@
         src: "omero/files/learning-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
+
+    - name: OMERO.web starts on boot
+      become: yes
+      service:
+        name: "{{ item }}.service"
+        enabled: true
+      loop:
+        - nginx
+        - omero-web
