@@ -19,3 +19,9 @@
     ssl_certificate_key_path: /etc/pki/tls/private/star_openmicroscopy_org.key
     # Server path to SSL combined certificate and key, set to empty to disable
     ssl_certificate_combined_path: ''
+
+
+
+
+
+#Adding a new pull request
