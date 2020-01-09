@@ -321,7 +321,7 @@
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.1') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.3.2') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.3') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.2.dev2') }}"
 
     # The omero_web_apps_* vars are used by the ome.omero_web role under
     # Python 3 otherwise ignored
