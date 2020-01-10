@@ -327,7 +327,7 @@
     # Python 3 otherwise ignored
     omero_web_apps_packages:
       - "omero-figure=={{ omero_figure_release }}"
-      # - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+      - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
       - "omero-iviewer=={{ omero_iviewer_release }}"
       - "omero-mapr=={{ omero_mapr_release }}"
       - "omero-parade=={{ omero_parade_release }}"
