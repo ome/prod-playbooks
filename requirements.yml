@@ -54,16 +54,16 @@
 
 # https://github.com/ome/ansible-role-omero-server/pull/40
 - name: ome.omero_server
-  src: https://github.com/ome/ansible-role-omero-server/archive/19747f05bba640df9f562fd95b1cae655ebe8e0c.tar.gz
-  version: 19747f05bba640df9f562fd95b1cae655ebe8e0c
+  src: https://github.com/ome/ansible-role-omero-server/archive/5e26aa5c66c1b45ddbcd16151214ffcf024cff08.tar.gz
+  version: 5e26aa5c66c1b45ddbcd16151214ffcf024cff08
 
 - src: ome.omero_user
   version: 0.1.2
 
 # https://github.com/ome/ansible-role-omero-web/pull/26
 - name: ome.omero_web
-  src: https://github.com/ome/ansible-role-omero-web/archive/c24baed1476b08b9dc49fa26f359d6b72447d81b.tar.gz
-  version: c24baed1476b08b9dc49fa26f359d6b72447d81b
+  src: https://github.com/ome/ansible-role-omero-web/archive/b31b08897b28d35e2c657439925f920c13f96886.tar.gz
+  version: b31b08897b28d35e2c657439925f920c13f96886
 
 - src: ome.omero_web_apps
   version: 0.2.0

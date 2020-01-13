@@ -138,5 +138,8 @@
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
 
+    # TODO: Remove when playbook is upgraded to Python 3
+    omero_web_python3: false
+
 
 - include: omero/omero-web-patch-settings.yml
