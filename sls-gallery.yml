@@ -44,8 +44,6 @@
       lvm_shrink: False
 
     - role: ome.omero_server
-      ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
-      omero_server_release: latest
       omero_server_dbpassword: "{{ database_password }}"
       omero_server_rootpassword: "{{ server_password }}"
       omero_server_config_set:
@@ -79,10 +77,8 @@
     - role: ome.nginx
 
     - role: ome.omero_web
-      ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
       omero_web_setup_nginx: False
       omero_web_systemd_start: False
-      omero_web_release: latest
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "SLS Gallery"]
@@ -113,7 +109,7 @@
 
     - role: ome.omero_web_apps
       omero_web_apps_packages:
-        - omero-iviewer
+        - omero-iviewer=={{ omero_web_apps_release["omero_iviewer"] }}
 
   tasks:
     - name: TLS certificate is installed for JVM
@@ -141,3 +137,10 @@
       loop:
         - nginx
         - omero-web
+
+  vars:
+    ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
+    omero_server_release: 5.5.1
+    omero_web_release: 5.5.1
+    omero_web_apps_release:
+      omero_iviewer: 0.8.1
