@@ -164,9 +164,9 @@
 
   vars:
     ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
-    omero_server_release: 5.5.1
-    omero_web_release: 5.5.1
+    omero_server_release: 5.6.0
+    omero_web_release: 5.6.1
     omero_web_apps_release:
-      omero_gallery: 3.1.1
-      omero_iviewer: 0.8.1
-      omero_virtual_microscope: 1.0.1
+      omero_gallery: 3.3.0
+      omero_iviewer: 0.9.0
+      omero_virtual_microscope: 1.1.0
