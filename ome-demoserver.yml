@@ -380,18 +380,18 @@
         force: yes
 
   vars:
-    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.4.0') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
-    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.0.2') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
+    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.5.3') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.2.0') }}"
+    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.2.0') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.9.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.2.0') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_signup_release: "{{ omero_signup_release_override | default('0.1.0') }}"
+    omero_signup_release: "{{ omero_signup_release_override | default('0.2.0') }}"
 
-    omero_server_release: "{{ omero_server_release_override | default('5.5.1') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.5.1') }}"
+    omero_server_release: "{{ omero_server_release_override | default('5.6.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.6.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
 
@@ -405,9 +405,9 @@
     omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
     # Pip versions
-    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
-    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.4.0') }}"
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.5.0') }}"
+    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.5.0') }}"
 
     postgresql_version: "9.6"
     filesystem: "xfs"
