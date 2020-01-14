@@ -110,7 +110,7 @@
 
     - role: ome.omero_web_apps
       omero_web_apps_packages:
-        - omero-iviewer=={{ omero_web_apps_release["omero_iviewer"] }}
+        - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
 
   tasks:
     - name: find OMERO.server log configuration

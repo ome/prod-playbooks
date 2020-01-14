@@ -116,9 +116,9 @@
 
     - role: ome.omero_web_apps
       omero_web_apps_packages:
-        - omero-gallery=={{ omero_web_apps_release["omero_gallery"] }}
-        - omero-iviewer=={{ omero_web_apps_release["omero_iviewer"] }}
-        - omero-virtual-microscope=={{ omero_web_apps_release["omero_virtual_microscope"] }}
+        - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
+        - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
+        - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
 
   tasks:
     - name: find OMERO.server log configuration
