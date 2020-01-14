@@ -455,9 +455,5 @@
     # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
     omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
 
-    # TODO: Remove when playbook is upgraded to Python 3
-    omero_server_python3: false
-    omero_web_python3: false
-
 
 - include: omero/omero-web-patch-settings.yml
