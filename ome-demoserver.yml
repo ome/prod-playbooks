@@ -454,6 +454,3 @@
 
     # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
     omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
-
-
-- include: omero/omero-web-patch-settings.yml
