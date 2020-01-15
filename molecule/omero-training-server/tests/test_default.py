@@ -49,7 +49,7 @@ def test_omero_metrics_auth_fail(host):
 
 def test_omero_nginx_ssl(host):
     out = host.check_output('curl -fkI https://localhost/')
-    assert 'Location: https://localhost/webclient/' in out
+    assert 'Location: /webclient/' in out
 
 
 def test_local_ldap(host):
