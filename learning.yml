@@ -117,6 +117,8 @@
         - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
         - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
+      omero_web_python_addons:
+        - "django-redis<4.9"
 
   tasks:
     - name: find OMERO.server log configuration

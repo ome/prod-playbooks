@@ -109,6 +109,8 @@
         omero.web.viewer.view: omero_iviewer.views.index
       omero_web_apps_packages:
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
+      omero_web_python_addons:
+        - "django-redis<4.9"
 
   tasks:
     - name: find OMERO.server log configuration
