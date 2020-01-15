@@ -21,6 +21,7 @@
       lvm_shrink: False
 
     - role: ome.postgresql
+      postgresql_install_server: True
       postgresql_databases:
         - name: omero
       postgresql_users:
