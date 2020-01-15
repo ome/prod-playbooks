@@ -46,8 +46,9 @@
 - src: ome.basedeps
   version: 1.1.0
 
-- src: ome.omero_prometheus_exporter
-  version: 0.2.1
+- name: ome.omero_prometheus_exporter
+  src: https://github.com/manics/ansible-role-omero-prometheus-exporter/archive/cb4951496efd41e55575bd8dbb27173fb423be4a.tar.gz
+  version: cb4951496efd41e55575bd8dbb27173fb423be4a
 
 - src: ome.omero_python_deps
   version: 2.0.1
