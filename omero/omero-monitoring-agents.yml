@@ -32,7 +32,6 @@
   roles:
 
   - role: ome.omero_web_django_prometheus
-    when: 'not (omero_web_python3 | default(False))'
 
 
 # NOTE: This assumes omero-web.conf is present and includes
