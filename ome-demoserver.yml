@@ -83,6 +83,17 @@
         chdir: /opt/omero/server/selfsigned
         creates: server.p12
 
+    - name: Delete broken Python 3 web app configuration
+      become: yes
+      file:
+        path: "{{ omero_web_basedir }}/config/{{ item }}"
+        state: absent
+      with_items:
+        - django-prometheus.omero
+        - gunicorn-config.py
+      notify:
+        - restart omero-web
+
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
