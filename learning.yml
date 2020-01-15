@@ -113,8 +113,6 @@
         omero.web.public.password: "{{ public_password }}"
         omero.web.public.url_filter: "/(webgateway|gallery)/"
         omero.web.public.user: public
-
-    - role: ome.omero_web_apps
       omero_web_apps_packages:
         - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
