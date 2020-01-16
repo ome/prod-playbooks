@@ -64,6 +64,12 @@
         path: /opt/omero/server/selfsigned
         state: directory
 
+    - name: OMERO.server install openssl for generating certificates
+      become: yes
+      yum:
+        name: openssl
+        state: present
+
     - name: OMERO.server self-signed certificate
       become: yes
       command: >-
