@@ -10,6 +10,7 @@
       register: _omero_web_venv3_st
 
     - name: Delete old Python 2 web configuration
+      become: true
       file:
         path: /opt/omero/web/config
         state: absent
@@ -142,8 +143,8 @@
         attrs:
           title: Open Figure in new tab
           target: _blank
-      - label: Tag Search
-        link: tagsearch
+      # - label: Tag Search
+      #   link: tagsearch
 
     omero_web_apps_config_append:
       omero.web.open_with:
