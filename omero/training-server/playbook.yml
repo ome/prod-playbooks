@@ -120,7 +120,6 @@
         - markdown
 
     - role: ome.omero_web
-      # omero_web_config_set:
 
     - role: ome.iptables_raw
 
@@ -138,17 +137,6 @@
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
-
-    # Inspired by
-    # https://github.com/ome/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
-    - name: omero-web nginx nested include
-      become: yes
-      lineinfile:
-        destfile: /etc/nginx/conf.d/omero-web.conf
-        insertafter: 'server {'
-        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
-      notify:
-      - restart nginx
 
     - name: NGINX - OMERO websockets
       become: yes
@@ -432,6 +420,10 @@
 
     # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
     omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
+
+    omero_web_config_set:
+      omero.web.nginx_server_extra_config:
+        - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
