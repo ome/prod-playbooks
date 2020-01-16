@@ -18,11 +18,7 @@
         name: "{{ item }}"
         state: present
       with_items:
-        - python-reportlab # For OMERO.figure
-        - python-markdown # For OMERO.figure
         - mencoder # For the 'make movie' script
-        - scipy
-        - python-matplotlib # For "simple frap with figure" script
 
     - name: Prerequisites for ldap
       become: yes
@@ -124,6 +120,9 @@
         - "omero-metadata=={{ omero_metadata_release }}"
         - reportlab
         - markdown
+        - scipy
+        # For "simple frap with figure" script
+        - matplotlib
 
     - role: ome.omero_web
 
