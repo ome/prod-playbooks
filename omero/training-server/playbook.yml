@@ -96,6 +96,24 @@
         chdir: /opt/omero/server/selfsigned
         creates: server.p12
 
+    # Since Nginx isn't installed until later the directories are created in advance
+    - name: Create nginx include directories
+      become: yes
+      file:
+        path: "{{ item }}"
+        recurse: yes
+        state: directory
+      with_items:
+        - /etc/nginx/conf.d
+        - /etc/nginx/conf.d-nested-includes
+
+    - name: NGINX - websocket proxy support
+      become: yes
+      template:
+        src: ../../templates/nginx-confd-websockets-conf.j2
+        dest: /etc/nginx/conf.d/websockets.conf
+      # Don't notify, nginx isn't installed yet
+
 
   roles:
 
@@ -135,21 +153,7 @@
 
     - role: ome.cli_utils
 
-  post_tasks:
-
-    - name: Create additional nginx include directory
-      become: yes
-      file:
-        path: /etc/nginx/conf.d-nested-includes
-        state: directory
-
-    - name: NGINX - websocket proxy support
-      become: yes
-      template:
-        src: ../../templates/nginx-confd-websockets-conf.j2
-        dest: /etc/nginx/conf.d/websockets.conf
-      notify:
-        - restart nginx
+  tasks:
 
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
