@@ -18,11 +18,7 @@
         name: "{{ item }}"
         state: present
       with_items:
-        - python-reportlab # For OMERO.figure
-        - python-markdown # For OMERO.figure
         - mencoder # For the 'make movie' script
-        - scipy
-        - python-matplotlib # For "simple frap with figure" script
 
     - name: Prerequisites for ldap
       become: yes
@@ -64,6 +60,12 @@
         path: /opt/omero/server/selfsigned
         state: directory
 
+    - name: OMERO.server install openssl for generating certificates
+      become: yes
+      yum:
+        name: openssl
+        state: present
+
     - name: OMERO.server self-signed certificate
       become: yes
       command: >-
@@ -94,6 +96,24 @@
         chdir: /opt/omero/server/selfsigned
         creates: server.p12
 
+    # Since Nginx isn't installed until later the directories are created in advance
+    - name: Create nginx include directories
+      become: yes
+      file:
+        path: "{{ item }}"
+        recurse: yes
+        state: directory
+      with_items:
+        - /etc/nginx/conf.d
+        - /etc/nginx/conf.d-nested-includes
+
+    - name: NGINX - websocket proxy support
+      become: yes
+      template:
+        src: ../../templates/nginx-confd-websockets-conf.j2
+        dest: /etc/nginx/conf.d/websockets.conf
+      # Don't notify, nginx isn't installed yet
+
 
   roles:
 
@@ -118,9 +138,11 @@
         - "omero-metadata=={{ omero_metadata_release }}"
         - reportlab
         - markdown
+        - scipy
+        # For "simple frap with figure" script
+        - matplotlib
 
     - role: ome.omero_web
-      # omero_web_config_set:
 
     - role: ome.iptables_raw
 
@@ -131,40 +153,7 @@
 
     - role: ome.cli_utils
 
-  post_tasks:
-
-    - name: Create additional nginx include directory
-      become: yes
-      file:
-        path: /etc/nginx/conf.d-nested-includes
-        state: directory
-
-    # Inspired by
-    # https://github.com/ome/prod-playbooks/blob/7695bf8b1c4f0ae4314524366b91c300c1fdb30b/nightshade-webclients.yml#L119
-    - name: omero-web nginx nested include
-      become: yes
-      lineinfile:
-        destfile: /etc/nginx/conf.d/omero-web.conf
-        insertafter: 'server {'
-        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
-      notify:
-      - restart nginx
-
-    - name: NGINX - OMERO websockets
-      become: yes
-      template:
-        src: templates/nginx-confdnestedincludes-omerows-conf.j2
-        dest: /etc/nginx/conf.d-nested-includes/omerows.conf
-      notify:
-        - restart nginx
-
-    - name: NGINX - websocket proxy support
-      become: yes
-      template:
-        src: templates/nginx-confd-websockets-conf.j2
-        dest: /etc/nginx/conf.d/websockets.conf
-      notify:
-        - restart nginx
+  tasks:
 
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
@@ -432,6 +421,19 @@
 
     # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
     omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
+
+    omero_web_config_set:
+      omero.web.nginx_server_extra_config:
+        - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
+        # TODO: Move the following into a shared variable
+        - >
+          location = /omero-ws {
+            proxy_pass https://127.0.0.1:4066;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_read_timeout 86400;
+          }
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
