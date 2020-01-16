@@ -59,8 +59,10 @@
 - src: ome.omero_user
   version: 0.1.2
 
-- src: ome.omero_web
-  version: 3.0.0
+# https://github.com/ome/ansible-role-omero-web/pull/35
+- name: ome.omero_web
+  src: https://github.com/manics/ansible-role-omero-web/archive/3a9266e90c0f307205d90ebd5b717ef13ee1a7c5.tar.gz
+  version: 3a9266e90c0f307205d90ebd5b717ef13ee1a7c5
 
 # Delete this when everything is on Python 3
 - src: ome.omero_web_apps
