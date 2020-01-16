@@ -14,7 +14,7 @@
   version: 3.0.2
 
 - src: ome.ice
-  version: 3.0.0
+  version: 4.0.0
 
 - src: ome.java
   version: 2.0.3
@@ -46,26 +46,28 @@
 - src: ome.basedeps
   version: 1.1.0
 
-- src: ome.omero_prometheus_exporter
-  version: 0.2.1
+- name: ome.omero_prometheus_exporter
+  src: https://github.com/manics/ansible-role-omero-prometheus-exporter/archive/cb4951496efd41e55575bd8dbb27173fb423be4a.tar.gz
+  version: cb4951496efd41e55575bd8dbb27173fb423be4a
 
 - src: ome.omero_python_deps
   version: 2.0.1
 
 - src: ome.omero_server
-  version: 2.1.0
+  version: 3.0.0
 
 - src: ome.omero_user
   version: 0.1.2
 
 - src: ome.omero_web
-  version: 2.0.3
+  version: 3.0.0
 
+# Delete this when everything is on Python 3
 - src: ome.omero_web_apps
-  version: 0.2.0
+  version: 0.3.0
 
 - src: ome.omero_web_django_prometheus
-  version: 0.2.1
+  version: 0.3.0
 
 - src: ome.postgresql
   version: 3.3.1

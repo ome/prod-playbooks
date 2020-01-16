@@ -35,6 +35,29 @@
         - gcc
         - python-ldap
 
+    - name: Delete broken Python 3 web app configuration
+      become: yes
+      file:
+        path: "{{ omero_web_basedir }}/config/{{ item }}"
+        state: absent
+      when: 'omero_web_python3 | default(False)'
+      with_items:
+        - omero-web-outreach-webapps.omero
+        - django-prometheus.omero
+        - gunicorn-config.py
+      notify:
+      - restart omero-web
+
+    # This separate file has been redundant for ages
+    # https://github.com/ome/prod-playbooks/blob/142d8c675c56d465686e792eb6d69668e408e537/templates/omero-web-config-for-webapps.j2#L19
+    - name: Remove old configuration file
+      become: yes
+      file:
+        path: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
+        state: absent
+      notify:
+      - restart omero-web
+
   roles:
 
     - role: ome.postgresql
@@ -44,7 +67,7 @@
       - user: omero
         password: omero
         databases: [omero]
-      postgresql_version: "10"
+      postgresql_install_server: true
 
     - role: ome.versioncontrol_utils
 
@@ -56,6 +79,8 @@
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
         - "omero-metadata=={{ omero_metadata_release }}"
+        - reportlab
+        - markdown
 
     - role: ome.omero_web
       # omero_web_config_set:
@@ -91,6 +116,7 @@
     - name: Omero.web plugins | plugin install via pip & pypi
       become: yes
       pip:
+        # name: "{{ omero_web_apps_packages }}"
         name:
         - "omero-figure=={{ omero_figure_release }}"
         - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
@@ -104,6 +130,7 @@
         # variable comes from role openmicroscopy.omero-web
         virtualenv: "{{ omero_web_basedir }}/venv"
         virtualenv_site_packages: yes
+      when: 'not (omero_web_python3 | default(False))'
       notify:
         - restart omero-web
 
@@ -204,7 +231,12 @@
     - name: Config for OMERO.web plugins
       become: yes
       template:
-        src: ../../templates/omero-web-config-for-webapps.j2
+        src: >-
+          {{
+            (omero_web_python3 | default(False)) | ternary(
+              'files/omero-web-config-for-webapps.j2',
+              '../../templates/omero-web-config-for-webapps.j2')
+          }}
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
@@ -217,17 +249,6 @@
       copy:
         src: files/omero-web-outreach-webapps.omero
         dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-      - restart omero-web
-
-    - name: Set default viewer in OMERO.web
-      become: yes
-      template:
-        src: ../../templates/omero-web-config-default-viewer.j2
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
         owner: "root"
         group: "root"
         mode: "u=rw,go=r"
@@ -290,22 +311,37 @@
   # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
   vars:
     #omero_server_datadir_chown: True
+    #temporal upgrade force for omero server workaround
+    #omero_server_checkupgrade_comparator: '!='
+    postgresql_version: "10"
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: False
-    omero_server_release: "{{ omero_server_release_override | default('5.5.1') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.5.1') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.1.0') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.1') }}"
-    omero_mapr_release: "{{ omero_mapr_release_override | default('0.3.2') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.3') }}"
-    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.1') }}"
+    omero_server_release: "{{ omero_server_release_override | default('5.6.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.6.1') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.2.0') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.9.0') }}"
+    omero_mapr_release: "{{ omero_mapr_release_override | default('0.4') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.2.0') }}"
+
+    # The omero_web_apps_* vars are used by the ome.omero_web role under
+    # Python 3 otherwise ignored
+    omero_web_apps_packages:
+      - "omero-figure=={{ omero_figure_release }}"
+      - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+      - "omero-iviewer=={{ omero_iviewer_release }}"
+      - "omero-mapr=={{ omero_mapr_release }}"
+      - "omero-parade=={{ omero_parade_release }}"
+      # - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+      # - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
-    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.4.1') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.3') }}"
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
+    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.5.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.5.0') }}"
     # The os_system_users_password default is "ome".
     # You may wish to change this variable,
     # or override it by defining the private variable os_system_users_password_override.
