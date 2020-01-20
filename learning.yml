@@ -21,6 +21,7 @@
       lvm_shrink: False
 
     - role: ome.postgresql
+      postgresql_install_server: True
       postgresql_databases:
         - name: omero
       postgresql_users:
@@ -112,12 +113,12 @@
         omero.web.public.password: "{{ public_password }}"
         omero.web.public.url_filter: "/(webgateway|gallery)/"
         omero.web.public.user: public
-
-    - role: ome.omero_web_apps
       omero_web_apps_packages:
-        - omero-gallery=={{ omero_web_apps_release["omero_gallery"] }}
-        - omero-iviewer=={{ omero_web_apps_release["omero_iviewer"] }}
-        - omero-virtual-microscope=={{ omero_web_apps_release["omero_virtual_microscope"] }}
+        - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
+        - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
+        - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
+      omero_web_python_addons:
+        - "django-redis<4.9"
 
   tasks:
     - name: find OMERO.server log configuration
@@ -163,10 +164,9 @@
         - omero-web
 
   vars:
-    ice_python_wheel: https://github.com/ome/zeroc-ice-py-centos7/releases/download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl
-    omero_server_release: 5.5.1
-    omero_web_release: 5.5.1
+    omero_server_release: 5.6.0
+    omero_web_release: 5.6.1
     omero_web_apps_release:
-      omero_gallery: 3.1.1
-      omero_iviewer: 0.8.1
-      omero_virtual_microscope: 1.0.1
+      omero_gallery: 3.3.0
+      omero_iviewer: 0.9.0
+      omero_virtual_microscope: 1.1.0
