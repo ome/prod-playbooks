@@ -375,8 +375,8 @@
       - "omero-iviewer=={{ omero_iviewer_release }}"
       - "omero-mapr=={{ omero_mapr_release }}"
       - "omero-parade=={{ omero_parade_release }}"
-      # - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-      # - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+      - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+      - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
 
     ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.2') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
