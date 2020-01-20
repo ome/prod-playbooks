@@ -277,7 +277,7 @@
     - name: Config for OMERO.web plugins
       become: yes
       template:
-        src: templates/omero-web-config-for-webapps-no-webtagging.j2
+        src: templates/omero-web-config-for-webapps.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
