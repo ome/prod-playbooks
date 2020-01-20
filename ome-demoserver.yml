@@ -387,8 +387,8 @@
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.9.0') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.0') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
     omero_signup_release: "{{ omero_signup_release_override | default('0.2.0') }}"
 
     omero_server_release: "{{ omero_server_release_override | default('5.6.0') }}"
