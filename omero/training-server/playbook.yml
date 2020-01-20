@@ -267,25 +267,7 @@
         recurse: yes
         owner: "omero-server"
         group: "omero-server"
-
-    # Config for OMERO.web plugins, loaded into OMERO.web by the
-    # omero.web systemd restart.
-    - name: Config for OMERO.web plugins
-      become: yes
-      template:
-        src: >-
-          {{
-            (omero_web_python3 | default(False)) | ternary(
-              'files/omero-web-config-for-webapps.j2',
-              '../../templates/omero-web-config-for-webapps.j2')
-          }}
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-      - restart omero-web
-
+ 
     - name: Outreach only config for OMERO.web plugins
       become: yes
       copy:
