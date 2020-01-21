@@ -270,7 +270,7 @@
  
     - name: Outreach only config for OMERO.web plugins
       become: yes
-      copy:
+      template:
         src: files/omero-web-outreach-webapps.omero
         dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
         owner: "root"
