@@ -267,7 +267,7 @@
         recurse: yes
         owner: "omero-server"
         group: "omero-server"
- 
+
     - name: Outreach only config for OMERO.web plugins
       become: yes
       template:
