@@ -46,9 +46,8 @@
 - src: ome.basedeps
   version: 1.1.0
 
-- name: ome.omero_prometheus_exporter
-  src: https://github.com/manics/ansible-role-omero-prometheus-exporter/archive/cb4951496efd41e55575bd8dbb27173fb423be4a.tar.gz
-  version: cb4951496efd41e55575bd8dbb27173fb423be4a
+- src: ome.omero_prometheus_exporter
+  version: 0.3.0
 
 - src: ome.omero_python_deps
   version: 2.0.1
@@ -59,10 +58,8 @@
 - src: ome.omero_user
   version: 0.1.2
 
-# https://github.com/ome/ansible-role-omero-web/pull/35
-- name: ome.omero_web
-  src: https://github.com/manics/ansible-role-omero-web/archive/3a9266e90c0f307205d90ebd5b717ef13ee1a7c5.tar.gz
-  version: 3a9266e90c0f307205d90ebd5b717ef13ee1a7c5
+- src: ome.omero_web
+  version: 3.0.1
 
 # Delete this when everything is on Python 3
 - src: ome.omero_web_apps
