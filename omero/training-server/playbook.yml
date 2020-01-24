@@ -268,27 +268,9 @@
         owner: "omero-server"
         group: "omero-server"
 
-    # Config for OMERO.web plugins, loaded into OMERO.web by the
-    # omero.web systemd restart.
-    - name: Config for OMERO.web plugins
-      become: yes
-      template:
-        src: >-
-          {{
-            (omero_web_python3 | default(False)) | ternary(
-              'files/omero-web-config-for-webapps.j2',
-              '../../templates/omero-web-config-for-webapps.j2')
-          }}
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-      - restart omero-web
-
     - name: Outreach only config for OMERO.web plugins
       become: yes
-      copy:
+      template:
         src: files/omero-web-outreach-webapps.omero
         dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
         owner: "root"
@@ -375,12 +357,12 @@
       - "omero-iviewer=={{ omero_iviewer_release }}"
       - "omero-mapr=={{ omero_mapr_release }}"
       - "omero-parade=={{ omero_parade_release }}"
-      # - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-      # - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+      - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+      - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
 
     ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.2') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
     omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.5.0') }}"
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.5.0') }}"
