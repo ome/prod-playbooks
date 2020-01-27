@@ -142,8 +142,7 @@
       lvm_shrink: False
 
     - role: ome.nginx
-      # Defaults overridden in private configuration
-      # nginx_version:
+      nginx_version: 1.16.1
 
     - role: ome.postgresql
       #no_log: true
