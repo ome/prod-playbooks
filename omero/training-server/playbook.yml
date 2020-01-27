@@ -360,7 +360,7 @@
       - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
 
-    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.6.2') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.7.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
