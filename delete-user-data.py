@@ -1,6 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
-# Copyright (C) 2019 University of Dundee & Open Microscopy Environment.
+# Copyright (C) 2019-2020 University of Dundee & Open Microscopy Environment.
 # All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -340,7 +340,8 @@ def run_tests():
     def test(case_number):
         for file_count, file_size, expected_names in test_cases:
             case_number += 1
-            chosen = choose_users(file_count, file_size, map(copy, test_users))
+            copied_users = list(map(copy, test_users))
+            chosen = choose_users(file_count, file_size, copied_users)
             actual_names = set([user.name for user in chosen])
             assert actual_names == expected_names
         return case_number
