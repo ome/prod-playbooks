@@ -131,11 +131,11 @@
       lvm_shrink: False
 
     - role: ome.nginx
-      # Defaults overridden in private configuration
-      # nginx_version:
+      nginx_version: 1.16.1
 
     - role: ome.postgresql
       #no_log: true
+      postgresql_install_server: True
       postgresql_databases:
         - name: omero
       postgresql_users:
@@ -157,6 +157,15 @@
       # Defaults overridden in private configuration
       # omero_web_release:
       omero_web_systemd_limit_nofile: 16384
+      omero_web_python_addons:
+        - "omero-figure=={{ omero_figure_release }}"
+        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+        - "omero-iviewer=={{ omero_iviewer_release }}"
+        - "omero-parade=={{ omero_parade_release }}"
+        - "omero-signup=={{ omero_signup_release }}"
+        - "django-cors-headers=={{ django_cors_headers_release }}"
 
     # This role only works on OMERO 5.3+
     - role: ome.omero_user
@@ -189,26 +198,6 @@
         state: reloaded
 
   post_tasks:
-
-    - name: Omero.web plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        name:
-        - "omero-figure=={{ omero_figure_release }}"
-        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
-        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
-        - "omero-iviewer=={{ omero_iviewer_release }}"
-        - "omero-parade=={{ omero_parade_release }}"
-        - "django-cors-headers=={{ django_cors_headers_release }}"
-        - "omero-signup=={{ omero_signup_release }}"
-        editable: False
-        state: present
-        # variable comes from role ome.omero_web
-        virtualenv: "{{ omero_web_basedir }}/venv"
-        virtualenv_site_packages: yes
-      notify:
-        - restart omero-web
 
     - name: Omero.cli plugins | plugin install via pip & pypi
       become: yes
@@ -380,18 +369,18 @@
         force: yes
 
   vars:
-    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.4.0') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
-    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.0.2') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.7.0') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_signup_release: "{{ omero_signup_release_override | default('0.1.0') }}"
+    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.5.3') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.2.0') }}"
+    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.2.0') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.9.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.2.0') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
+    omero_signup_release: "{{ omero_signup_release_override | default('0.2.2') }}"
 
-    omero_server_release: "{{ omero_server_release_override | default('5.5.1') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.5.1') }}"
+    omero_server_release: "{{ omero_server_release_override | default('5.6.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.6.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
 
@@ -405,9 +394,9 @@
     omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
     # Pip versions
-    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.2.0') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.4.2') }}"
-    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.4.0') }}"
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.5.0') }}"
+    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.5.0') }}"
 
     postgresql_version: "9.6"
     filesystem: "xfs"
