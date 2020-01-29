@@ -6,7 +6,6 @@ If you are looking for examples of running your own production OMERO.server see
 
   https://github.com/ome/omero-deployment-examples
 
-
 Details
 -------
 
