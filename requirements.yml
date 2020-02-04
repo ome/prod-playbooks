@@ -52,8 +52,9 @@
 - src: ome.omero_python_deps
   version: 2.0.1
 
-- src: ome.omero_server
-  version: 3.0.0
+- name: ome.omero_server
+  src: https://github.com/ome/ansible-role-omero-server/archive/b7a7a59f3dcf16cb8ed20068fb4a62d1b3365a64.tar.gz
+  version: b7a7a59f3dcf16cb8ed20068fb4a62d1b3365a64
 
 - src: ome.omero_user
   version: 0.1.2

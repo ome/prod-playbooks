@@ -126,6 +126,15 @@
         state: reloaded
 
   tasks:
+
+    - name: Create another temporary directory since OMERO doesn't limit sizes and fills up /tmp
+      become: yes
+      file:
+        path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
+        state: directory
+        mode: 0700
+        owner: "{{ omero_server_system_user }}"
+
     - name: NGINX - enable service / start on boot
       become: yes
       systemd:
@@ -288,6 +297,11 @@
       - reportlab
       - markdown
 
+    # Workaround lack of restriction on temp file sizes
+    # https://github.com/ome/omero-web/issues/118
+    # The downside is that it won't be automatically cleared out
+    omero_server_systemd_environment:
+      OMERO_TMPDIR: /opt/omero/server/tmp
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
