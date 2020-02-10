@@ -2,6 +2,20 @@
 
 - hosts: ns-webclients
 
+  pre_tasks:
+
+    - name: Check if Python 3 venv3 already installed
+      stat:
+        path: /opt/omero/web/venv3
+      register: _omero_web_venv3_st
+
+    - name: Delete old Python 2 web configuration
+      become: true
+      file:
+        path: /opt/omero/web/config
+        state: absent
+      when: not _omero_web_venv3_st.stat.exists
+
   roles:
 
     # Root LV Size
@@ -12,6 +26,7 @@
       lvm_lvmount: /
       lvm_lvsize: "{{ provision_rootsize }}"
       lvm_lvfilesystem: "{{ provision_root_filesystem }}"
+      when: "not (molecule_test | default(False))"
 
     - role: ome.ssl_certificate
 
@@ -19,7 +34,6 @@
 
     # OMERO.web configuration in host_vars in different repository
     - role: ome.omero_web
-      omero_web_release: "{{ omero_web_release_version }}"
       omero_web_systemd_limit_nofile: 16384
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
@@ -36,25 +50,7 @@
         state: reloaded
 
 
-  post_tasks:
-
-    - name: Omero.web plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        name:
-        - "omero-figure=={{ omero_figure_release }}"
-        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
-        - "omero-iviewer=={{ omero_iviewer_release }}"
-        - "omero-parade=={{ omero_parade_release }}"
-        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
-        editable: False
-        state: present
-        # variable comes from role ome.omero_web
-        virtualenv: "{{ omero_web_basedir }}/venv"
-        virtualenv_site_packages: yes
-      notify:
-        - restart omero-web
+  tasks:
 
     - name: Install open-vm-tools if system is a VMware vm
       become: yes
@@ -64,6 +60,7 @@
       when: >
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
+           and not (molecule_test | default(False))
 
     # (Total cores / 2), leaving some for WSGI
     # post 2.3 'dest' should be renamed 'path'
@@ -89,15 +86,6 @@
         path: /etc/nginx/conf.d-nested-includes
         state: directory
 
-    - name: NGINX - omero-web.conf nested includes
-      become: yes
-      lineinfile:
-        destfile: /etc/nginx/conf.d/omero-web.conf
-        insertafter: 'server {'
-        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
-      notify:
-        - restart nginx
-
     - name: NGINX - SSL Configuration
       become: yes
       template:
@@ -114,26 +102,83 @@
       notify:
         - restart nginx
 
-    - name: Config for OMERO.web plugins
-      become: yes
-      template:
-        src: templates/omero-web-config-for-webapps.j2
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-        - restart omero-web
-
   vars:
-    omero_web_config_set: "{{ omero_web_config_set_for_group | combine(omero_web_config_set_for_host) }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.0.2') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.3.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.8.0') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.1.2') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.0.2') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.0.3') }}"
-    omero_web_release_version: "{{ omero_web_release_version_override | default('5.5.1') }}"
-    nginx_version: 1.14.2
+    omero_web_config_set_for_playbook:
+      omero.web.nginx_server_extra_config:
+        - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
+    omero_web_config_set: >-
+      {{
+        omero_web_config_set_for_playbook | combine(
+        (omero_web_config_set_for_group | default({})),
+        (omero_web_config_set_for_host | default({})))
+      }}
+
+    omero_web_release: "{{ omero_web_release_override | default('5.6.1') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.2.0') }}"
+    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.9.0') }}"
+    omero_parade_release: "{{ omero_parade_release_override | default('0.2.0') }}"
+    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
+    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
+
+    omero_web_apps_names:
+      - omero_figure
+      - omero_fpbioimage
+      - omero_iviewer
+      - omero_parade
+      - omero_webtagging_autotag
+      - omero_webtagging_tagsearch
+
+    omero_web_apps_packages:
+      - "omero-figure=={{ omero_figure_release }}"
+      - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
+      - "omero-iviewer=={{ omero_iviewer_release }}"
+      - "omero-parade=={{ omero_parade_release }}"
+      - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
+      - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+
+    omero_web_apps_top_links:
+      - label: Figure
+        link: figure_index
+        attrs:
+          title: Open Figure in new tab
+          target: _blank
+      - label: Tag Search
+        link: tagsearch
+
+    omero_web_apps_config_append:
+      omero.web.open_with:
+        - - omero_figure
+          - new_figure
+          - supported_objects:
+              - images
+            target: _blank
+            label: OMERO.figure
+        - - omero_fpbioimage"
+          - fpbioimage_index
+          - supported_objects:
+              - image
+            script_url: fpbioimage/openwith.js
+            label: FPBioimage
+        - - omero_iviewer
+          - omero_iviewer_index
+          - supported_objects:
+              - images
+              - dataset
+              - well
+            script_url: omero_iviewer/openwith.js
+            label: OMERO.iviewer
+      omero.web.ui.center_plugins:
+        - - Auto Tag
+          - omero_webtagging_autotag/auto_tag_init.js.html
+          - auto_tag_panel
+        - - Parade
+          - omero_parade/init.js.html
+          - omero_parade
+
+    omero_web_apps_config_set:
+      omero.web.viewer.view: "{{ omeroweb_default_viewer_override | default('omero_iviewer.views.index') }}"
+
+    nginx_version: 1.16.1
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''

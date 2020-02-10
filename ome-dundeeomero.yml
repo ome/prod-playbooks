@@ -10,6 +10,7 @@
       when: >
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
+           and not (molecule_test | default(False))
 
     # Not required for an OMERO server install - UoD specific implementation
     - name: NGOM mount point | Install NFS prerequisites
@@ -31,6 +32,7 @@
         opts: tcp,rsize=16384,wsize=16384
         dump: 0
         passno: 0
+      when: "not (molecule_test | default(False))"
 
     # Perhaps alter the role at https://github.com/openmicroscopy/ansible-role-lvm-partition/
     # to make some of the variables non-required.
@@ -41,11 +43,12 @@
         lv: root
         vg: rhel
         size: "{{ provision_root_lvsize }}"
+      when: "not (molecule_test | default(False))"
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: yes
       yum:
-        name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+        name:  https://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
         state: present
 
     - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
@@ -55,12 +58,7 @@
         state: present
       with_items:
         # For OMERO.figure
-        - python-reportlab
-        - python-markdown
         - mencoder # For the 'make movie' script
-        # Current server proxies to a decoupled OMERO.web server
-        # Initially replicate this setup, to minimise changes.
-        - nginx
 
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
@@ -76,6 +74,7 @@
       lvm_lvmount: /var/lib/pgsql
       lvm_lvsize: "{{ provision_postgres_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
+      when: "not (molecule_test | default(False))"
 
     # Disk Layout - OMERO | data dir
     - role: ome.lvm_partition
@@ -85,6 +84,7 @@
       lvm_lvmount: "{{ omero_common_basedir }}"
       lvm_lvsize: "{{ provision_omero_basedir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
+      when: "not (molecule_test | default(False))"
 
     #  Mock database user & creds, to allow Playbook to install
     #  OMERO, and allow for a manual PostgresSQL dump/restore.
@@ -96,19 +96,24 @@
         password: "{{ omero_server_dbpassword | default('omero') }}"
         databases:
           - "{{ omero_server_dbname | default('omero') }}"
+      postgresql_install_server: true
 
 
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: ome.omero_server
-      omero_server_release: 5.5.1
-      omero_server_datadir_manage: False
+      omero_server_release: 5.6.0
+      omero_server_datadir_manage: "{{ molecule_test | default(False) }}"
       omero_server_systemd_limit_nofile: 16384
-      omero_server_systemd_after:
-      - gpfs.service
-      omero_server_systemd_requires:
-      - gpfs.service
-      omero_server_system_user_manage: False
+      omero_server_systemd_after: >-
+        {{ molecule_test | default(False) | ternary([], ['gpfs.service']) }}
+      omero_server_systemd_requires: >-
+        {{ molecule_test | default(False) | ternary([], ['gpfs.service']) }}
+      omero_server_system_user_manage: "{{ molecule_test | default(False) }}"
+
+    # Current server proxies to a decoupled OMERO.web server
+    # Initially replicate this setup, to minimise changes.
+    - role: ome.nginx
 
     - role: ome.ssl_certificate
 
@@ -120,7 +125,16 @@
         name: nginx
         state: reloaded
 
-  post_tasks:
+  tasks:
+
+    - name: Create another temporary directory since OMERO doesn't limit sizes and fills up /tmp
+      become: yes
+      file:
+        path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
+        state: directory
+        mode: 0700
+        owner: "{{ omero_server_system_user }}"
+
     - name: NGINX - enable service / start on boot
       become: yes
       systemd:
@@ -134,6 +148,8 @@
         dest: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
         replace: "worker_processes 1;"
+      notify:
+        - restart nginx
 
     # post 2.3 'dest' should be renamed 'path'
     # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
@@ -143,6 +159,8 @@
         dest: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
+      notify:
+        - restart nginx
 
     - name: NGINX - create nested includes directory
       become: yes
@@ -193,7 +211,7 @@
       tags: monitoring
       become: yes
       command: cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg" "{{ check_mk_agent_config_path }}/logwatch.cfg" creates="{{ check_mk_agent_config_path }}/logwatch.cfg"
-      when: check_mk_logwatch_plugin_conf_st
+      when: check_mk_logwatch_plugin_conf_st.stat.exists
 
     - name: PostgreSQL Nightly Backups | Create the backups directory
       tags: backups
@@ -204,6 +222,7 @@
         owner: postgres
         group: postgres
         mode: "u=rwx,go="
+      when: "not (molecule_test | default(False))"
 
     - name: PostgreSQL Nightly Backups | send the backup script
       tags: backups
@@ -212,6 +231,7 @@
         src: nightly-pg_dump-omero.sh.j2
         dest: /etc/cron.daily/nightly-pg_dump-omero.sh
         mode: "u=rwx,go="
+      when: "not (molecule_test | default(False))"
 
     - name: Create a figure scripts directory
       become: yes
@@ -225,7 +245,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
         mode: 0644
         owner: root
@@ -245,29 +265,43 @@
     #omero_server_db_dumpdir_parent: /tmp
     #omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
-    ice_version: "3.6"
+    nginx_version: 1.16.1
     postgresql_version: "9.6"
     filesystem: "xfs"
-    omero_figure_release: "{{ omero_figure_release_override | default('v4.0.2') }}"
-    omero_server_config_set:
+    omero_figure_release: "{{ omero_figure_release_override | default('4.2.0') }}"
+
+    omero_server_config_set_production:
       omero.db.poolsize: 60
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
       omero.jvmcfg.system_memory: 17000
-      omero.ldap.base: "{{ omero_server_ldap_base }}"
+      omero.ldap.base: "{{ omero_server_ldap_base | default('example') }}"
       omero.ldap.config: true
-      omero.ldap.urls: "{{ omero_server_ldap_urls }}"
+      omero.ldap.urls: "{{ omero_server_ldap_urls | default('ldap://example.org') }}"
       omero.mail.config: true
-      omero.mail.from: "{{ omero_server_mail_from }}"
-      omero.mail.host: "{{ omero_server_mail_host }}"
+      omero.mail.from: "{{ omero_server_mail_from | default('omero@example.org') }}"
+      omero.mail.host: "{{ omero_server_mail_host | default('smtp.example.org') }}"
       omero.ldap.new_user_group: "My Data"
       omero.search.batch: 100
       omero.security.password_provider: chainedPasswordProvider431
       omero.throttling.method_time.error: 60000
-      omero.Ice.Default.Host: "{{ omero_server_ice_default_host }}"
-      Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints }}"
-      omero.data.dir: "{{ omero_server_datadir  }}"
+      omero.Ice.Default.Host: "{{ omero_server_ice_default_host | default('127.0.0.1') }}"
+      Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints | default('tcp -h 127.0.0.1') }}"
+      omero.data.dir: "{{ omero_server_datadir | default('/OMERO') }}"
+
+    # Production config can't be tested in molecule
+    omero_server_config_set: "{{ molecule_test | default(False) | ternary({}, omero_server_config_set_production) }}"
+    omero_server_python_addons:
+      # For OMERO.figure script
+      - reportlab
+      - markdown
+
+    # Workaround lack of restriction on temp file sizes
+    # https://github.com/ome/omero-web/issues/118
+    # The downside is that it won't be automatically cleared out
+    omero_server_systemd_environment:
+      OMERO_TMPDIR: /opt/omero/server/tmp
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
