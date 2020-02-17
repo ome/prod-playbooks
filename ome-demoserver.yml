@@ -229,15 +229,6 @@
         path: /etc/nginx/conf.d-nested-includes
         state: directory
 
-    - name: NGINX - omero-web.conf nested includes
-      become: yes
-      lineinfile:
-        destfile: /etc/nginx/conf.d/omero-web.conf
-        insertafter: 'server {'
-        line: '    include /etc/nginx/conf.d-nested-includes/*.conf;'
-      notify:
-      - restart nginx
-
     - name: NGINX - SSL Configuration
       become: yes
       template:
@@ -437,6 +428,8 @@
       omero.web.admins:  "{{ omero_web_admins }}"
       # https://pypi.org/project/omero-iviewer/ - set iviewer to default viewer
       omero.web.viewer.view: omero_iviewer.views.index
+      omero.web.nginx_server_extra_config:
+        - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
