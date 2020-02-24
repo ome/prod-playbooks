@@ -107,6 +107,6 @@
 - src: ome.versioncontrol_utils
   version: 1.0.2
 
-- name: idr.idr-jupyter
-  src: idr.ansible-role-idr-jupyter
-  version: 3.0.0
+- name: idr.idr_jupyter
+  src: https://github.com/IDR/ansible-role-idr-jupyter/archive/50dedc7e093df8dc407d037badd78f487dd8d19e.tar.gz
+  version: 50dedc7e093df8dc407d037badd78f487dd8d19e
