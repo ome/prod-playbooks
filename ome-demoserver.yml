@@ -146,7 +146,6 @@
 
     - role: ome.omero_server
       # Defaults overridden in private configuration
-      # omero_server_release:
       # omero_server_dbuser:
       # omero_server_dbpassword:
       # omero_server_rootpassword:
@@ -155,7 +154,6 @@
 
     - role: ome.omero_web
       # Defaults overridden in private configuration
-      # omero_web_release:
       omero_web_systemd_limit_nofile: 16384
       omero_web_python_addons:
         - "omero-figure=={{ omero_figure_release }}"
