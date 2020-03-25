@@ -36,15 +36,12 @@
         name: mencoder
         state: present
 
-    - name: OMERO.figure server-side prerequisites, script prerequisites
+    - name: Server-side script prerequisites
       become: yes
       yum:
         name: "{{ item }}"
         state: present
       with_items:
-        # For OMERO.figure
-        - python-reportlab
-        - python-markdown
         - mencoder # For the 'make movie' script
 
     - name: OMERO.server self-signed certificate directory
@@ -411,6 +408,11 @@
       omero.new_user_group: "My Data"
       omero.search.batch: 100
       omero.throttling.method_time.error: 60000
+
+    omero_server_python_addons:
+      # For OMERO.figure script
+      - reportlab
+      - markdown
 
     omero_web_config_set:
       omero.mail.config: true
