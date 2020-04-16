@@ -59,6 +59,8 @@
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
+    - role: ome.sudoers
+
   post_tasks:
 
     - name: Check_MK logwatch plugin | check for plugin existence

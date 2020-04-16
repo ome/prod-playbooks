@@ -96,7 +96,7 @@
   version: 0.3.2
 
 - src: ome.sudoers
-  version: 1.0.1
+  version: 1.0.2
 
 - src: ome.system_monitor_agent
   version: 0.1.1
