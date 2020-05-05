@@ -28,6 +28,7 @@ public_folders:
   leica-lif: 'Leica-LIF'
   leica-scn: 'Leica-SCN'
   leo: 'LEO'
+  metaxpress: 'MetaXpress'
   micromanager: 'Micro-Manager'
   mrc: 'MRC'
   nd2: 'ND2'
