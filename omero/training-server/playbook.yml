@@ -319,8 +319,10 @@
         network_mode: host
         published_ports:
           - "8080:8080"
-        state: started
         restart_policy: always
+        state: started
+        volumes:
+          - "/OMERO:/OMERO:ro"
 
     # https://fralef.me/docker-and-iptables.html
     # https://blog.daknob.net/debian-firewall-docker/
