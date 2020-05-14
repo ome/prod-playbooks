@@ -345,6 +345,8 @@
           -A POSTROUTING -o {{ external_nic }} -j MASQUERADE
           # Allow world to access 10389?
           -A INPUT -p tcp -m tcp --dport 10389 -s 0.0.0.0/0 -j ACCEPT
+          # Allow world to access 8080?
+          -A INPUT -p tcp -m tcp --dport 8080 -s 0.0.0.0/0 -j ACCEPT
         state: present
 
   # Crypted passwords generated using
@@ -387,7 +389,7 @@
     # or override it by defining the private variable os_system_users_password_override.
     os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
-    omero_ms_zarr_release: "{{ omero_ms_zarr_release | default('latest') }}"
+    omero_ms_zarr_release: "{{ omero_ms_zarr_release_override | default('latest') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
     omero_server_config_set:
       #omero.fs.importUsers: "fm1"
