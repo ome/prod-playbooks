@@ -114,6 +114,12 @@
         dest: /etc/nginx/conf.d/websockets.conf
       # Don't notify, nginx isn't installed yet
 
+    - name: NGINX - omero-ms-zarr support
+      become: yes
+      template:
+        src: ../../templates/nginx-confdnestedincludes-omero-ms-zarr.j2
+        dest: /etc/nginx/conf.d-nested-includes/omero-ms-zarr.conf
+      # Don't notify, nginx isn't installed yet
 
   roles:
 
@@ -317,8 +323,8 @@
           CONFIG_omero_db_name: omero
           CONFIG_omero_data_dir: /OMERO
         network_mode: host
-        published_ports:
-          - "8080:8080"
+        exposed_ports: "8080"
+        published_ports: "8080:8080"
         restart_policy: always
         state: started
         volumes:
@@ -348,8 +354,6 @@
           -A POSTROUTING -o {{ external_nic }} -j MASQUERADE
           # Allow world to access 10389?
           -A INPUT -p tcp -m tcp --dport 10389 -s 0.0.0.0/0 -j ACCEPT
-          # Allow world to access 8080?
-          -A INPUT -p tcp -m tcp --dport 8080 -s 0.0.0.0/0 -j ACCEPT
         state: present
 
   # Crypted passwords generated using
