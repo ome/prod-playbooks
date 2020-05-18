@@ -114,13 +114,6 @@
         dest: /etc/nginx/conf.d/websockets.conf
       # Don't notify, nginx isn't installed yet
 
-    - name: NGINX - omero-ms-zarr support
-      become: yes
-      template:
-        src: ../../templates/nginx-confdnestedincludes-omero-ms-zarr.j2
-        dest: /etc/nginx/conf.d-nested-includes/omero-ms-zarr.conf
-      # Don't notify, nginx isn't installed yet
-
   roles:
 
     - role: ome.postgresql
@@ -323,12 +316,19 @@
           CONFIG_omero_db_name: omero
           CONFIG_omero_data_dir: /OMERO
         network_mode: host
-        exposed_ports: "8080"
-        published_ports: "8080:8080"
         restart_policy: always
         state: started
+        pull: yes
         volumes:
           - "/OMERO:/OMERO:ro"
+
+    - name: NGINX - omero-ms-zarr support
+      become: yes
+      template:
+        src: ../../templates/nginx-confdnestedincludes-omero-ms-zarr.j2
+        dest: /etc/nginx/conf.d-nested-includes/omero-ms-zarr.conf
+      notify:
+        - restart nginx
 
     # https://fralef.me/docker-and-iptables.html
     # https://blog.daknob.net/debian-firewall-docker/
