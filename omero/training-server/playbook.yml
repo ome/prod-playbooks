@@ -114,7 +114,6 @@
         dest: /etc/nginx/conf.d/websockets.conf
       # Don't notify, nginx isn't installed yet
 
-
   roles:
 
     - role: ome.postgresql
@@ -305,6 +304,32 @@
         state: started
         restart_policy: always
 
+    - name: Run docker for omero-ms-zarr
+      become: yes
+      docker_container:
+        image: openmicroscopy/omero-ms-zarr:{{ omero_ms_zarr_release }}
+        name: omero_ms_zarr
+        env:
+          CONFIG_omero_db_host: localhost
+          CONFIG_omero_db_user: omero
+          CONFIG_omero_db_pass: omero
+          CONFIG_omero_db_name: omero
+          CONFIG_omero_data_dir: /OMERO
+        network_mode: host
+        restart_policy: always
+        state: started
+        pull: yes
+        volumes:
+          - "/OMERO:/OMERO:ro"
+
+    - name: NGINX - omero-ms-zarr support
+      become: yes
+      template:
+        src: ../../templates/nginx-confdnestedincludes-omero-ms-zarr.j2
+        dest: /etc/nginx/conf.d-nested-includes/omero-ms-zarr.conf
+      notify:
+        - restart nginx
+
     # https://fralef.me/docker-and-iptables.html
     # https://blog.daknob.net/debian-firewall-docker/
     # Allow:
@@ -371,6 +396,7 @@
     # or override it by defining the private variable os_system_users_password_override.
     os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
+    omero_ms_zarr_release: "{{ omero_ms_zarr_release_override | default('latest') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
     omero_server_config_set:
       #omero.fs.importUsers: "fm1"
