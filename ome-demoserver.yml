@@ -356,7 +356,7 @@
 
   vars:
     django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.5.3') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.2.0') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.3.0') }}"
     omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.2.0') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.9.1') }}"
