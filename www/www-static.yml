@@ -48,8 +48,8 @@
       path: "{{ phpbbforum_style_file }}"
 
   vars:
-    website_version: "2020.05.25-4"
+    website_version: "2020.05.26-1"
     website_sha256: >-
-      441dcd80ec8ae4b6a42beb66b53cee8436a371b791edc849dcf62ac94904fe73
+      83e7aa197b074da12a1a42de8fb1711060e61a71355b7c7d5e6e5d478413434b
     website_name: www.openmicroscopy.org
     phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"
