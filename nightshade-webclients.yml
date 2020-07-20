@@ -2,20 +2,6 @@
 
 - hosts: ns-webclients
 
-  pre_tasks:
-
-    - name: Check if Python 3 venv3 already installed
-      stat:
-        path: /opt/omero/web/venv3
-      register: _omero_web_venv3_st
-
-    - name: Delete old Python 2 web configuration
-      become: true
-      file:
-        path: /opt/omero/web/config
-        state: absent
-      when: not _omero_web_venv3_st.stat.exists
-
   roles:
 
     # Root LV Size
