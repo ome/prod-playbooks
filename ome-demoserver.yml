@@ -132,7 +132,6 @@
 
     - role: ome.postgresql
       #no_log: true
-      postgresql_install_server: True
       postgresql_databases:
         - name: omero
       postgresql_users:

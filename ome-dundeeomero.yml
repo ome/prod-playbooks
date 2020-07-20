@@ -96,7 +96,6 @@
         password: "{{ omero_server_dbpassword | default('omero') }}"
         databases:
           - "{{ omero_server_dbname | default('omero') }}"
-      postgresql_install_server: true
 
 
     # Note - had to have these set to `install-mock` to progress role
