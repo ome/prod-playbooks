@@ -123,7 +123,6 @@
       - user: omero
         password: omero
         databases: [omero]
-      postgresql_install_server: true
 
     - role: ome.versioncontrol_utils
 
