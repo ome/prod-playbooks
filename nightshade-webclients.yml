@@ -177,7 +177,7 @@
           - omero_parade
 
     omero_web_apps_config_set:
-      omero.web.viewer.view: "{{ omeroweb_default_viewer_override | default('omero_iviewer.views.index') }}"
+      omero.web.viewer.view: omero_iviewer.views.index
 
     nginx_version: 1.16.1
     # Disable SSL combined certificate and key
