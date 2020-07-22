@@ -140,7 +140,7 @@
               - images
             target: _blank
             label: OMERO.figure
-        - - omero_fpbioimage"
+        - - omero_fpbioimage
           - fpbioimage_index
           - supported_objects:
               - image
