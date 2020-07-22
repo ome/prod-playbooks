@@ -165,6 +165,6 @@
     omero_web_apps_config_set:
       omero.web.viewer.view: omero_iviewer.views.index
 
-    nginx_version: 1.16.1
+    nginx_version: 1.18.0
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
