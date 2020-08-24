@@ -61,6 +61,9 @@
 - src: ome.omero_web
   version: 3.1.0
 
+- src: ome.python3_virtualenv
+  version: 0.1.1
+
 # Delete this when everything is on Python 3
 - src: ome.omero_web_apps
   version: 0.3.0
