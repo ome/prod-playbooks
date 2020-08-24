@@ -20,6 +20,9 @@
   - role: ome.ssl_certificate
   - role: ome.nginx_proxy
 
+  vars:
+    nginx_version: 1.18.0
+
   handlers:
     - name: reload nginx
       listen: ssl certificate changed
