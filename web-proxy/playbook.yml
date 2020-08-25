@@ -27,3 +27,6 @@
       service:
         name: nginx
         state: reloaded
+
+  vars:
+    nginx_version: 1.18.0
