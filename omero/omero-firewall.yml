@@ -37,7 +37,7 @@
   - name: Iptables default
     become: yes
     iptables_raw_25:
-      name: default_reject
+      name: default_rules
       rules: |
         -A INPUT -j REJECT
         -A FORWARD -j REJECT
