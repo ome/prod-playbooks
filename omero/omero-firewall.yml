@@ -37,7 +37,7 @@
   - name: Iptables default
     become: yes
     iptables_raw_25:
-      name: default_reject
+      name: default_rules
       rules: |
         -A INPUT -j REJECT
         -A FORWARD -j REJECT
@@ -58,6 +58,10 @@
       rules: |
         -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
         -A INPUT -p tcp -m multiport --dports 4063,4064 -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 1191 -s 10.0.48.0/21 -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 6556 -s 10.2.1.0/24 -j ACCEPT
+        {% for s in gpfs_cluster_source | default([]) %}
+        -A INPUT -p tcp -m tcp --dport 1191 -s {{ s }} -j ACCEPT
+        {% endfor %}
+        {% if (checkmk_server_source  | default('')) %}
+        -A INPUT -p tcp -m tcp --dport 6556 -s {{ checkmk_server_source }} -j ACCEPT
+        {% endif %}
       state: present
