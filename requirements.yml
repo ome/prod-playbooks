@@ -90,7 +90,7 @@
   version: 0.2.1
 
 - src: ome.prometheus_postgres
-  version: 0.2.1
+  version: 0.4.0
 
 - src: ome.redis
   version: 1.1.1
