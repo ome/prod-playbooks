@@ -12,7 +12,7 @@ OMERO_LOGIN = '-C -s localhost -u root -w omero'
 @pytest.mark.parametrize("name", [
     'nginx',
     'omero-server',
-    'postgresql-9.6',
+    'postgresql-11',
     'prometheus-node-exporter',
     'prometheus-omero-exporter',
     'prometheus-postgres-exporter',
