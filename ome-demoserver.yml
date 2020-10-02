@@ -47,7 +47,7 @@
     - name: OMERO.server self-signed certificate directory
       become: yes
       file:
-        path: /opt/omero/server/selfsigned
+        path: "{{ omero_server_basedir }}/selfsigned"
         state: directory
 
     - name: OMERO.server self-signed certificate
@@ -60,7 +60,7 @@
         -out server.pem
         -extensions v3_ca
       args:
-        chdir: /opt/omero/server/selfsigned
+        chdir: "{{ omero_server_basedir }}/selfsigned"
         creates: server.pem
 
     # This self-signed cert is used to encrypt the websocket connection
@@ -77,7 +77,7 @@
         -password pass:{{
         omero_server_config_set['omero.glacier2.IceSSL.Password'] | quote }}
       args:
-        chdir: /opt/omero/server/selfsigned
+        chdir: "{{ omero_server_basedir }}/selfsigned"
         creates: server.p12
 
   roles:
@@ -164,7 +164,7 @@
     # This role only works on OMERO 5.3+
     - role: ome.omero_user
       no_log: true
-      omero_user_bin_omero: /opt/omero/server/OMERO.server/bin/omero
+      omero_user_bin_omero: "{{ omero_server_basedir }}/OMERO.server/bin/omero"
       omero_user_system: omero-server
       omero_user_admin_user: root
       omero_user_admin_pass: "{{ omero_server_rootpassword }}"
@@ -338,7 +338,7 @@
     - name: Create a figure scripts directory
       become: yes
       file:
-        path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
+        path: "{{ omero_server_basedir }}/OMERO.server/lib/scripts/omero/figure_scripts"
         state: directory
         mode: 0755
         recurse: yes
@@ -348,7 +348,7 @@
       become: yes
       get_url:
         url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_script_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        dest: "{{ omero_server_basedir }}/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -391,7 +391,7 @@
       omero.client.icetransports: ssl,wss,tcp
       omero.db.poolsize: 60
       omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
-      omero.glacier2.IceSSL.DefaultDir: /opt/omero/server/selfsigned
+      omero.glacier2.IceSSL.DefaultDir: "{{ omero_server_basedir }}/selfsigned"
       omero.glacier2.IceSSL.CAs: server.pem
       omero.glacier2.IceSSL.CertFile: server.p12
       # This password doesn't need to be secret
