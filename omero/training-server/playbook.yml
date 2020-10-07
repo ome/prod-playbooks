@@ -387,7 +387,7 @@
     ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.7.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
-    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
+    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
     omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.5.0') }}"
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.6.1') }}"
     # The os_system_users_password default is "ome".
