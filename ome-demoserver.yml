@@ -183,6 +183,12 @@
     - role: ome.ssl_certificate
       tags: ssl
 
+    - role: ome.postgresql_backup
+      postgresql_backup_dir: >-
+        {{ omero_server_db_dumpdir_parent | default('/tmp/pgbackup') }}
+      postgresql_backup_filename_format: "nightly-omero-%a.pgdump"
+      postgresql_backup_minimum_expected_size: 1000000000
+
   handlers:
     - name: reload web server
       listen: ssl certificate changed
@@ -318,21 +324,11 @@
       command: cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg" "{{ check_mk_agent_config_path }}/logwatch.cfg" creates="{{ check_mk_agent_config_path }}/logwatch.cfg"
       when: check_mk_logwatch_plugin_conf_st.stat.exists
 
-    - name: PostgreSQL Nightly Backups | Create the backups directory
+    - name: PostgreSQL Nightly Backups | Remove old cron job
       become: yes
       file:
-        path: "{{ omero_server_db_dumpdir_parent }}/{{ omero_server_db_dumpdir_name }}"
-        state: directory
-        owner: postgres
-        group: postgres
-        mode: "u=rwx,go="
-
-    - name: PostgreSQL Nightly Backups | send the backup script
-      become: yes
-      template:
-        src: nightly-pg_dump-omero.sh.j2
-        dest: /etc/cron.daily/nightly-pg_dump-omero.sh
-        mode: "u=rwx,go="
+        path: /etc/cron.daily/nightly-pg_dump-omero.sh
+        state: absent
 
     - name: Create a figure scripts directory
       become: yes
@@ -373,10 +369,6 @@
     check_mk_agent_plugin_path: /usr/share/check-mk-agent/available-plugins
     check_mk_agent_config_example_path: /usr/share/check_mk/agents/cfg_examples
     check_mk_agent_config_path: /etc/check-mk-agent
-
-    # Backup folder for PostgreSQL 'folder' format dump
-    omero_server_db_dumpdir_parent: /tmp
-    omero_server_db_dumpdir_name: nightly-pg_dump_omero.dir
 
     # Pip versions
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.3.0') }}"
