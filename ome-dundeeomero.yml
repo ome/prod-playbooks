@@ -117,10 +117,11 @@
     - role: ome.ssl_certificate
 
     - role: ome.postgresql_backup
+      postgresql_backup_compress: true
       postgresql_backup_dir: >-
         {{ omero_server_db_dumpdir_parent | default('/tmp/pgbackup') }}
-      postgresql_backup_filename_format: "nightly-omero-%a.pgdump"
-      postgresql_backup_minimum_expected_size: 1000000000
+      postgresql_backup_filename_format: "nightly-omero-%a.pgdump.gz"
+      postgresql_backup_minimum_expected_size: 100000000
 
 
   handlers:
