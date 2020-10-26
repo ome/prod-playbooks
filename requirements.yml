@@ -10,8 +10,9 @@
 - src: ome.deploy_archive
   version: 0.1.3
 
-- src: ome.docker
-  version: 3.0.2
+- name: ome.docker
+  src: https://github.com/manics/ansible-role-docker/archive/fe4612d679852a1bd033904e5993b77f326e14a0.tar.gz
+  version: fe4612d679852a1bd033904e5993b77f326e14a0
 
 - src: ome.ice
   version: 4.0.0

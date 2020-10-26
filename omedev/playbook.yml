@@ -1,0 +1,15 @@
+---
+# OMEDEV servers
+
+- hosts: omedev-docker
+
+  roles:
+
+    - role: ome.cli_utils
+
+    - role: ome.versioncontrol_utils
+
+    - role: ome.nfs_mount
+    # This will only have effect if nfs_share_mounts is defined in host/group vars
+
+    - role: ome.docker
