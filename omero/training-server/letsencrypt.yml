@@ -78,4 +78,4 @@
     # This must match the expectations of certbot, do not change this:
     https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain | default('localhost') }}"
     # In production set this to True:
-    # https_lets_encrypt_enabled:
+    # https_letsencrypt_enabled:
