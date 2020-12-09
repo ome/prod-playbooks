@@ -321,11 +321,49 @@
         volumes:
           - "/OMERO:/OMERO:ro"
 
-    - name: NGINX - omero-ms-zarr support
+    - name: Create minio config directory
+      become: yes
+      file:
+        path: /etc/minio
+        state: directory
+
+    - name: Check if minio admin credentials exists
+      become: yes
+      stat:
+        path: /etc/minio/docker-minio.env
+      register: _minio_docker_env_st
+
+    - name: Create random minio admin credentials file
+      become: yes
+      copy:
+        content: |
+          MINIO_ACCESS_KEY={{ lookup('password', '/dev/null length=12') }}
+          MINIO_SECRET_KEY={{ lookup('password', '/dev/null length=24') }}
+        dest: /etc/minio/docker-minio.env
+      when: not _minio_docker_env_st.stat.exists
+
+    - name: Run docker for minio
+      become: yes
+      docker_container:
+        image: minio/minio:{{ minio_docker_release }}
+        name: minio
+        command: server /srv/minio
+        env_file: /etc/minio/docker-minio.env
+        published_ports:
+        - "9000:9000"
+        state: started
+        restart_policy: always
+        volumes:
+          - "/srv/minio:/srv/minio"
+
+    - name: Nginx - docker webservices support
       become: yes
       template:
-        src: ../../templates/nginx-confdnestedincludes-omero-ms-zarr.j2
-        dest: /etc/nginx/conf.d-nested-includes/omero-ms-zarr.conf
+        src: ../../templates/nginx-confdnestedincludes-{{ item }}.j2
+        dest: /etc/nginx/conf.d-nested-includes/{{ item }}.conf
+      with_items:
+        - omero-ms-zarr
+        - minio-publicscratch
       notify:
         - restart nginx
 
@@ -354,6 +392,18 @@
           # Allow world to access 10389?
           -A INPUT -p tcp -m tcp --dport 10389 -s 0.0.0.0/0 -j ACCEPT
         state: present
+
+    # TODO: Move to an independent role, currently bundled in
+    # https://github.com/manics/ansible-role-minio-s3-gateway/blob/0.1.0/tasks/minio-client.yml
+    - name: Download minio client
+      become: true
+      get_url:
+        url:
+          https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2020-11-25T23-04-07Z
+        checksum:
+          sha256:985c43f9bec8fdc4ef2ee44c63c9657e10c4cfeb5cb949179d6d693f7428c314
+        dest: /usr/local/bin/mc
+        mode: u=rwx,g=rx,o=rx
 
   # Crypted passwords generated using
   # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
@@ -396,6 +446,7 @@
     os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
     omero_ms_zarr_release: "{{ omero_ms_zarr_release_override | default('latest') }}"
+    minio_docker_release: "{{ minio_docker_release_override | default('RELEASE.2020-11-25T22-36-25Z') }}"
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
     omero_server_config_set:
       #omero.fs.importUsers: "fm1"

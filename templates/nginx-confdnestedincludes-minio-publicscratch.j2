@@ -1,0 +1,4 @@
+location /publicscratch {
+    proxy_pass http://127.0.0.1:9000/publicscratch;
+    proxy_set_header Host $http_host;
+}
