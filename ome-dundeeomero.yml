@@ -48,7 +48,7 @@
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: yes
       yum:
-        name:  https://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+        name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
         state: present
 
     - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
