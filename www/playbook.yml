@@ -60,6 +60,10 @@
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
     - role: ome.sudoers
+      sudoers_individual_commands:
+      - user: "%omedev"
+        become: ALL
+        command: "NOPASSWD: /usr/local/bin/deploy *"
 
   post_tasks:
 
