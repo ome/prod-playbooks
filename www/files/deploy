@@ -68,7 +68,7 @@ def main(version, parent, dry_run):
         # Mutator
         os.symlink(dst, sym)
         print('Symlinked {} to {}'.format(dst, sym))
-    sys.exit(0)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

@@ -29,7 +29,8 @@
     become: yes
     command: /usr/local/bin/deploy -f
     register: deploy_result
-    changed_when: '"Symlinked" in deploy_result.stdout'
+    changed_when: 'deploy_result.rc==1'
+    failed_when: 'deploy_result.rc>1'
 
   - name: Update static phpbb stylesheet
     become: yes
