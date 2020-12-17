@@ -27,8 +27,9 @@
 
   - name: run deployment script
     become: yes
-    command: /usr/local/bin/deploy -f
+    command: /usr/local/bin/deploy {{ ansible_check_mode | ternary('-n', '-f') }}
     register: deploy_result
+    check_mode: no
     changed_when: 'deploy_result.rc==1'
     failed_when: 'deploy_result.rc>1'
 
