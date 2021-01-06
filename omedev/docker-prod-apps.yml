@@ -1,0 +1,209 @@
+---
+# Production Docker applications
+
+# May want to change this to a hostgroup
+- hosts: ome-dockr-prod1.openmicroscopy.org
+
+  pre_tasks:
+
+    - name: Create Prometheus data directory
+      become: true
+      file:
+        path: "{{ nfs_data_volume | default('/srv') }}/prometheus"
+        owner: "{{ prometheus_docker_user }}"
+        group: root
+        state: directory
+
+  roles:
+
+    # Self monitoring
+    - role: ome.prometheus_node
+
+    - role: ome.prometheus
+      prometheus_docker_network: monitoring
+      prometheus_docker_data_volume: "{{ nfs_data_volume | default('/srv') }}/prometheus"
+      prometheus_additional_command_args: "--storage.tsdb.retention.time=5y"
+
+      # prometheus_alertmanager_slack_webhook: secret
+      # prometheus_alertmanager_slack_channel: secret
+
+      prometheus_targets:
+        - jobname: self-node-exporter
+          hosts:
+            - ome-dockr-prod1.openmicroscopy.org
+          port: 9100
+        - jobname: self-prometheus
+          hosts:
+            - ome-dockr-prod1.openmicroscopy.org
+          port: 9090
+
+      prometheus_custom_targets:
+
+        - job_name: node-exporter
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /metrics/9100
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_web_hosts }}"
+
+        - job_name: omero-web
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /django_prometheus/metrics
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_web_hosts }}"
+
+        - job_name: jmx-blitz
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /metrics/9180
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_server_hosts }}"
+
+        - job_name: jmx-indexer
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /metrics/9181
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_server_hosts }}"
+
+        - job_name: jmx-pixeldata
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /metrics/9182
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_server_hosts }}"
+
+        - job_name: postgres-exporter
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /metrics/9187
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_server_hosts }}"
+
+        - job_name: omero-server
+          basic_auth:
+            username: "{{ scrape_username }}"
+            password: "{{ scrape_password }}"
+          metrics_path: /metrics/9449
+          scheme: https
+          static_configs:
+          - targets: "{{ monitored_omero_server_hosts }}"
+
+# Federated metrics from the IDR
+# To get all federated metrics so you can decide what to fetch:
+# curl -G https://idr.openmicroscopy.org/prometheus/federate --data-urlencode 'match[]={__name__=~".+"}'
+
+        - job_name: federate-{{ idr_internal_1 }}
+          honor_labels: true
+          metrics_path: /prometheus/federate
+          params:
+            'match[]':
+              # TODO: Decide what metrics to fetch
+              - '{job="node-exporter"}'
+              - '{job="omero-server"}'
+          scheme: https
+          static_configs:
+          - targets:
+            - "{{ idr_internal_1 }}.openmicroscopy.org"
+            labels:
+              prometheussrc: "{{ idr_internal_1 }}"
+
+        - job_name: federate-{{ idr_internal_2 }}
+          honor_labels: true
+          metrics_path: /prometheus/federate
+          params:
+            'match[]':
+              # TODO: Decide what metrics to fetch
+              - '{job="node-exporter"}'
+              - '{job="omero-server"}'
+          scheme: https
+          static_configs:
+          - targets:
+            - "{{ idr_internal_2 }}.openmicroscopy.org"
+            labels:
+              prometheussrc: "{{ idr_internal_2 }}"
+
+        - job_name: federate-idr-production
+          honor_labels: true
+          metrics_path: /prometheus/federate
+          params:
+            'match[]':
+              # TODO: Decide what metrics to fetch
+              - '{job="node-exporter"}'
+              - '{job="omero-server"}'
+          scheme: https
+          static_configs:
+          - targets:
+            - idr.openmicroscopy.org
+            labels:
+              prometheussrc: idr-production
+
+        - job_name: federate-idr-analysis
+          basic_auth:
+            username: "{{ scrape_idr_username }}"
+            password: "{{ scrape_idr_password }}"
+          honor_labels: true
+          metrics_path: /prometheus/federate
+          params:
+            'match[]':
+              # TODO: Decide what metrics to fetch
+              - '{__name__="node_cpu"}'
+              - '{__name__=~"node_memory.*"}'
+              - '{__name__="kube_pod_status_phase"}'
+              - '{__name__="container_cpu_user_seconds_total"}'
+              - '{__name__="container_memory_rss"}'
+          scheme: https
+          static_configs:
+          - targets:
+            - idr-analysis.openmicroscopy.org
+            labels:
+              prometheussrc: idr-analysis
+
+  vars:
+
+    # Corresponds to omero-server hostgroup
+    monitored_node_exporter_hosts:
+      - ns-web.openmicroscopy.org
+      - ns-web-pub.openmicroscopy.org
+      - ome-demoserver.openmicroscopy.org
+      - ome-dundeeomero.openmicroscopy.org
+      - outreach.openmicroscopy.org
+      - workshop.openmicroscopy.org
+      - pub-omero.openmicroscopy.org
+    monitored_omero_server_hosts:
+      - ome-demoserver.openmicroscopy.org
+      - ome-dundeeomero.openmicroscopy.org
+      - outreach.openmicroscopy.org
+      - workshop.openmicroscopy.org
+      - pub-omero.openmicroscopy.org
+    # Corresponds to omero-web hostgroup
+    monitored_omero_web_hosts:
+      - ns-web.openmicroscopy.org
+      - ns-web-pub.openmicroscopy.org
+      - ome-demoserver.openmicroscopy.org
+      - outreach.openmicroscopy.org
+      - workshop.openmicroscopy.org
+      - pub-omero.openmicroscopy.org
+
+    prometheus_docker_user: 909
+
+    idr_internal_1: "{{ ome_monitored_idr_internal_1 | default('idr1') }}"
+    idr_internal_2: "{{ ome_monitored_idr_internal_2 | default('idr2') }}"
+
+    scrape_username: "{{ ome_monitored_scrape_username | default('monitoring') }}"
+    scrape_password: "{{ ome_monitored_scrape_password | default('monitoring') }}"
+    scrape_idr_username: "{{ ome_monitored_scrape_idr_username | default('monitoring') }}"
+    scrape_idr_password: "{{ ome_monitored_scrape_idr_password | default('monitoring') }}"

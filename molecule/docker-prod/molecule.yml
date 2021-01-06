@@ -1,0 +1,44 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # TODO: enable
+  enabled: False
+platforms:
+  - name: ome-dockr-prod1.openmicroscopy.org
+    image: centos/systemd:latest
+    command: /sbin/init
+    privileged: true
+    groups:
+      - docker-hosts
+      - omedev-docker
+    published_ports:
+      - "0.0.0.0:9090:9090/tcp"
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ../../omedev/playbook.yml
+    converge: ../../omedev/docker-prod-apps.yml
+  inventory:
+    group_vars:
+      # all:
+      #   molecule_test: True
+      docker-hosts:
+        # This should allow docker-in-docker to work
+        docker_storage_driver: vfs
+        # Latest version 17.12.1.ce-1.el7.centos has a bug that prevents
+        # testing on travis: https://github.com/docker/for-linux/issues/219
+        docker_version: 17.09.1.ce-1.el7.centos
+  lint:
+    name: ansible-lint
+scenario:
+  name: docker-prod
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
