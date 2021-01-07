@@ -10,8 +10,9 @@
 - src: ome.deploy_archive
   version: 0.1.3
 
+# https://github.com/ome/ansible-role-docker/pull/8
 - src: ome.docker
-  version: 3.0.2
+  version: 3.1.0
 
 - src: ome.ice
   version: 4.0.0
