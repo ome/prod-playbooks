@@ -11,9 +11,8 @@
   version: 0.1.3
 
 # https://github.com/ome/ansible-role-docker/pull/8
-- name: ome.docker
-  src: https://github.com/manics/ansible-role-docker/archive/baafa75cae09d3e8885c220221e7d73b67828f8d.tar.gz
-  version: baafa75cae09d3e8885c220221e7d73b67828f8d
+- src: ome.docker
+  version: 3.1.0
 
 - src: ome.ice
   version: 4.0.0
