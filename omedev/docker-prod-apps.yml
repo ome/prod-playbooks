@@ -22,19 +22,28 @@
     - role: ome.prometheus
       prometheus_docker_network: monitoring
       prometheus_docker_data_volume: "{{ nfs_data_volume | default('/srv') }}/prometheus"
-      prometheus_additional_command_args: "--storage.tsdb.retention.time=5y"
+      # https://prometheus.io/docs/guides/basic-auth/#prometheus-configuration
+      prometheus_additional_command_args: >-
+        --storage.tsdb.retention.time=5y
+        --web.external-url https://$(hostname)/prometheus
+        --web.route-prefix=/
 
-      # prometheus_alertmanager_slack_webhook: secret
-      # prometheus_alertmanager_slack_channel: secret
+      # prometheus_alertmanager_slack_webhook: "secret"
+      # prometheus_alertmanager_slack_channel: "#secret"
+
+      # Disable external ports, external access is via a proxy
+      prometheus_port: 0
+      prometheus_alertmanager_port: 0
+      prometheus_blackboxexporter_port: 0
 
       prometheus_targets:
         - jobname: self-node-exporter
           hosts:
-            - ome-dockr-prod1.openmicroscopy.org
+            - "{{ ansible_default_ipv4.address }}"
           port: 9100
         - jobname: self-prometheus
           hosts:
-            - ome-dockr-prod1.openmicroscopy.org
+            - localhost
           port: 9090
 
       prometheus_custom_targets:
@@ -46,7 +55,7 @@
           metrics_path: /metrics/9100
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_web_hosts }}"
+          - targets: "{{ monitored_node_exporter_hosts }}"
 
         - job_name: omero-web
           basic_auth:
@@ -91,7 +100,7 @@
           metrics_path: /metrics/9187
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_server_hosts }}"
+          - targets: "{{ monitored_postgres_hosts }}"
 
         - job_name: omero-server
           basic_auth:
@@ -172,31 +181,75 @@
             labels:
               prometheussrc: idr-analysis
 
+    # The prometheus role sets the prometheus_internal_ip variable that is
+    # used later
+
+    - role: ome.ssl_certificate
+
+  tasks:
+
+    - name: Run docker grafana
+      become: true
+      docker_container:
+        image: grafana/grafana:7.2.0
+        env:
+          GF_SERVER_ROOT_URL: '%(protocol)s://%(domain)s:%(http_port)s/grafana/'
+          GF_SERVER_SERVE_FROM_SUB_PATH: 'true'
+        name: grafana
+        networks:
+          - name: monitoring
+        state: started
+        restart_policy: always
+        volumes:
+          - grafana-data:/var/lib/grafana
+      register: _grafana_container
+
+    - name: prometheus htpasswd parent directory
+      become: true
+      file:
+        path: /etc/nginx
+        state: directory
+
+    - name: prometheus htpasswd file
+      become: true
+      copy:
+        dest: /etc/nginx/prometheus.htpasswd
+        # default: admin:monitoring
+        content: >-
+          {{
+            ome_monitoring_prometheus_htpasswd |
+            default('admin:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0')
+          }}
+
+    - include_role:
+        name: ome.nginx_proxy
+      vars:
+        nginx_proxy_ssl: true
+        nginx_proxy_http2: true
+        nginx_proxy_ssl_certificate: "{{ ssl_certificate_bundled_path }}"
+        nginx_proxy_ssl_certificate_key: "{{ ssl_certificate_key_path }}"
+        nginx_proxy_force_ssl: True
+        nginx_proxy_backends:
+          - name: prometheus
+            location: /prometheus/
+            server: http://{{ prometheus_internal_ip }}:9090/
+            additional:
+              - auth_basic Prometheus
+              - auth_basic_user_file /etc/nginx/prometheus.htpasswd
+          - name: grafana
+            location: /grafana/
+            server: >-
+              http://{{
+                (_grafana_container.container | default(
+                  _grafana_container.ansible_facts.docker_container)
+                ).NetworkSettings.IPAddress }}:3000/
+
   vars:
 
-    # Corresponds to omero-server hostgroup
-    monitored_node_exporter_hosts:
-      - ns-web.openmicroscopy.org
-      - ns-web-pub.openmicroscopy.org
-      - ome-demoserver.openmicroscopy.org
-      - ome-dundeeomero.openmicroscopy.org
-      - outreach.openmicroscopy.org
-      - workshop.openmicroscopy.org
-      - pub-omero.openmicroscopy.org
-    monitored_omero_server_hosts:
-      - ome-demoserver.openmicroscopy.org
-      - ome-dundeeomero.openmicroscopy.org
-      - outreach.openmicroscopy.org
-      - workshop.openmicroscopy.org
-      - pub-omero.openmicroscopy.org
-    # Corresponds to omero-web hostgroup
-    monitored_omero_web_hosts:
-      - ns-web.openmicroscopy.org
-      - ns-web-pub.openmicroscopy.org
-      - ome-demoserver.openmicroscopy.org
-      - outreach.openmicroscopy.org
-      - workshop.openmicroscopy.org
-      - pub-omero.openmicroscopy.org
+    monitored_node_exporter_hosts: "{{ ome_monitored_node_exporter_hosts | default([]) }}"
+    monitored_postgres_hosts: "{{ ome_monitored_postgres_hosts | default([]) }}"
+    monitored_omero_server_hosts: "{{ ome_monitored_omero_server_hosts | default([]) }}"
+    monitored_omero_web_hosts: "{{ ome_monitored_omero_web_hosts | default([]) }}"
 
     prometheus_docker_user: 909
 
@@ -207,3 +260,10 @@
     scrape_password: "{{ ome_monitored_scrape_password | default('monitoring') }}"
     scrape_idr_username: "{{ ome_monitored_scrape_idr_username | default('monitoring') }}"
     scrape_idr_password: "{{ ome_monitored_scrape_idr_password | default('monitoring') }}"
+
+# The following manual steps are required:
+# 1. Login to Grafana with the default admin password
+# 2. Set a new password (for ease set it to the same as the prometheus htpasswd)
+# 3. Create a new prometheus datasource with url "http://prometheus:9090"
+#    (prometheus is the internal docker network container name)
+# 4. Create your dashboards

@@ -32,8 +32,10 @@
 - src: ome.nginx
   version: 1.1.1
 
-- src: ome.nginx_proxy
-  version: 1.12.0
+# https://github.com/ome/ansible-role-nginx-proxy/pull/31
+- name: ome.nginx_proxy
+  src: https://github.com/ome/ansible-role-nginx-proxy/archive/ec8a2576598e32881232e000090d407c406851d0.tar.gz
+  version: ec8a2576598e32881232e000090d407c406851d0
 
 - src: ome.nfs_mount
   version: 1.2.1
@@ -81,8 +83,10 @@
 - src: ome.postgresql_client
   version: 0.1.2
 
-- src: ome.prometheus
-  version: 0.3.1
+# https://github.com/ome/ansible-role-prometheus/pull/9
+- name: ome.prometheus
+  src: https://github.com/ome/ansible-role-prometheus/archive/04a619ece84c266a6c366fa912c627c0a8d164c9.tar.gz
+  version: 04a619ece84c266a6c366fa912c627c0a8d164c9
 
 - src: ome.prometheus_jmx
   version: 0.2.1
