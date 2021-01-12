@@ -6,7 +6,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 
-def test_targets(host):
+def test_prometheus_targets(host):
     out = host.check_output(
         'curl -k -f --user admin:monitoring '
         'https://localhost/prometheus/api/v1/targets')
@@ -25,3 +25,8 @@ def test_targets(host):
         'idr2.openmicroscopy.org:443',
         'localhost:9090',
     }.difference(unique_instances)) == 0
+
+
+def test_minio_connect(host):
+    out = host.check_output('curl -s http://localhost:9000 -I')
+    assert 'Server: MinIO/' in out
