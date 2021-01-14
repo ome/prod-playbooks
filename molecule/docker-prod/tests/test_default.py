@@ -30,3 +30,10 @@ def test_prometheus_targets(host):
 def test_minio_connect(host):
     out = host.check_output('curl -s http://localhost:9000 -I')
     assert 'Server: MinIO/' in out
+
+
+def test_redmine_connect(host):
+    out = host.check_output(
+        'curl -k -f -L -H "Host: idr-redmine-docker.openmicroscopy.org" '
+        'https://localhost/')
+    assert '<title>Redmine</title>' in out

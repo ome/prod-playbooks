@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: ome-dockr-prod1.openmicroscopy.org
+  roles:
+    - role: ome.postgresql
+      postgresql_version: "12"
+      postgresql_server_auth:
+        - database: redmine
+          user: redmine
+          address: 0.0.0.0/0
+      postgresql_databases:
+        - name: redmine
+          owner: redmine
+      postgresql_users:
+        - user: redmine
+          password: redmine
+          databases:
+            - redmine
+      postgresql_server_listen: "'*'"
+
+- import_playbook: ../../omedev/playbook.yml

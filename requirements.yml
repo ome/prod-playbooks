@@ -120,3 +120,7 @@
 
 - src: idr.idr_jupyter
   version: 4.0.0
+
+- name: idr.redmine_tracker
+  src: https://github.com/manics/ansible-role-redmine-tracker/archive/20210114.tar.gz
+  version: "20210114"

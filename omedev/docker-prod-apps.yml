@@ -9,7 +9,7 @@
     - name: Create Prometheus data directory
       become: true
       file:
-        path: "{{ nfs_monitoring_data_volume | default('/srv') }}/prometheus"
+        path: "{{ prometheus_docker_data_volume }}"
         owner: "{{ prometheus_docker_user }}"
         group: root
         state: directory
@@ -17,9 +17,17 @@
     - name: Create Minio data directory
       become: true
       file:
-        path: "{{ nfs_objectstore_data_volume | default('/srv') }}/minio"
+        path: "{{ nfs_minio_data_volume }}"
         owner: root
         group: root
+        state: directory
+
+    - name: Create Redmine data directory
+      become: true
+      file:
+        path: "{{ redmine_tracker_docker_data_volume }}"
+        owner: "{{ redmine_docker_user }}"
+        group: "{{ redmine_docker_user }}"
         state: directory
 
   roles:
@@ -29,7 +37,6 @@
 
     - role: ome.prometheus
       prometheus_docker_network: monitoring
-      prometheus_docker_data_volume: "{{ nfs_data_volume | default('/srv') }}/prometheus"
       # https://prometheus.io/docs/guides/basic-auth/#prometheus-configuration
       prometheus_additional_command_args: >-
         --storage.tsdb.retention.time=5y
@@ -192,6 +199,11 @@
     # The prometheus role sets the prometheus_internal_ip variable that is
     # used later
 
+    - role: idr.redmine_tracker
+      # This role sets the redmine_tracker_internal_ip variable
+      # Disable external port, access is via a proxy
+      redmine_tracker_port: 0
+
     - role: ome.ssl_certificate
 
   tasks:
@@ -244,7 +256,7 @@
           - '9000:9000'
         restart_policy: always
         volumes:
-          - "{{ nfs_objectstore_data_volume | default('/srv') }}/minio:/data"
+          - "{{ nfs_minio_data_volume }}:/data"
 
     - include_role:
         name: ome.nginx_proxy
@@ -254,20 +266,29 @@
         nginx_proxy_ssl_certificate: "{{ ssl_certificate_bundled_path }}"
         nginx_proxy_ssl_certificate_key: "{{ ssl_certificate_key_path }}"
         nginx_proxy_force_ssl: True
-        nginx_proxy_backends:
-          - name: prometheus
-            location: /prometheus/
-            server: http://{{ prometheus_internal_ip }}:9090/
-            additional:
-              - auth_basic Prometheus
-              - auth_basic_user_file /etc/nginx/prometheus.htpasswd
-          - name: grafana
-            location: /grafana/
-            server: >-
-              http://{{
-                (_grafana_container.container | default(
-                  _grafana_container.ansible_facts.docker_container)
-                ).NetworkSettings.IPAddress }}:3000/
+        nginx_proxy_sites:
+          # Default site
+          - nginx_proxy_is_default: true
+            nginx_proxy_backends:
+              - name: prometheus
+                location: /prometheus/
+                server: http://{{ prometheus_internal_ip }}:9090/
+                additional:
+                  - auth_basic Prometheus
+                  - auth_basic_user_file /etc/nginx/prometheus.htpasswd
+              - name: grafana
+                location: /grafana/
+                server: >-
+                  http://{{
+                    (_grafana_container.container | default(
+                      _grafana_container.ansible_facts.docker_container)
+                    ).NetworkSettings.IPAddress }}:3000/
+          # idr-redmine
+          - nginx_proxy_server_name: idr-redmine-docker.openmicroscopy.org
+            nginx_proxy_backends:
+              - name: idr-redmine
+                location: /
+                server: http://{{ redmine_tracker_internal_ip }}:3000/
 
   vars:
 
@@ -277,6 +298,7 @@
     monitored_omero_web_hosts: "{{ ome_monitored_omero_web_hosts | default([]) }}"
 
     prometheus_docker_user: 909
+    redmine_docker_user: 999
 
     idr_internal_1: "{{ ome_monitored_idr_internal_1 | default('idr1') }}"
     idr_internal_2: "{{ ome_monitored_idr_internal_2 | default('idr2') }}"

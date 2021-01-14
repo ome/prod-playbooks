@@ -22,8 +22,8 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    prepare: ../../omedev/playbook.yml
-    converge: ../../omedev/docker-prod-apps.yml
+    prepare: prepare.yml
+    converge: converge.yml
   inventory:
     host_vars:
       ome-dockr-prod1.openmicroscopy.org:
@@ -35,6 +35,9 @@ provisioner:
           - omeroserver.example.org
         ome_monitored_omero_web_hosts:
           - omeroweb.example.org
+        prometheus_docker_data_volume: /srv/prometheus
+        nfs_minio_data_volume: /srv/minio
+        redmine_tracker_docker_data_volume: /srv/redmine-files
 
     group_vars:
       # all:
