@@ -384,6 +384,24 @@
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.6.1') }}"
     omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.5.0') }}"
 
+    # Signup
+    omero_signup_email_body: >-
+      'Thank you for creating an account on demo.openmicroscopy.org server.
+      Your login details are \n\n
+      username: {username}\n
+      password: {password}\n
+      Use these login details for\n
+      1. in your browser, go to\n
+      demo.openmicroscopy.org\n
+      and log in.\n
+      2. download the OMERO.insight [1] desktop application to import your first data into OMERO.\n
+      3. Following the steps in the omero-guide [2], change the server address to\n
+      demo.openmicroscopy.org\n
+      and connect to the OMERO server using the login details as above and import your data.\n
+      OME Team\n
+      [1] https://omero-guides.readthedocs.io/en/latest/upload/docs/import-desktop-client.html \n
+      [2] https://omero-guides.readthedocs.io/en/latest/upload/docs/import-desktop-client.html#step-by-step \n'
+
     postgresql_version: "11"
     filesystem: "xfs"
 
