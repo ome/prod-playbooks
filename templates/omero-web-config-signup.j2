@@ -10,4 +10,4 @@ config set -- omero.web.signup.group.name %Y-%m
 config set -- omero.web.signup.group.templatetime true
 config set -- omero.web.signup.email.enabled true
 config set -- omero.web.signup.helpmessage 'If you have trouble creating an account please contact {{ omero_server_mail_from | default('help@example.org') }}'
-config set -- omero.web.signup.email.body '{{ omero_signup_email_body }}'
+config set -- omero.web.signup.email.body {{ omero_signup_email_body }}
