@@ -391,13 +391,10 @@
       username: {username}\n
       password: {password}\n\n
       Use these login details as follows\n
-      1. In your browser, go to 
-      demo.openmicroscopy.org 
-      and log in.\n
+      1. In your browser, go to demo.openmicroscopy.org and log in.\n
       2. Download the OMERO.insight [1] desktop application to import your first data into OMERO.\n
       3. Following the steps in the omero-guide [2], change the server address to\n
-      demo.openmicroscopy.org   
-      and connect to the OMERO server\n
+      demo.openmicroscopy.org and connect\n
       using the login details as above to import your data.\n
       4. Use the walkthrough example [3] to get ideas about how to start using OMERO.\n
       OME Team\n\n
