@@ -122,5 +122,5 @@
   version: 4.0.0
 
 - name: idr.redmine_tracker
-  src: https://github.com/manics/ansible-role-redmine-tracker/archive/20210114.tar.gz
-  version: "20210114"
+  src: https://github.com/IDR/ansible-role-redmine-tracker/archive/0.0.1.tar.gz
+  version: 0.0.1
