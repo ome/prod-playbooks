@@ -266,6 +266,8 @@
         nginx_proxy_ssl_certificate: "{{ ssl_certificate_bundled_path }}"
         nginx_proxy_ssl_certificate_key: "{{ ssl_certificate_key_path }}"
         nginx_proxy_force_ssl: True
+        nginx_proxy_conf_http:
+          - "client_max_body_size 128m"
         nginx_proxy_sites:
           # Default site
           - nginx_proxy_is_default: true
