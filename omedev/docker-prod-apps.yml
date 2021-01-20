@@ -285,8 +285,14 @@
                     (_grafana_container.container | default(
                       _grafana_container.ansible_facts.docker_container)
                     ).NetworkSettings.IPAddress }}:3000/
-          # idr-redmine
+          # idr-redmine (internal direct)
           - nginx_proxy_server_name: idr-redmine-docker.openmicroscopy.org
+            nginx_proxy_backends:
+              - name: idr-redmine
+                location: /
+                server: http://{{ redmine_tracker_internal_ip }}:3000/
+          # idr-redmine (via external proxy)
+          - nginx_proxy_server_name: idr-redmine.openmicroscopy.org
             nginx_proxy_backends:
               - name: idr-redmine
                 location: /
