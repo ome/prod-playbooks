@@ -76,7 +76,7 @@
   version: 5.0.1
 
 - src: ome.postgresql_backup
-  version: 0.1.1
+  version: 0.2.0
 
 - src: ome.postgresql_client
   version: 0.1.2
