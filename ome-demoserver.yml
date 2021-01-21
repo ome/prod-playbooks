@@ -49,6 +49,7 @@
       file:
         path: "{{ omero_server_basedir }}/selfsigned"
         state: directory
+        mode: 0644
 
     - name: OMERO.server self-signed certificate
       become: yes
@@ -229,12 +230,14 @@
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
+        mode: 0644
 
     - name: NGINX - SSL Configuration
       become: yes
       template:
         src: templates/nginx-confdnestedincludes-ssl-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/ssl.conf
+        mode: 0644
       notify:
         - restart nginx
 
@@ -243,6 +246,7 @@
       template:
         src: templates/nginx-confdnestedincludes-omerows-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/omerows.conf
+        mode: 0644
       notify:
         - restart nginx
 
@@ -251,6 +255,7 @@
       template:
         src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
+        mode: 0644
       notify:
         - restart nginx
 
@@ -322,7 +327,10 @@
     - name: Check_MK logwatch plugin | copy the default config
       tags: monitoring
       become: yes
-      command: cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg" "{{ check_mk_agent_config_path }}/logwatch.cfg" creates="{{ check_mk_agent_config_path }}/logwatch.cfg"
+      command: >
+        cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
+        "{{ check_mk_agent_config_path }}/logwatch.cfg"
+        creates="{{ check_mk_agent_config_path }}/logwatch.cfg"
       when: check_mk_logwatch_plugin_conf_st.stat.exists
 
     - name: PostgreSQL Nightly Backups | Remove old cron job

@@ -23,6 +23,7 @@
     copy:
       dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
       src: omero-server-config-prometheus.omero
+      mode: 0644
     notify:
     - restart omero-server
 
@@ -60,6 +61,7 @@
     copy:
       content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
       dest: /etc/nginx/monitoring.htpasswd
+      mode: 0644
 
   # This is fine to apply to all servers because if an exporter doesn't
   # exist it will return an error, and we know which exporters to expect
@@ -69,6 +71,7 @@
     copy:
       dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
       src: confd-nested-proxy-exporters.conf
+      mode: 0644
     notify:
     - restart nginx
 
@@ -93,6 +96,7 @@
     copy:
       dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
       src: confd-nested-proxy-exporters-web.conf
+      mode: 0644
     notify:
     - restart nginx
 

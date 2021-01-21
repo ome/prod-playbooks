@@ -76,7 +76,10 @@
     - name: Check_MK logwatch plugin | activate the plugin
       tags: monitoring
       become: yes
-      command: cp "{{ check_mk_agent_plugin_path }}/mk_logwatch" /usr/share/check-mk-agent/plugins/ creates=/usr/share/check-mk-agent/plugins/mk_logwatch
+      command: >-
+        cp "{{ check_mk_agent_plugin_path }}/mk_logwatch"
+        /usr/share/check-mk-agent/plugins/
+        creates=/usr/share/check-mk-agent/plugins/mk_logwatch
       when: check_mk_logwatch_plugin_st.stat.exists
 
     - name: Check_MK logwatch plugin | check for default config file
@@ -88,7 +91,10 @@
     - name: Check_MK logwatch plugin | copy the default config
       tags: monitoring
       become: yes
-      command: cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg" "{{ check_mk_agent_config_path }}/logwatch.cfg" creates="{{ check_mk_agent_config_path }}/logwatch.cfg"
+      command: >-
+        cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
+        "{{ check_mk_agent_config_path }}/logwatch.cfg"
+        creates="{{ check_mk_agent_config_path }}/logwatch.cfg"
       when: check_mk_logwatch_plugin_conf_st.stat.exists
 
   vars:

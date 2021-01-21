@@ -156,6 +156,7 @@
       path: /srv/www/letsencrypt/.well-known/
       recurse: yes
       state: directory
+      mode: 0644
 
   roles:
 
@@ -191,8 +192,14 @@
   - role: ome.nginx_proxy
     #nginx_proxy_force_ssl: True
     nginx_proxy_ssl: True
-    nginx_proxy_ssl_certificate: "{{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/fullchain.pem', ssl_certificate_public_path) }}"
-    nginx_proxy_ssl_certificate_key: "{{ (https_letsencrypt_enabled | default(False)) | ternary(https_letsencrypt_cert_path + '/privkey.pem', ssl_certificate_key_path) }}"
+    nginx_proxy_ssl_certificate: >-
+      "{{ (https_letsencrypt_enabled | default(False)) |
+      ternary(https_letsencrypt_cert_path + '/fullchain.pem',
+      ssl_certificate_public_path) }}"
+    nginx_proxy_ssl_certificate_key: >-
+      "{{ (https_letsencrypt_enabled | default(False)) |
+      ternary(https_letsencrypt_cert_path + '/privkey.pem',
+      ssl_certificate_key_path) }}"
     nginx_proxy_direct_locations:
     # Required for renewals
     - location: /.well-known/
