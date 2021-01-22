@@ -110,7 +110,7 @@
     - name: NGINX - websocket proxy support
       become: yes
       template:
-        src: ../../templates/nginx-confd-websockets-conf.j2
+        src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
       # Don't notify, nginx isn't installed yet
 
@@ -359,8 +359,9 @@
     - name: Nginx - docker webservices support
       become: yes
       template:
-        src: ../../templates/nginx-confdnestedincludes-{{ item }}.j2
+        src: templates/nginx-confdnestedincludes-{{ item }}.j2
         dest: /etc/nginx/conf.d-nested-includes/{{ item }}.conf
+        mode: 0644
       with_items:
         - omero-ms-zarr
         - minio-publicscratch
