@@ -1,5 +1,5 @@
 ---
-- hosts: ome-k8s-pg-01.openmicroscopy.org
+- hosts: ome-pg-prod1.openmicroscopy.org
   roles:
 
   - role: ome.postgresql
@@ -18,6 +18,9 @@
     - database: idr-redmine
       user: idr-redmine
       address: "{{ idr_redmine_postgres_auth_ip | default('0.0.0.0/0') }}"
+    - database: idr-redmine
+      user: idr-redmine
+      address: "{{ idr_redmine_postgres_auth_ip2 | default('0.0.0.0/0') }}"
 
   - role: ome.nfs_mount
     # Parameters for this role are internal

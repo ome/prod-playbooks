@@ -10,7 +10,7 @@ lint:
   # TODO: enable
   enabled: False
 platforms:
-  - name: ome-k8s-pg-01.openmicroscopy.org
+  - name: ome-pg-prod1.openmicroscopy.org
     image: centos/systemd
     image_version: latest
     command: /sbin/init
@@ -19,11 +19,11 @@ provisioner:
   name: ansible
   playbooks:
     prepare: prepare.yml
-    converge: ../../k8s/postgres/playbook.yml
+    converge: ../../postgres/ome-pg-prod.yml
   lint:
     name: ansible-lint
 scenario:
-  name: k8s-postgres
+  name: ome-pg-prod
 verifier:
   name: testinfra
   lint:

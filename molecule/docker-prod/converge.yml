@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: ome-dockr-prod1.openmicroscopy.org
+  tasks:
+    - name: Workaround to get host IP inside docker
+      shell: hostname -I | cut -d' ' -f1
+      register: hostname_ip
+      check_mode: false
+      changed_when: false
+      tags:
+        # Ignore [306] Shells that use pipes should set the pipefail option
+        - skip_ansible_lint
+
+    - name: Set address of postgres for redmine
+      set_fact:
+        redmine_tracker_db_host: "{{ hostname_ip.stdout }}"
+
+
+- import_playbook: ../../omedev/docker-prod-apps.yml
