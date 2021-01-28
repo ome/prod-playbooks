@@ -71,7 +71,7 @@
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
-        mode: 0644
+        mode: 0755
 
     - name: NGINX - SSL Configuration
       become: yes

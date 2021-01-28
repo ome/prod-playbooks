@@ -328,7 +328,7 @@
       file:
         path: /etc/minio
         state: directory
-        mode: 0644
+        mode: 0755
 
     - name: Check if minio admin credentials exists
       become: yes

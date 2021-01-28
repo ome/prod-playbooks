@@ -49,7 +49,7 @@
       file:
         path: "{{ omero_server_basedir }}/selfsigned"
         state: directory
-        mode: 0644
+        mode: 0755
 
     - name: OMERO.server self-signed certificate
       become: yes
@@ -230,7 +230,7 @@
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
-        mode: 0644
+        mode: 0755
 
     - name: NGINX - SSL Configuration
       become: yes
