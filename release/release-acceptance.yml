@@ -48,6 +48,7 @@
       file:
         path: "{{ item }}/{{ product }}/{{ minorversion }}"
         state: directory
+        mode: 0755
       with_items: "{{ www_folders }}"
       when: not prerelease
 
@@ -56,6 +57,7 @@
         dest: "{{ item }}/{{ product }}/{{ minorversion }}/.htaccess"
         content: "Redirect 301 /{{ product }}/{{ minorversion }} \
           /{{ product }}/{{ version }}"
+        mode: 0644
       with_items: "{{ www_folders }}"
       when: not prerelease
 
@@ -63,6 +65,7 @@
       file:
         path: "{{ item }}/{{ product }}/{{ majorversion }}"
         state: directory
+        mode: 0755
       with_items: "{{ www_folders }}"
       when: not prerelease
 
@@ -71,6 +74,7 @@
         dest: "{{ item }}/{{ product }}/{{ majorversion }}/.htaccess"
         content: "Redirect 301 /{{ product }}/{{ majorversion }} \
           /{{ product }}/{{ version }}"
+        mode: 0644
       with_items: "{{ www_folders }}"
       when: not prerelease
 
@@ -78,6 +82,7 @@
       file:
         path: "{{ item }}/{{ product }}/latest"
         state: directory
+        mode: 0755
       with_items: "{{ www_folders }}"
       when: not prerelease
 
@@ -86,5 +91,6 @@
         dest: "{{ item }}/{{ product }}/latest/.htaccess"
         content: "Redirect 301 /{{ product }}/latest \
           /{{ product }}/{{ version }}"
+        mode: 0644
       with_items: "{{ www_folders }}"
       when: not prerelease

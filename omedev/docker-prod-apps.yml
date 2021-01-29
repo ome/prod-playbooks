@@ -13,6 +13,7 @@
         owner: "{{ prometheus_docker_user }}"
         group: root
         state: directory
+        mode: 0755
 
     - name: Create Minio data directory
       become: true
@@ -21,6 +22,7 @@
         owner: root
         group: root
         state: directory
+        mode: 0755
 
     - name: Create Redmine data directory
       become: true
@@ -29,6 +31,7 @@
         owner: "{{ redmine_docker_user }}"
         group: "{{ redmine_docker_user }}"
         state: directory
+        mode: 0755
 
   roles:
 
@@ -267,6 +270,7 @@
       file:
         path: /etc/nginx
         state: directory
+        mode: 0755
 
     - name: prometheus htpasswd file
       become: true
@@ -278,6 +282,7 @@
             ome_monitoring_prometheus_htpasswd |
             default('admin:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0')
           }}
+        mode: 0644
 
     # This is a dev Minio server so expose the port directly
     - name: Run docker minio dev server

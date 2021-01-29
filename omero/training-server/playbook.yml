@@ -59,6 +59,7 @@
       file:
         path: /opt/omero/server/selfsigned
         state: directory
+        mode: 0755
 
     - name: OMERO.server install openssl for generating certificates
       become: yes
@@ -101,8 +102,8 @@
       become: yes
       file:
         path: "{{ item }}"
-        recurse: yes
         state: directory
+        mode: 0755
       with_items:
         - /etc/nginx/conf.d
         - /etc/nginx/conf.d-nested-includes
@@ -110,8 +111,9 @@
     - name: NGINX - websocket proxy support
       become: yes
       template:
-        src: ../../templates/nginx-confd-websockets-conf.j2
+        src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
+        mode: 0644
       # Don't notify, nginx isn't installed yet
 
   roles:
@@ -326,6 +328,7 @@
       file:
         path: /etc/minio
         state: directory
+        mode: 0755
 
     - name: Check if minio admin credentials exists
       become: yes
@@ -340,6 +343,7 @@
           MINIO_ACCESS_KEY={{ lookup('password', '/dev/null length=12') }}
           MINIO_SECRET_KEY={{ lookup('password', '/dev/null length=24') }}
         dest: /etc/minio/docker-minio.env
+        mode: 0644
       when: not _minio_docker_env_st.stat.exists
 
     - name: Run docker for minio
@@ -359,8 +363,9 @@
     - name: Nginx - docker webservices support
       become: yes
       template:
-        src: ../../templates/nginx-confdnestedincludes-{{ item }}.j2
+        src: templates/nginx-confdnestedincludes-{{ item }}.j2
         dest: /etc/nginx/conf.d-nested-includes/{{ item }}.conf
+        mode: 0644
       with_items:
         - omero-ms-zarr
         - minio-publicscratch
@@ -443,7 +448,9 @@
     # The os_system_users_password default is "ome".
     # You may wish to change this variable,
     # or override it by defining the private variable os_system_users_password_override.
-    os_system_users_password: "{{ os_system_users_password_override | default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
+    os_system_users_password: >-
+      "{{ os_system_users_password_override |
+      default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
     omero_ms_zarr_release: "{{ omero_ms_zarr_release_override | default('latest') }}"
     minio_docker_release: "{{ minio_docker_release_override | default('RELEASE.2020-11-25T22-36-25Z') }}"
