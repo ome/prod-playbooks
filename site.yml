@@ -27,9 +27,6 @@
 # Internal monitoring configuration for all UoD OMERO servers
 - include: omero/omero-monitoring-agents.yml
 
-# https://outreach-analysis.openmicroscopy.org backup JupyterHub server
-- include: jupyterhub/playbook.yml
-
 # https://www.openmicroscopy.org/
 - include: www/playbook.yml
 
