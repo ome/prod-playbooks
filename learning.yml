@@ -24,8 +24,8 @@
       postgresql_databases:
         - name: omero
       postgresql_users:
-        - user: omero
-          password: "{{ database_password }}"
+        - user: "{{ omero_server_dbuser | default('omero') }}"
+          password: "{{ omero_server_dbpassword | default('omero') }}"
           databases: [omero]
       postgresql_version: "10"
 
@@ -46,8 +46,6 @@
       lvm_shrink: False
 
     - role: ome.omero_server
-      omero_server_dbpassword: "{{ database_password }}"
-      omero_server_rootpassword: "{{ server_password }}"
       omero_server_config_set:
         omero.client.ui.menu.dropdown.colleagues.enabled: False
         omero.client.ui.menu.dropdown.everyone.label: "All courses"
@@ -59,7 +57,7 @@
         omero.ldap.config: True
         omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: "{{ omero_server_ldap_username }}"
-        omero.ldap.password: "{{ ldap_password }}"
+        omero.ldap.password: "{{ omero_server_ldap_password | default('') }}"
         omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
         omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
         omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
@@ -109,9 +107,9 @@
           - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.public.enabled: true
-        omero.web.public.password: "{{ public_password }}"
+        omero.web.public.password: "{{ omero_web_public_password | default('public') }}"
         omero.web.public.url_filter: "/(webgateway|gallery)/"
-        omero.web.public.user: public
+        omero.web.public.user: "{{ omero_web_public_user | default('public') }}"
       omero_web_apps_packages:
         - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
