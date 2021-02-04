@@ -22,8 +22,8 @@
       postgresql_databases:
         - name: omero
       postgresql_users:
-        - user: omero
-          password: "{{ database_password }}"
+        - user: "{{ omero_server_dbuser | default('omero') }}"
+          password: "{{ omero_server_dbpassword | default('omero') }}"
           databases: [omero]
       postgresql_version: "10"
 
@@ -44,8 +44,6 @@
       lvm_shrink: False
 
     - role: ome.omero_server
-      omero_server_dbpassword: "{{ database_password }}"
-      omero_server_rootpassword: "{{ server_password }}"
       omero_server_config_set:
         omero.client.ui.menu.dropdown.colleagues.enabled: False
         omero.client.ui.menu.dropdown.everyone.label: "All images"
