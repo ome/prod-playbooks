@@ -285,7 +285,7 @@
        name: "importer1"
        state: present
        groups: "{{ omero_server_system_managedrepo_group }}"
-       password: "{{ os_system_users_password }}"
+       password: "{{ os_system_users_password | password_hash('sha512', 'ome') }}"
 
     - name: Allow managed repo group to login
       become: yes
@@ -445,12 +445,7 @@
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
     omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.5.0') }}"
     omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.6.1') }}"
-    # The os_system_users_password default is "ome".
-    # You may wish to change this variable,
-    # or override it by defining the private variable os_system_users_password_override.
-    os_system_users_password: >-
-      "{{ os_system_users_password_override |
-      default('$6$leKi5B1PgSvdA/ec$xbU3CnoSFnYdeZjEjKK5TH8SGATsW746uopssff4edpgyu.cWXGo9A.oK6wH9kIkxLCCNcORGZnnroZPMqGzN/') }}"
+    os_system_users_password: "{{ os_system_users_password_override | default('ome') }}"
     apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
     omero_ms_zarr_release: "{{ omero_ms_zarr_release_override | default('latest') }}"
     minio_docker_release: "{{ minio_docker_release_override | default('RELEASE.2020-11-25T22-36-25Z') }}"
