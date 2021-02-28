@@ -162,10 +162,8 @@
         - "omero-signup=={{ omero_signup_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
 
-    # This role only works on OMERO 5.3+
     - role: ome.omero_user
       no_log: true
-      omero_user_bin_omero: "{{ omero_server_basedir }}/OMERO.server/bin/omero"
       omero_user_system: omero-server
       omero_user_admin_user: root
       omero_user_admin_pass: "{{ omero_server_rootpassword }}"
