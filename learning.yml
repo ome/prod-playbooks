@@ -161,9 +161,9 @@
         - omero-web
 
   vars:
-    omero_server_release: 5.6.2
-    omero_web_release: 5.7.0
+    omero_server_release: 5.6.3
+    omero_web_release: 5.9.1
     omero_web_apps_release:
       omero_gallery: 3.3.2
-      omero_iviewer: 0.10.0
+      omero_iviewer: 0.10.2
       omero_virtual_microscope: 1.1.0

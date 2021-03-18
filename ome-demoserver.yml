@@ -360,17 +360,17 @@
 
   vars:
     django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.5.3') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.3.2') }}"
-    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.3.2') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.4.0') }}"
+    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.4.0') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.10.1') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.10.2') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
     omero_signup_release: "{{ omero_signup_release_override | default('0.2.3') }}"
 
     omero_server_release: "{{ omero_server_release_override | default('5.6.3') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.8.1') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.9.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
 
