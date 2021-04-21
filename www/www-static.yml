@@ -25,13 +25,12 @@
       dest: /usr/local/bin/deploy
       mode: 0555
 
-  - name: run deployment script
+  - name: Add cron job updating the website
     become: yes
-    command: /usr/local/bin/deploy {{ ansible_check_mode | ternary('-n', '-f') }}
-    register: deploy_result
-    check_mode: no
-    changed_when: 'deploy_result.rc==1'
-    failed_when: 'deploy_result.rc>1'
+    cron:
+      name: "Deploy the website"
+      special_time: hourly
+      job: "/usr/local/bin/deploy 2>&1 > /dev/null || /usr/local/bin/deploy -f"
 
   - name: Update static phpbb stylesheet
     become: yes
