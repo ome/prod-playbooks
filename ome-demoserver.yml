@@ -44,43 +44,6 @@
       with_items:
         - mencoder # For the 'make movie' script
 
-    - name: OMERO.server self-signed certificate directory
-      become: yes
-      file:
-        path: "{{ omero_server_basedir }}/selfsigned"
-        state: directory
-        mode: 0755
-
-    - name: OMERO.server self-signed certificate
-      become: yes
-      command: >-
-        openssl req
-        -new -nodes -x509
-        {{ omero_server_websocket_internal_cert_params }}
-        -keyout server.key
-        -out server.pem
-        -extensions v3_ca
-      args:
-        chdir: "{{ omero_server_basedir }}/selfsigned"
-        creates: server.pem
-
-    # This self-signed cert is used to encrypt the websocket connection
-    # between Nginx and OMERO.server
-    - name: OMERO.server self-signed certificate pkcs12
-      become: yes
-      command: >-
-        openssl pkcs12
-        -export
-        -out server.p12
-        -inkey server.key
-        -in server.pem
-        -name server
-        -password pass:{{
-        omero_server_config_set['omero.glacier2.IceSSL.Password'] | quote }}
-      args:
-        chdir: "{{ omero_server_basedir }}/selfsigned"
-        creates: server.p12
-
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
@@ -404,6 +367,7 @@
     filesystem: "xfs"
 
     omero_server_config_set:
+      omero.certificates.owner: "/C=UK/ST=Scotland/L=Dundee/O=OME"
       omero.client.icetransports: ssl,wss,tcp
       omero.db.poolsize: 60
       omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
@@ -428,6 +392,8 @@
       - reportlab
       - markdown
 
+    omero_server_selfsigned_certificates: True
+
     omero_web_config_set:
       omero.mail.config: true
       omero.mail.from: "{{ omero_server_mail_from }}"
@@ -449,6 +415,3 @@
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
-
-    # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
-    omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
