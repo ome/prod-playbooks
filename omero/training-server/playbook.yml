@@ -110,28 +110,6 @@
     - role: ome.cli_utils
 
   tasks:
-
-    - name: Omero.web plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        # name: "{{ omero_web_apps_packages }}"
-        name:
-        - "omero-figure=={{ omero_figure_release }}"
-        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
-        - "omero-iviewer=={{ omero_iviewer_release }}"
-        - "omero-mapr=={{ omero_mapr_release }}"
-        - "omero-parade=={{ omero_parade_release }}"
-        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
-        editable: False
-        state: present
-        # variable comes from role openmicroscopy.omero-web
-        virtualenv: "{{ omero_web_basedir }}/venv"
-        virtualenv_site_packages: yes
-      when: 'not (omero_web_python3 | default(False))'
-      notify:
-        - restart omero-web
-
     - name: Docker | python client
       become: yes
       yum:
