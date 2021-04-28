@@ -261,6 +261,8 @@
       Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints | default('tcp -h 127.0.0.1') }}"
       omero.data.dir: "{{ omero_server_datadir | default('/OMERO') }}"
 
+    omero_server_selfsigned_certificates: True
+
     # Production config can't be tested in molecule
     omero_server_config_set: "{{ molecule_test | default(False) | ternary({}, omero_server_config_set_production) }}"
     omero_server_python_addons:
