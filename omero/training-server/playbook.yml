@@ -31,29 +31,6 @@
         - gcc
         - python-ldap
 
-    - name: Delete broken Python 3 web app configuration
-      become: yes
-      file:
-        path: "{{ omero_web_basedir }}/config/{{ item }}"
-        state: absent
-      when: 'omero_web_python3 | default(False)'
-      with_items:
-        - omero-web-outreach-webapps.omero
-        - django-prometheus.omero
-        - gunicorn-config.py
-      notify:
-      - restart omero-web
-
-    # This separate file has been redundant for ages
-    # https://github.com/ome/prod-playbooks/blob/142d8c675c56d465686e792eb6d69668e408e537/templates/omero-web-config-for-webapps.j2#L19
-    - name: Remove old configuration file
-      become: yes
-      file:
-        path: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
-        state: absent
-      notify:
-      - restart omero-web
-
     # Since Nginx isn't installed until later the directories are created in advance
     - name: Create nginx include directories
       become: yes
