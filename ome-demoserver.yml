@@ -161,16 +161,6 @@
 
   post_tasks:
 
-    - name: Omero.cli plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        executable: "{{ omero_server_basedir }}/venv3/bin/pip"
-        name:
-        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
-        - "omero-cli-render=={{ omero_cli_render_release }}"
-        - "omero-metadata=={{ omero_metadata_release }}"
-        state: present
-
     - name: NGINX - Performance tuning - worker processes
       become: yes
       replace:
@@ -388,6 +378,9 @@
       omero.throttling.method_time.error: 60000
 
     omero_server_python_addons:
+      - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+      - "omero-cli-render=={{ omero_cli_render_release }}"
+      - "omero-metadata=={{ omero_metadata_release }}"
       # For OMERO.figure script
       - reportlab
       - markdown
