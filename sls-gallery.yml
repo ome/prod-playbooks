@@ -69,6 +69,7 @@
         omero.security.trustStore: "/etc/pki/java/cacerts"
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
+      omero_server_selfsigned_certificates: True
 
     - role: ome.redis
 
