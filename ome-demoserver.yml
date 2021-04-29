@@ -44,43 +44,6 @@
       with_items:
         - mencoder # For the 'make movie' script
 
-    - name: OMERO.server self-signed certificate directory
-      become: yes
-      file:
-        path: "{{ omero_server_basedir }}/selfsigned"
-        state: directory
-        mode: 0755
-
-    - name: OMERO.server self-signed certificate
-      become: yes
-      command: >-
-        openssl req
-        -new -nodes -x509
-        {{ omero_server_websocket_internal_cert_params }}
-        -keyout server.key
-        -out server.pem
-        -extensions v3_ca
-      args:
-        chdir: "{{ omero_server_basedir }}/selfsigned"
-        creates: server.pem
-
-    # This self-signed cert is used to encrypt the websocket connection
-    # between Nginx and OMERO.server
-    - name: OMERO.server self-signed certificate pkcs12
-      become: yes
-      command: >-
-        openssl pkcs12
-        -export
-        -out server.p12
-        -inkey server.key
-        -in server.pem
-        -name server
-        -password pass:{{
-        omero_server_config_set['omero.glacier2.IceSSL.Password'] | quote }}
-      args:
-        chdir: "{{ omero_server_basedir }}/selfsigned"
-        creates: server.p12
-
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
@@ -162,10 +125,8 @@
         - "omero-signup=={{ omero_signup_release }}"
         - "django-cors-headers=={{ django_cors_headers_release }}"
 
-    # This role only works on OMERO 5.3+
     - role: ome.omero_user
       no_log: true
-      omero_user_bin_omero: "{{ omero_server_basedir }}/OMERO.server/bin/omero"
       omero_user_system: omero-server
       omero_user_admin_user: root
       omero_user_admin_pass: "{{ omero_server_rootpassword }}"
@@ -199,16 +160,6 @@
         state: reloaded
 
   post_tasks:
-
-    - name: Omero.cli plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        executable: "{{ omero_server_basedir }}/venv3/bin/pip"
-        name:
-        - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
-        - "omero-cli-render=={{ omero_cli_render_release }}"
-        - "omero-metadata=={{ omero_metadata_release }}"
-        state: present
 
     - name: NGINX - Performance tuning - worker processes
       become: yes
@@ -406,6 +357,7 @@
     filesystem: "xfs"
 
     omero_server_config_set:
+      omero.certificates.owner: "/C=UK/ST=Scotland/L=Dundee/O=OME"
       omero.client.icetransports: ssl,wss,tcp
       omero.db.poolsize: 60
       omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
@@ -426,9 +378,14 @@
       omero.throttling.method_time.error: 60000
 
     omero_server_python_addons:
+      - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
+      - "omero-cli-render=={{ omero_cli_render_release }}"
+      - "omero-metadata=={{ omero_metadata_release }}"
       # For OMERO.figure script
       - reportlab
       - markdown
+
+    omero_server_selfsigned_certificates: True
 
     omero_web_config_set:
       omero.mail.config: true
@@ -451,6 +408,3 @@
 
     # Disable SSL combined certificate and key
     ssl_certificate_combined_path: ''
-
-    # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
-    omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'

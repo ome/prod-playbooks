@@ -71,6 +71,7 @@
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
         omero.sessions.timeout: 3600000
+      omero_server_selfsigned_certificates: True
 
     - role: ome.redis
 

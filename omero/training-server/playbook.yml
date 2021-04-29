@@ -31,72 +31,6 @@
         - gcc
         - python-ldap
 
-    - name: Delete broken Python 3 web app configuration
-      become: yes
-      file:
-        path: "{{ omero_web_basedir }}/config/{{ item }}"
-        state: absent
-      when: 'omero_web_python3 | default(False)'
-      with_items:
-        - omero-web-outreach-webapps.omero
-        - django-prometheus.omero
-        - gunicorn-config.py
-      notify:
-      - restart omero-web
-
-    # This separate file has been redundant for ages
-    # https://github.com/ome/prod-playbooks/blob/142d8c675c56d465686e792eb6d69668e408e537/templates/omero-web-config-for-webapps.j2#L19
-    - name: Remove old configuration file
-      become: yes
-      file:
-        path: "{{ omero_web_basedir }}/config/omero-web-config-default-viewer.omero"
-        state: absent
-      notify:
-      - restart omero-web
-
-    - name: OMERO.server self-signed certificate directory
-      become: yes
-      file:
-        path: /opt/omero/server/selfsigned
-        state: directory
-        mode: 0755
-
-    - name: OMERO.server install openssl for generating certificates
-      become: yes
-      yum:
-        name: openssl
-        state: present
-
-    - name: OMERO.server self-signed certificate
-      become: yes
-      command: >-
-        openssl req
-        -new -nodes -x509
-        {{ omero_server_websocket_internal_cert_params }}
-        -keyout server.key
-        -out server.pem
-        -extensions v3_ca
-      args:
-        chdir: /opt/omero/server/selfsigned
-        creates: server.pem
-
-    # This self-signed cert is used to encrypt the websocket connection
-    # between Nginx and OMERO.server
-    - name: OMERO.server self-signed certificate pkcs12
-      become: yes
-      command: >-
-        openssl pkcs12
-        -export
-        -out server.p12
-        -inkey server.key
-        -in server.pem
-        -name server
-        -password pass:{{
-        omero_server_config_set['omero.glacier2.IceSSL.Password'] | quote }}
-      args:
-        chdir: /opt/omero/server/selfsigned
-        creates: server.p12
-
     # Since Nginx isn't installed until later the directories are created in advance
     - name: Create nginx include directories
       become: yes
@@ -131,7 +65,6 @@
     - role: ome.nfs_mount
 
     - role: ome.omero_server
-      omero_server_virtualenv: yes
       omero_server_python_addons:
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
@@ -154,28 +87,6 @@
     - role: ome.cli_utils
 
   tasks:
-
-    - name: Omero.web plugins | plugin install via pip & pypi
-      become: yes
-      pip:
-        # name: "{{ omero_web_apps_packages }}"
-        name:
-        - "omero-figure=={{ omero_figure_release }}"
-        - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
-        - "omero-iviewer=={{ omero_iviewer_release }}"
-        - "omero-mapr=={{ omero_mapr_release }}"
-        - "omero-parade=={{ omero_parade_release }}"
-        - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
-        editable: False
-        state: present
-        # variable comes from role openmicroscopy.omero-web
-        virtualenv: "{{ omero_web_basedir }}/venv"
-        virtualenv_site_packages: yes
-      when: 'not (omero_web_python3 | default(False))'
-      notify:
-        - restart omero-web
-
     - name: Docker | python client
       become: yes
       yum:
@@ -417,6 +328,7 @@
     #temporal upgrade force for omero server workaround
     #omero_server_checkupgrade_comparator: '!='
     postgresql_version: "10"
+    omero_server_selfsigned_certificates: True
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: False
@@ -452,6 +364,7 @@
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
     omero_server_config_set:
       #omero.fs.importUsers: "fm1"
+      omero.certificates.owner: "/C=UK/ST=Scotland/L=Dundee/O=OME"
       omero.client.icetransports: ssl,wss,tcp
       omero.fs.watchDir: "/home/DropBox"
       omero.fs.importArgs: "-T \"regex:^.*/(?<Container1>.*?)\""
@@ -478,9 +391,6 @@
       omero.ldap.user_filter: "(objectClass=person)"
       omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
       omero.ldap.username: "uid=admin,ou=system"
-
-    # OMERO.server internal SSL (only used for Nginx <-> OMERO.server traffic)
-    omero_server_websocket_internal_cert_params: '-subj "/C=UK/ST=Scotland/L=Dundee/O=OME/CN=localhost" -days 3650'
 
     omero_web_config_set:
       omero.web.nginx_server_extra_config:
