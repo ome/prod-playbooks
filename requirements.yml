@@ -5,7 +5,7 @@
   version: 0.1.0
 
 - src: ome.cli_utils
-  version: 1.1.0
+  version: 1.1.1
 
 - src: ome.deploy_archive
   version: 0.1.4
@@ -92,7 +92,7 @@
   version: 0.3.3
 
 - src: ome.sudoers
-  version: 1.0.3
+  version: 1.0.4
 
 - src: ome.system_monitor_agent
   version: 0.1.1
