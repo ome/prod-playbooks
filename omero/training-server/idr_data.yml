@@ -1,0 +1,23 @@
+---
+- hosts: ome-outreach
+  tasks:
+    - name: Clone study metadata
+      become: yes
+      git:
+        dest: /uod/idr/metadata/{{ item.name }}
+        repo: https://github.com/IDR/{{ item.name }}
+        update: yes
+        version: "{{ item.version }}"
+      loop: "{{ studies | default([]) }}"
+
+    - name: Check existence of study data directory
+      stat:
+        path: /uod/idr/filesets/{{ item.name }}
+      register: stat_results
+      loop: "{{ studies | default([]) }}"
+
+    - name: Fail if data directory is missing
+      fail:
+        msg: "/uod/idr/filesets/{{ item.item }} does not exist"
+      when: not item.stat.exists
+      loop: "{{ stat_results.results }}"
