@@ -194,6 +194,7 @@
 
     omero_server_config_set_production:
       omero.db.poolsize: 60
+      omero.fs.repo.path: "%user%_%userId%/%thread%//%year%-%month%/%day%/%time%"
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
