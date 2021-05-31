@@ -321,7 +321,7 @@
     omero_signup_release: "{{ omero_signup_release_override | default('0.2.3') }}"
 
     omero_server_release: "{{ omero_server_release_override | default('5.6.3') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.9.1') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.9.2') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
 
