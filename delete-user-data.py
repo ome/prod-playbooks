@@ -219,15 +219,17 @@ def find_users(conn):
             "SELECT id, omeName FROM Experimenter", None):
         user_id = result[0].val
         user_name = result[1].val
-        users[user_id] = user_name
+        if user_name not in ('PUBLIC', 'guest', 'root', 'monitoring'):
+            users[user_id] = user_name
 
     for result in conn.getQueryService().projection(
             "SELECT DISTINCT owner.id FROM Session WHERE closed IS NULL",
             None):
         user_id = result[0].val
-        print('Ignoring "{}" (#{}) who is logged in.'
-              .format(users[user_id], user_id))
-        del users[user_id]
+        if user_id in users.keys():
+            print('Ignoring "{}" (#{}) who is logged in.'
+                  .format(users[user_id], user_id))
+            del users[user_id]
 
     now = time()
 
