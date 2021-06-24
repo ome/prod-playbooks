@@ -359,7 +359,8 @@ def perform_delete(conn):
                          resource_usage(conn))
     print('Found {} user(s) for deletion.'.format(len(users)))
     for user in users:
-        print('Deleting data of "{}" (#{}).'.format(user.name, user.id))
+        print('Deleting {} GB of data belonging to "{}" (#{}).'.format(
+              user.size / 1000**3, user.name, user.id,))
         delete_data(conn, user.id)
 
 
