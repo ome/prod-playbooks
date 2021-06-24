@@ -53,7 +53,7 @@ minimum_days = ns.days
 excess_file_count = ns.inodes
 
 # How many bytes need to be deleted, can be 0; written as n * 1GB.
-excess_file_size = ns.gigabytes * 1024**3
+excess_file_size = ns.gigabytes * 1000**3
 
 # Leave this as True except when running the script for real.
 dry_run = not ns.force
