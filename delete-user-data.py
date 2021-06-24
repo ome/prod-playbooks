@@ -25,7 +25,7 @@ import omero
 from omero.gateway import BlitzGateway
 from omero.rtypes import rlong
 from omero.sys import ParametersI
-from omero.cli import CLI
+from omero.cli import cli_login
 from omero.cmd import \
     Delete2, Delete2Response, \
     DiskUsage2, DiskUsage2Response, \
@@ -39,10 +39,6 @@ from getpass import getuser
 from time import time
 
 parser = ArgumentParser()
-parser.add_argument("--local", "-l", default=False, action="store_true")
-parser.add_argument("--username", "-u", default=getuser())
-parser.add_argument("--password", "-p")
-parser.add_argument("--host", "-H", default="demo.openmicroscopy.org")
 parser.add_argument("--days", "-d", type=int, default=0)
 parser.add_argument("--inodes", "-i", type=int, default=0)
 parser.add_argument("--gigabytes", "-g", type=int, default=0)
@@ -371,27 +367,14 @@ def main():
         run_tests()
         return  # EARLY EXIT
 
-    if ns.local:
-        # Refactor to use with statement
-        cli = CLI()
-        cli.loadplugins()
-        cli.onecmd(["-q", "login"])
-        conn = BlitzGateway(client_obj=cli.get_client())
-    # Fill in administrator login credentials.
-    else:
-        cli = None
-        conn = BlitzGateway(ns.username, ns.password, host=ns.host)
-        conn.connect()
-
-    try:
-        perform_delete(conn)
-    except KeyboardInterrupt:
-        pass  # ignore
-    finally:
-        if cli:
-            cli.close()
-        else:
-            conn._closeSession()
+    with omero.cli.cli_login() as cli:
+        conn = omero.gateway.BlitzGateway(client_obj=cli.get_client())
+        try:
+            perform_delete(conn)
+        except KeyboardInterrupt:
+            pass  # ignore
+        finally:
+            conn.close()
 
 
 if __name__ == "__main__":
