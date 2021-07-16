@@ -318,7 +318,7 @@
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.1') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
-    omero_signup_release: "{{ omero_signup_release_override | default('0.2.3') }}"
+    omero_signup_release: "{{ omero_signup_release_override | default('0.3.0') }}"
 
     omero_server_release: "{{ omero_server_release_override | default('5.6.3') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.9.2') }}"
