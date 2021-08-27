@@ -227,6 +227,3 @@
     # The downside is that it won't be automatically cleared out
     omero_server_systemd_environment:
       OMERO_TMPDIR: /opt/omero/server/tmp
-
-    # Disable SSL combined certificate and key
-    ssl_certificate_combined_path: ''

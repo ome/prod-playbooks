@@ -405,6 +405,3 @@
       omero.web.viewer.view: omero_iviewer.views.index
       omero.web.nginx_server_extra_config:
         - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
-
-    # Disable SSL combined certificate and key
-    ssl_certificate_combined_path: ''
