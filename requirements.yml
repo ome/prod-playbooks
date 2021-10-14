@@ -43,8 +43,9 @@
 - src: ome.basedeps
   version: 1.2.0
 
-- src: ome.omero_prometheus_exporter
-  version: 0.3.1
+- name: ome.omero_prometheus_exporter
+  src: https://github.com/ome/ansible-role-omero-prometheus-exporter/archive/c8cb4b1cb9942c4215e1a12e02a3137e5ffb3be6.tar.gz
+  version: 0.3.2
 
 - src: ome.omero_server
   version: 4.0.1
