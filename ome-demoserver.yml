@@ -382,7 +382,7 @@
       - "omero-cli-render=={{ omero_cli_render_release }}"
       - "omero-metadata=={{ omero_metadata_release }}"
       # For OMERO.figure script
-      - reportlab
+      - "reportlab<3.6"
       - markdown
 
     omero_server_selfsigned_certificates: True
