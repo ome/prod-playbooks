@@ -219,7 +219,7 @@
     omero_server_config_set: "{{ molecule_test | default(False) | ternary({}, omero_server_config_set_production) }}"
     omero_server_python_addons:
       # For OMERO.figure script
-      - "reportlab<3.6"
+      - reportlab
       - markdown
 
     # Workaround lack of restriction on temp file sizes
