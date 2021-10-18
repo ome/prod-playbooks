@@ -44,7 +44,6 @@
   version: 1.2.0
 
 - name: ome.omero_prometheus_exporter
-  src: https://github.com/ome/ansible-role-omero-prometheus-exporter/archive/c2e6cfde636d296030e39e5682d2a21dd642dc3b.tar.gz
   version: 0.3.2
 
 - name: ome.omero_server
