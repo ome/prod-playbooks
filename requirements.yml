@@ -44,7 +44,7 @@
   version: 1.2.0
 
 - name: ome.omero_prometheus_exporter
-  version: 0.3.2
+  version: 0.3.3
 
 - name: ome.omero_server
   version: 4.0.2
