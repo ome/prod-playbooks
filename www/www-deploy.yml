@@ -33,10 +33,6 @@
       - location: /static
         server: https://www-legacy.openmicroscopy.org
       # Proxy locations for OME Data Model schemas
-      - location: /Schemas
-        server: https://www-legacy.openmicroscopy.org/Schemas
-      - location: /XMLschemas
-        server: https://www-legacy.openmicroscopy.org/XMLschemas
       - location: /schema_doc
         server: https://www-legacy.openmicroscopy.org
 
@@ -55,6 +51,8 @@
     - location: "~ ^/(info)($|/)"
       code: 302
     - location: "~ ^/(forums)($|/)"
+      code: 302
+    - location: "~ ^/(XMLschemas)($|/)"
       code: 302
 
     nginx_proxy_redirect_map:
@@ -276,6 +274,9 @@
       dest: https://www.intelligent-imaging.com/technical-answers
     - match: "~/info/(.*)?$"
       dest: /site-map
+
+    - match: "~/XMLschemas/(?<link>.*[^/])?$"
+      dest: /Schemas/$link
 
     nginx_proxy_direct_locations:
     - location: "/"
