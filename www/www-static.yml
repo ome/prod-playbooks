@@ -8,6 +8,11 @@
       path: "{{ phpbbforum_style_file }}"
     register: _phpbbforum_style_file_st
 
+  - name: Check if schemas_documentation already unzipped
+    stat:
+      path: "{{ schemas_doc_file }}"
+    register: _schemas_doc_file_st
+
   roles:
   - role: ome.deploy_archive
     become: yes
@@ -16,6 +21,14 @@
     deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
     # This file is patched later so only unzip if it doesn't exist
     when: not _phpbbforum_style_file_st.stat.exists
+
+  - role: ome.deploy_archive
+    become: yes
+    deploy_archive_dest_dir: /var/www
+    deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/schemas_documentation-20211213.tar.gz
+    deploy_archive_sha256: 27cc5def458112a2e259484906f2bc8c0e0e2bd0a728b0a478302537d67117ec
+    # This file is patched later so only unzip if it doesn't exist
+    when: not _schemas_doc_file_st.stat.exists
 
   tasks:
   - name: install deployment script
@@ -58,3 +71,4 @@
 
   vars:
     phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"
+    schemas_doc_file: "/var/www/schemas_documentation/OME-2016-06/ome.html"
