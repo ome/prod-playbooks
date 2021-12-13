@@ -51,6 +51,8 @@
       code: 302
     - location: "~ ^/(XMLschemas)($|/)"
       code: 302
+    - location: "~ ^/(Schemas/Samples)($|/)"
+      code: 302
 
     nginx_proxy_redirect_map:
     # by default redirect to the 404 page
@@ -272,8 +274,30 @@
     - match: "~/info/(.*)?$"
       dest: /site-map
 
+    # Legacy XMLschemas endpoint
     - match: "~/XMLschemas/(?<link>.*[^/])?$"
       dest: /Schemas/$link
+
+    # Legacy schemas samples
+    - match:
+        "~/Schemas/Samples/2013-06/bioformats-artificial/\
+        multi-channel-4D-series.ome.tif.zip"
+      dest:
+        "https://downloads.openmicroscopy.org/images/OME-TIFF/\
+        2013-06/bioformats-artificial/multi-channel-4D-series.ome.tif"
+    - match: "~/Schemas/Samples/2015-01/set-1-meta-companion"
+      dest:
+        https://downloads.openmicroscopy.org/images/OME-TIFF/2015-01/companion/
+    - match:
+        "~/Schemas/Samples/2015-01/bioformats-artificial/\
+        multi-channel-time-series.ome.tif.zip"
+      dest:
+        "https://downloads.openmicroscopy.org/images/OME-TIFF/\
+        2015-01/bioformats-artificial/multi-channel-time-series.ome.tif"
+    - match: "~/Schemas/Samples/(?<link>.*)?$"
+      dest: https://downloads.openmicroscopy.org/images/OME-TIFF/$link
+    - match: "~/Schemas/Samples"
+      dest: https://downloads.openmicroscopy.org/images/
 
     nginx_proxy_direct_locations:
     - location: "/"
