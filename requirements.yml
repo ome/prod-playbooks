@@ -32,8 +32,7 @@
   version: 2.1.1
 
 - name: ome.nginx_proxy
-  src: https://github.com/ome/ansible-role-nginx-proxy/archive/37390104dd4119805c0c9e984bf207c98fb12f1a.tar.gz
-  version: 1.16.0
+  version: 1.15.2
 
 - src: ome.nfs_mount
   version: 1.3.0
