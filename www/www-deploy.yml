@@ -32,13 +32,6 @@
         server: https://www-legacy.openmicroscopy.org/qa2
       - location: /static
         server: https://www-legacy.openmicroscopy.org
-      # Proxy locations for OME Data Model schemas
-      - location: /Schemas
-        server: https://www-legacy.openmicroscopy.org/Schemas
-      - location: /XMLschemas
-        server: https://www-legacy.openmicroscopy.org/XMLschemas
-      - location: /schema_doc
-        server: https://www-legacy.openmicroscopy.org
 
     nginx_proxy_redirect_map_locations:
     # TODO: change to 301 when we're happy
@@ -55,6 +48,10 @@
     - location: "~ ^/(info)($|/)"
       code: 302
     - location: "~ ^/(forums)($|/)"
+      code: 302
+    - location: "~ ^/(XMLschemas)($|/)"
+      code: 302
+    - location: "~ ^/(Schemas/Samples)($|/)"
       code: 302
 
     nginx_proxy_redirect_map:
@@ -277,10 +274,38 @@
     - match: "~/info/(.*)?$"
       dest: /site-map
 
+    # Legacy XMLschemas endpoint
+    - match: "~/XMLschemas/(?<link>.*[^/])?$"
+      dest: /Schemas/$link
+
+    # Legacy schemas samples
+    - match:
+        "~/Schemas/Samples/2013-06/bioformats-artificial/\
+        multi-channel-4D-series.ome.tif.zip"
+      dest:
+        "https://downloads.openmicroscopy.org/images/OME-TIFF/\
+        2013-06/bioformats-artificial/multi-channel-4D-series.ome.tif"
+    - match: "~/Schemas/Samples/2015-01/set-1-meta-companion"
+      dest:
+        https://downloads.openmicroscopy.org/images/OME-TIFF/2015-01/companion/
+    - match:
+        "~/Schemas/Samples/2015-01/bioformats-artificial/\
+        multi-channel-time-series.ome.tif.zip"
+      dest:
+        "https://downloads.openmicroscopy.org/images/OME-TIFF/\
+        2015-01/bioformats-artificial/multi-channel-time-series.ome.tif"
+    - match: "~/Schemas/Samples/(?<link>.*)?$"
+      dest: https://downloads.openmicroscopy.org/images/OME-TIFF/$link
+    - match: "~/Schemas/Samples"
+      dest: https://downloads.openmicroscopy.org/images/
+
     nginx_proxy_direct_locations:
     - location: "/"
       root: "/var/www/www.openmicroscopy.org/html"
       index: index.html
+
+    - location: "^~ /Schemas/Documentation/Generated/"
+      alias: /var/www/schemas_documentation/
 
     # Static copy of old phpBB forums: treat query params as part of filename
     - location: "~ ^/community/style.php.*"
