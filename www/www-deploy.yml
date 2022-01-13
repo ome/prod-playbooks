@@ -307,6 +307,11 @@
     - location: "^~ /Schemas/Documentation/Generated/"
       alias: /var/www/schemas_documentation/
 
+    - location: "/Schemas/Transforms/"
+      root: "/var/www/www.openmicroscopy.org/html/"
+      custom:
+        - autoindex on
+
     # Static copy of old phpBB forums: treat query params as part of filename
     - location: "~ ^/community/style.php.*"
       root: /var/www/phpbbforum/www.openmicroscopy.org
