@@ -126,7 +126,7 @@
     - name: Download the Scipy_Gaussian_Filter.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/scipy_gaussian_filter.py
+        url: https://raw.githubusercontent.com/ome/omero-guide-python/v{{ ome_training_scripts_release }}/scripts/scipy_gaussian_filter.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Scipy_Gaussian_Filter.py
         mode: 0755
         owner: "omero-server"
@@ -136,7 +136,7 @@
     - name: Download the simple_frap.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap.py
+        url: https://raw.githubusercontent.com/ome/omero-guide-python/v{{ ome_training_scripts_release }}/scripts/simple_frap.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
         mode: 0755
         owner: "omero-server"
@@ -146,7 +146,7 @@
     - name: Download the simple_frap_with_figure.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/training-scripts/v{{ ome_training_scripts_release }}/practical/python/server/simple_frap_with_figure.py
+        url: https://raw.githubusercontent.com/ome/omero-guide-python/v{{ ome_training_scripts_release }}/scripts/simple_frap_with_figure.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
         mode: 0755
         owner: "omero-server"
@@ -351,7 +351,7 @@
       - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
 
-    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.7.1') }}"
+    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.2.0') }}"
     omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.1.0') }}"
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.1.0') }}"
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
