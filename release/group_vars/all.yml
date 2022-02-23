@@ -27,6 +27,7 @@ public_folders:
   klb: 'KLB'
   leica-lif: 'Leica-LIF'
   leica-scn: 'Leica-SCN'
+  leica-xlef-lof: 'Leica-XLEF'
   leo: 'LEO'
   metaxpress: 'MetaXpress'
   micromanager: 'Micro-Manager'
