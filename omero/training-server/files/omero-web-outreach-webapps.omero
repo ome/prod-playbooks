@@ -3,6 +3,12 @@
 # after web already installed and running via role
 # and set iviewer as a default viewer
 
+# reset keys
+config set omero.web.apps
+config set omero.web.ui.top_links
+config set omero.web.open_with
+config set omero.web.ui.center_plugins
+
 # omero-figure
 config append -- omero.web.apps '"omero_figure"'
 config append -- omero.web.ui.top_links '["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]'
