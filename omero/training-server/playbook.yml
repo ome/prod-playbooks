@@ -90,15 +90,6 @@
           - ["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]
           - ["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
           - ["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]
-        omero.web.apps:
-          - "omero_gallery"
-          - "omero_iviewer"
-          - "omero_figure"
-          - "omero_fpbioimage"
-          - "omero_webtagging_autotag"
-          - "omero_webtagging_tagsearch"
-          - "omero_parade"
-          - "omero_mapr"
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.mapr.config:
           - [{"menu": "gene", "config": {"default": ["Gene Symbol"], "all": ["Gene Symbol", "Gene Identifier"], "ns": ["openmicroscopy.org/mapr/gene"], "label": "Gene"}}, {"menu": "keyvalue", "config": {"default": ["Any Value"], "all": [], "ns": ["openmicroscopy.org/omero/client/mapAnnotation"], "label": "KeyValue"}}]
