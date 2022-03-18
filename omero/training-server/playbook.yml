@@ -108,6 +108,14 @@
             proxy_set_header Connection $connection_upgrade;
             proxy_read_timeout 86400;
           }
+      omero.web.apps:
+           - "omero_iviewer"
+           - "omero_figure"
+           - "omero_fpbioimage"
+           - "omero_webtagging_autotag"
+           - "omero_webtagging_tagsearch"
+           - "omero_parade"
+           - "omero_mapr"
 
     - role: ome.iptables_raw
 
