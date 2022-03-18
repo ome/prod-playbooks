@@ -78,34 +78,30 @@
     - role: ome.omero_web
       omero_web_setup_nginx: False
       omero_web_config_set:
+        omero.web.ui.center_plugins:
+          - ["Parade", "omero_parade/init.js.html", "omero_parade"]
+          - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
         omero.web.ui.top_links:
-          - ["Virtual Microscope", "webindex", {"title": "Virtual Microscope"}]
-          - ["HELP", "https://help.openmicroscopy.org/virtual-microscope.html", {"title": "Help", "target": "new"}]
-        omero.web.ui.right_plugins:
-          - ["Acquisition", "webclient/data/includes/right_plugin.acquisition.js.html", "metadata_tab"]
-        omero.web.caches:
-          default:
-            BACKEND: django_redis.cache.RedisCache
-            LOCATION: redis://127.0.0.1:6379/0
-        omero.web.session_engine: django.contrib.sessions.backends.cache
+          - ["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]
+          - ["Tag Search", "tagsearch"]
+          - ["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]
+          - ["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]
+        omero.web.open_with:
+          - ["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]
+          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - ["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]
         omero.web.apps:
           - "omero_gallery"
           - "omero_iviewer"
-          - "virtualmicroscope"
-        omero.web.open_with:
-          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
-          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - "omero_figure"
+          - "omero_fpbioimage"
+          - "omero_webtagging_autotag"
+          - "omero_webtagging_tagsearch"
+          - "omero_parade"
+          - "omero_mapr"
         omero.web.viewer.view: omero_iviewer.views.index
-        omero.web.public.enabled: true
-        omero.web.public.password: "{{ omero_web_public_password | default('public') }}"
-        omero.web.public.url_filter: "/(webgateway|gallery)/"
-        omero.web.public.user: "{{ omero_web_public_user | default('public') }}"
-      omero_web_apps_packages:
-        - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
-        - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
-        - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
-      omero_web_python_addons:
-        - "django-redis<4.9"
+        omero.web.mapr.config:
+          - [{"menu": "gene", "config": {"default": ["Gene Symbol"], "all": ["Gene Symbol", "Gene Identifier"], "ns": ["openmicroscopy.org/mapr/gene"], "label": "Gene"}}, {"menu": "keyvalue", "config": {"default": ["Any Value"], "all": [], "ns": ["openmicroscopy.org/omero/client/mapAnnotation"], "label": "KeyValue"}}]
       omero.web.nginx_server_extra_config:
         - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
         # TODO: Move the following into a shared variable
