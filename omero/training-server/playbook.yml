@@ -82,6 +82,9 @@
           - ["Parade", "omero_parade/init.js.html", "omero_parade"]
           - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
         omero.web.ui.top_links:
+          - ["Data", "webindex", {"title": "Browse Data via Projects, Tags etc"}]
+          - ["History", "history", {"title": "History"}]
+          - ["Help", "https://help.openmicroscopy.org/", {"title": "Open OMERO user guide in a new tab", "target": "new"}]
           - ["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]
           - ["Tag Search", "tagsearch"]
           - ["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]
