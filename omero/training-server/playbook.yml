@@ -78,6 +78,14 @@
     - role: ome.omero_web
       omero_web_setup_nginx: False
       omero_web_config_set:
+        omero.web.apps:
+           - "omero_iviewer"
+           - "omero_figure"
+           - "omero_fpbioimage"
+           - "omero_webtagging_autotag"
+           - "omero_webtagging_tagsearch"
+           - "omero_parade"
+           - "omero_mapr"
         omero.web.ui.center_plugins:
           - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
           - ["Parade", "omero_parade/init.js.html", "omero_parade"]
@@ -108,14 +116,6 @@
             proxy_set_header Connection $connection_upgrade;
             proxy_read_timeout 86400;
           }
-      omero.web.apps:
-           - "omero_iviewer"
-           - "omero_figure"
-           - "omero_fpbioimage"
-           - "omero_webtagging_autotag"
-           - "omero_webtagging_tagsearch"
-           - "omero_parade"
-           - "omero_mapr"
 
     - role: ome.iptables_raw
 
