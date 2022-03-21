@@ -118,21 +118,21 @@
             config:
               default:
                 - "Any Value"
-              all:
+              all: []
               ns:
                 - "openmicroscopy.org/omero/client/mapAnnotation"
-              label": "KeyValue"
-      omero.web.nginx_server_extra_config:
-        - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
-        # TODO: Move the following into a shared variable
-        - >
-          location = /omero-ws {
-            proxy_pass https://127.0.0.1:4066;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_read_timeout 86400;
-          }
+              label: "KeyValue"
+        omero.web.nginx_server_extra_config:
+          - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
+          # TODO: Move the following into a shared variable
+          - >
+            location = /omero-ws {
+              proxy_pass https://127.0.0.1:4066;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection $connection_upgrade;
+              proxy_read_timeout 86400;
+            }
 
     - role: ome.iptables_raw
 
