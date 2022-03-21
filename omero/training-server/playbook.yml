@@ -104,7 +104,24 @@
           - ["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.mapr.config:
-          - [{"menu": "gene", "config": {"default": ["Gene Symbol"], "all": ["Gene Symbol", "Gene Identifier"], "ns": ["openmicroscopy.org/mapr/gene"], "label": "Gene"}}, {"menu": "keyvalue", "config": {"default": ["Any Value"], "all": [], "ns": ["openmicroscopy.org/omero/client/mapAnnotation"], "label": "KeyValue"}}]
+          - menu: gene
+            config:
+              default:
+                - "Gene Symbol"
+              all:
+                - "Gene Symbol"
+                - "Gene Identifier"
+              ns:
+                - "openmicroscopy.org/mapr/gene"
+              label: "Gene"
+          - menu: keyvalue
+            config:
+              default:
+                - "Any Value"
+              all:
+              ns:
+                - "openmicroscopy.org/omero/client/mapAnnotation"
+              label": "KeyValue"
       omero.web.nginx_server_extra_config:
         - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
         # TODO: Move the following into a shared variable
