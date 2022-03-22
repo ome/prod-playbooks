@@ -102,7 +102,15 @@
           - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
           - ["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]
           - ["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]
-          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects":["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - - omero_iviewer
+            - omero_iviewer_index
+            - supported_objects:
+                - images
+                - dataset
+                - well
+              script_url: omero_iviewer/openwith.js
+              label: OMERO.iviewer
+
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.mapr.config:
           - menu: gene
