@@ -76,6 +76,7 @@
         - matplotlib
 
     - role: ome.omero_web
+      tags: ['web']
       omero_web_setup_nginx: False
       omero_web_config_set:
         omero.web.apps:
