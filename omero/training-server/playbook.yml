@@ -82,19 +82,19 @@
            - "omero_iviewer"
            - "omero_figure"
            - "omero_fpbioimage"
-           - "omero_webtagging_autotag"
-           - "omero_webtagging_tagsearch"
+           #- "omero_webtagging_autotag"
+           #- "omero_webtagging_tagsearch"
            - "omero_parade"
            - "omero_mapr"
         omero.web.ui.center_plugins:
-          - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
+          #- ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
           - ["Parade", "omero_parade/init.js.html", "omero_parade"]
         omero.web.ui.top_links:
           - ["Data", "webindex", {"title": "Browse Data via Projects, Tags etc"}]
           - ["History", "history", {"title": "History"}]
           - ["Help", "https://help.openmicroscopy.org/", {"title": "Open OMERO user guide in a new tab", "target": "new"}]
           - ["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]
-          - ["Tag Search", "tagsearch"]
+          #- ["Tag Search", "tagsearch"]
           - ["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]
           - ["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]
         omero.web.open_with:
