@@ -76,6 +76,71 @@
         - matplotlib
 
     - role: ome.omero_web
+      tags: ['web']
+      omero_web_config_set:
+        omero.web.apps:
+           - "omero_iviewer"
+           - "omero_figure"
+           - "omero_fpbioimage"
+           - "omero_webtagging_autotag"
+           - "omero_webtagging_tagsearch"
+           - "omero_parade"
+           - "omero_mapr"
+        omero.web.ui.center_plugins:
+          - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
+          - ["Parade", "omero_parade/init.js.html", "omero_parade"]
+        omero.web.ui.top_links:
+          - ["Data", "webindex", {"title": "Browse Data via Projects, Tags etc"}]
+          - ["History", "history", {"title": "History"}]
+          - ["Help", "https://help.openmicroscopy.org/", {"title": "Open OMERO user guide in a new tab", "target": "new"}]
+          - ["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]
+          - ["Tag Search", "tagsearch"]
+          - ["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]
+          - ["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]
+        omero.web.open_with:
+          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
+          - ["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]
+          - ["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]
+          - - omero_iviewer
+            - omero_iviewer_index
+            - supported_objects:
+                - images
+                - dataset
+                - well
+              script_url: omero_iviewer/openwith.js
+              label: OMERO.iviewer
+
+        omero.web.viewer.view: omero_iviewer.views.index
+        omero.web.mapr.config:
+          - menu: gene
+            config:
+              default:
+                - "Gene Symbol"
+              all:
+                - "Gene Symbol"
+                - "Gene Identifier"
+              ns:
+                - "openmicroscopy.org/mapr/gene"
+              label: "Gene"
+          - menu: keyvalue
+            config:
+              default:
+                - "Any Value"
+              all: []
+              ns:
+                - "openmicroscopy.org/omero/client/mapAnnotation"
+              label: "KeyValue"
+        omero.web.nginx_server_extra_config:
+          - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
+          # TODO: Move the following into a shared variable
+          - >
+            location = /omero-ws {
+              proxy_pass https://127.0.0.1:4066;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection $connection_upgrade;
+              proxy_read_timeout 86400;
+            }
 
     - role: ome.iptables_raw
 
@@ -178,17 +243,6 @@
         recurse: yes
         owner: "omero-server"
         group: "omero-server"
-
-    - name: Outreach only config for OMERO.web plugins
-      become: yes
-      template:
-        src: files/omero-web-outreach-webapps.omero
-        dest: "{{ omero_web_basedir }}/config/omero-web-outreach-webapps.omero"
-        owner: "root"
-        group: "root"
-        mode: "u=rw,go=r"
-      notify:
-      - restart omero-web
 
     - name: Add operating system user "importer1"
       become: true
@@ -391,19 +445,6 @@
       omero.ldap.user_filter: "(objectClass=person)"
       omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
       omero.ldap.username: "uid=admin,ou=system"
-
-    omero_web_config_set:
-      omero.web.nginx_server_extra_config:
-        - 'include /etc/nginx/conf.d-nested-includes/*.conf;'
-        # TODO: Move the following into a shared variable
-        - >
-          location = /omero-ws {
-            proxy_pass https://127.0.0.1:4066;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_read_timeout 86400;
-          }
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
