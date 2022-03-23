@@ -17,7 +17,7 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    converge: ../../ome-demoserver.yml
+    converge: ../../site.yml
   lint:
     name: ansible-lint
 scenario:
