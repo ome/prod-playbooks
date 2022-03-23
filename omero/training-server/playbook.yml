@@ -391,7 +391,7 @@
     omero_figure_release: "{{ omero_figure_release_override | default('4.4.3') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.11.3') }}"
-    omero_mapr_release: "{{ omero_mapr_release_override | default('0.5rc1') }}"
+    omero_mapr_release: "{{ omero_mapr_release_override | default('0.5.0') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
 
     # The omero_web_apps_* vars are used by the ome.omero_web role under
