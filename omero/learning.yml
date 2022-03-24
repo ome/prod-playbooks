@@ -5,16 +5,18 @@
 # - Migrate binary repository to /OMERO/ with rsync.
 # - Migrate database with pg_dump, pg_restore.
 # - Upgrade database.
-# - bin/omero db password for root user.
+#   Do run shape_color_argb_to_rgba.sql.
+#   UPDATE shape SET points = REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*', '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points LIKE 'points[%';
+# - bin/omero db password for root and public users.
 # - systemctl start omero-{server,web}
 
-- hosts: omero-sls-gallery
+- hosts: omero-learning
   roles:
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
       lvm_lvname: 'var_lib_psql'
       lvm_lvmount: '/var/lib/pgsql'
-      lvm_lvsize: 8G
+      lvm_lvsize: 20G
       lvm_lvfilesystem: xfs
       lvm_shrink: False
 
@@ -31,7 +33,7 @@
       lvm_vgname: VolGroup00
       lvm_lvname: 'omero'
       lvm_lvmount: '/OMERO'
-      lvm_lvsize: 80G
+      lvm_lvsize: 150G
       lvm_lvfilesystem: xfs
       lvm_shrink: False
 
@@ -46,29 +48,29 @@
     - role: ome.omero_server
       omero_server_config_set:
         omero.client.ui.menu.dropdown.colleagues.enabled: False
-        omero.client.ui.menu.dropdown.everyone.label: "All images"
-        omero.client.ui.menu.dropdown.leaders.label: "Gallery:"
-        omero.db.poolsize: 50
+        omero.client.ui.menu.dropdown.everyone.label: "All courses"
+        omero.client.ui.menu.dropdown.leaders.label: "Courses:"
+        omero.db.poolsize: 100
         omero.jvmcfg.percent.blitz: 50
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
         omero.ldap.config: True
         omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: "{{ omero_server_ldap_username }}"
+        omero.ldap.password: "{{ omero_server_ldap_password | default('') }}"
         omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
-        omero.ldap.group_filter: "{{ omero_server_ldap_group_filter }}"
-        omero.ldap.group_mapping: "{{ omero_server_ldap_group_mapping }}"
         omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
         omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
         omero.mail.config: true
         omero.mail.from: "{{ omero_server_mail_from }}"
         omero.mail.host: "{{ omero_server_mail_host }}"
-        omero.pixeldata.max_plane_height: 5120
-        omero.pixeldata.max_plane_width: 5120
+        omero.policy.binary_access: "+read,+write,-image,-plate"
+        omero.security.ignore_case: True
         omero.security.keyStore: "/etc/pki/java/cacerts"
         omero.security.trustStore: "/etc/pki/java/cacerts"
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
+        omero.sessions.timeout: 3600000
       omero_server_selfsigned_certificates: True
 
     - role: ome.redis
@@ -77,36 +79,41 @@
 
     - role: ome.omero_web
       omero_web_setup_nginx: False
-      omero_web_systemd_start: False
       omero_web_config_set:
         omero.web.server_list:
-          - ["localhost", 4064, "SLS Gallery"]
-        omero.web.prefix: '/ome-sls'
-        omero.web.static_url: '/ome-sls/static/'
+          - ["localhost", 4064, "Virtual Microscope"]
+        omero.web.prefix: '/dundee'
+        omero.web.static_url: '/dundee/static/'
         omero.web.login_redirect:
           redirect:
             - webindex
-          viewname: "load_template"
-          query_string: "experimenter=-1"
-          args:
-            - userdata
+          viewname: "webindex_custom"
         omero.web.ui.top_links:
-          - ["Image Gallery", "webindex", {"title": "Image Gallery"}]
-          - ["HELP", "https://help.openmicroscopy.org/web-client.html", {"title": "Help", "target": "new"}]
-          - ["SLS Homepage", "https://www.lifesci.dundee.ac.uk/", {"title": "SLS Homepage", "target": "new"}]
+          - ["Virtual Microscope", "webindex", {"title": "Virtual Microscope"}]
+          - ["HELP", "https://help.openmicroscopy.org/virtual-microscope.html", {"title": "Help", "target": "new"}]
+        omero.web.ui.right_plugins:
+          - ["Acquisition", "webclient/data/includes/right_plugin.acquisition.js.html", "metadata_tab"]
         omero.web.caches:
           default:
             BACKEND: django_redis.cache.RedisCache
             LOCATION: redis://127.0.0.1:6379/0
         omero.web.session_engine: django.contrib.sessions.backends.cache
         omero.web.apps:
+          - "omero_gallery"
           - "omero_iviewer"
+          - "virtualmicroscope"
         omero.web.open_with:
           - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
           - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
         omero.web.viewer.view: omero_iviewer.views.index
+        omero.web.public.enabled: true
+        omero.web.public.password: "{{ omero_web_public_password | default('public') }}"
+        omero.web.public.url_filter: "/(webgateway|gallery)/"
+        omero.web.public.user: "{{ omero_web_public_user | default('public') }}"
       omero_web_apps_packages:
+        - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
+        - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
       omero_web_python_addons:
         - "django-redis<4.9"
 
@@ -140,7 +147,7 @@
     - name: OMERO.web configuration is installed
       become: yes
       copy:
-        src: "omero/files/sls-gallery-omero-web.conf"
+        src: "files/learning-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
 
@@ -157,4 +164,6 @@
     omero_server_release: 5.6.3
     omero_web_release: 5.12.0
     omero_web_apps_release:
+      omero_gallery: 3.3.2
       omero_iviewer: 0.11.1
+      omero_virtual_microscope: 1.1.0

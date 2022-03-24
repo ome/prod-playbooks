@@ -7,13 +7,13 @@
 
 # deployment of two OMERO.web instances for hosting Dundee's production OMERO.
 # One of the two instances is for publication data ("ns-web-pub").
-- include: nightshade-webclients.yml
+- include: omero/nightshade-webclients.yml
 
 # nightshade.openmicroscopy.org OMERO.server
-- include: ome-dundeeomero.yml
+- include: omero/ome-dundeeomero.yml
 
 # https://demo.openmicroscopy.org OMERO.server and OMERO.web
-- include: ome-demoserver.yml
+- include: omero/ome-demoserver.yml
 
 # Firewall configuration for all UoD OMERO servers
 # The training-server playbooks modify the firewall configuration so this must
