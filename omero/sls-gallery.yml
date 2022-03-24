@@ -59,16 +59,12 @@
         omero.ldap.group_filter: "{{ omero_server_ldap_group_filter }}"
         omero.ldap.group_mapping: "{{ omero_server_ldap_group_mapping }}"
         omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
-        omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
+        omero.ldap.urls: "ldap://{{ ldap_host }}:389"
         omero.mail.config: true
         omero.mail.from: "{{ omero_server_mail_from }}"
         omero.mail.host: "{{ omero_server_mail_host }}"
         omero.pixeldata.max_plane_height: 5120
         omero.pixeldata.max_plane_width: 5120
-        omero.security.keyStore: "/etc/pki/java/cacerts"
-        omero.security.trustStore: "/etc/pki/java/cacerts"
-        omero.security.keyStorePassword: "changeit"
-        omero.security.trustStorePassword: "changeit"
       omero_server_selfsigned_certificates: True
 
     - role: ome.redis
@@ -126,16 +122,6 @@
         replace: "\\1.gz\\2"
         backup: yes
       with_items: "{{ logbacks.files }}"
-
-    - name: TLS certificate is installed for JVM
-      become: yes
-      java_cert:
-        cert_url: "{{ ldap_host }}"
-        cert_port: 636
-        keystore_path: "/etc/pki/java/cacerts"
-        keystore_pass: changeit
-        state: present
-      notify: restart omero-server
 
     - name: OMERO.web configuration is installed
       become: yes
