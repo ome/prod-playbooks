@@ -59,16 +59,12 @@
         omero.ldap.group_filter: "{{ omero_server_ldap_group_filter }}"
         omero.ldap.group_mapping: "{{ omero_server_ldap_group_mapping }}"
         omero.ldap.new_user_group: "{{ omero_server_ldap_new_user_group }}"
-        omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
+        omero.ldap.urls: "ldap://{{ ldap_host }}:389"
         omero.mail.config: true
         omero.mail.from: "{{ omero_server_mail_from }}"
         omero.mail.host: "{{ omero_server_mail_host }}"
         omero.pixeldata.max_plane_height: 5120
         omero.pixeldata.max_plane_width: 5120
-        omero.security.keyStore: "/etc/pki/java/cacerts"
-        omero.security.trustStore: "/etc/pki/java/cacerts"
-        omero.security.keyStorePassword: "changeit"
-        omero.security.trustStorePassword: "changeit"
       omero_server_selfsigned_certificates: True
 
     - role: ome.redis
@@ -77,7 +73,7 @@
 
     - role: ome.omero_web
       omero_web_setup_nginx: False
-      omero_web_systemd_start: False
+      omero_web_systemd_start: True
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "SLS Gallery"]
@@ -108,7 +104,7 @@
       omero_web_apps_packages:
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
       omero_web_python_addons:
-        - "django-redis<4.9"
+        - "django-redis==5.0.0"
 
   tasks:
     - name: find OMERO.server log configuration
@@ -126,16 +122,6 @@
         replace: "\\1.gz\\2"
         backup: yes
       with_items: "{{ logbacks.files }}"
-
-    - name: TLS certificate is installed for JVM
-      become: yes
-      java_cert:
-        cert_url: "{{ ldap_host }}"
-        cert_port: 636
-        keystore_path: "/etc/pki/java/cacerts"
-        keystore_pass: changeit
-        state: present
-      notify: restart omero-server
 
     - name: OMERO.web configuration is installed
       become: yes
@@ -155,6 +141,6 @@
 
   vars:
     omero_server_release: 5.6.3
-    omero_web_release: 5.12.0
+    omero_web_release: 5.14.0
     omero_web_apps_release:
-      omero_iviewer: 0.11.1
+      omero_iviewer: 0.11.3
