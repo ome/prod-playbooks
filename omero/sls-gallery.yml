@@ -77,7 +77,7 @@
 
     - role: ome.omero_web
       omero_web_setup_nginx: False
-      omero_web_systemd_start: False
+      omero_web_systemd_start: True
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "SLS Gallery"]
