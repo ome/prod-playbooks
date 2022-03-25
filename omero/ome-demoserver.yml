@@ -330,8 +330,8 @@
 
     # Pip versions
     omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.6.1') }}"
-    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.5.0') }}"
+    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.8.0') }}"
+    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.10.0') }}"
 
     # Signup
     omero_signup_email_body: >-
