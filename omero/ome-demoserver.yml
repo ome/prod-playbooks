@@ -381,7 +381,7 @@
       - "omero-metadata=={{ omero_metadata_release }}"
       - "omero-demo-cleanup==0.1.0"
       # For OMERO.figure script
-      - reportlab
+      - "reportlab<3.6"
       - markdown
 
     omero_server_selfsigned_certificates: True
