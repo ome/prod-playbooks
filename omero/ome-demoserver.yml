@@ -123,7 +123,6 @@
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
         - "omero-signup=={{ omero_signup_release }}"
-        - "django-cors-headers=={{ django_cors_headers_release }}"
 
     - role: ome.omero_user
       no_log: true
@@ -310,7 +309,6 @@
         force: yes
 
   vars:
-    django_cors_headers_release: "{{ django_cors_headers_release_override | default('2.5.3') }}"
     omero_figure_release: "{{ omero_figure_release_override | default('4.4.1') }}"
     omero_figure_script_release: "{{ omero_figure_script_release_override | default('v4.4.1') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
