@@ -74,7 +74,7 @@
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: ome.omero_server
-      omero_server_release: 5.6.3
+      omero_server_release: 5.6.4
       omero_server_datadir_manage: "{{ molecule_test | default(False) }}"
       omero_server_systemd_limit_nofile: 16384
       omero_server_systemd_after: >-
@@ -190,7 +190,7 @@
     nginx_version: 1.18.0
     postgresql_version: "11"
     filesystem: "xfs"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.3.2') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('4.4.3') }}"
 
     omero_server_config_set_production:
       omero.db.poolsize: 60
