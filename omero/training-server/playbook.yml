@@ -142,6 +142,11 @@
               proxy_read_timeout 86400;
             }
 
+        omero.web.public.enabled: true
+        omero.web.public.password: "{{ omero_web_public_password_override }}"
+        omero.web.public.url_filter: ^/(webgateway/\w+|webclient/annotation/([0-9]+)/)
+        omero.web.public.user: "{{ omero_web_public_user_override }}"
+
     - role: ome.iptables_raw
 
     - role: ome.docker
