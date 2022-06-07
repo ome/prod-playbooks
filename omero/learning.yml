@@ -162,7 +162,7 @@
 
   vars:
     omero_server_release: 5.6.3
-    omero_web_release: 5.14.0
+    omero_web_release: 5.14.1
     omero_web_apps_release:
       omero_gallery: 3.4.2
       omero_iviewer: 0.11.3
