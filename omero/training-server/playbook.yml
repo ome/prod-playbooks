@@ -97,7 +97,7 @@
 
     - role: ome.omero_web
       tags: ['web']
-        omero_web_config_set:
+      omero_web_config_set:
         omero.web.apps:
            - "omero_iviewer"
            - "omero_figure"
