@@ -77,7 +77,26 @@
 
     - role: ome.omero_web
       tags: ['web']
-      omero_web_config_set:
+        idr_omero_web_public_url_filters_webclient_exclude:
+          - action
+          - annotate_(file|tags|comment|rating|map)
+          - script_ui
+          - ome_tiff
+          - figure_script
+        idr_omero_web_public_url_filters:
+          - api/
+          - webadmin/myphoto/
+          - mapr/
+          - figure/
+          - iviewer/
+          - '$'
+          - gallery-api/
+          - gallery_settings/
+          - cell/
+          - tissue/
+          - webclient/(?!({{ idr_omero_web_public_url_filters_webclient_exclude | join('|') }}))
+          - webgateway/(?!(archived_files|download_as))
+        omero_web_config_set:
         omero.web.apps:
            - "omero_iviewer"
            - "omero_figure"
@@ -144,7 +163,7 @@
 
         omero.web.public.enabled: true
         omero.web.public.password: "{{ omero_web_public_password_override }}"
-        omero.web.public.url_filter: ^\/(api|iviewer|figure|webadmin\/myphoto\/|webclient\/(?!(script_ui|ome_tiff|figure_script|render_image_download|download_|ome_tiff_script|archived_files\/download|download_orig_metadata))|webgateway\/(?!(archived_files|download_as)))
+        omero.web.public.url_filter: "^/({{ idr_omero_web_public_url_filters | join('|') }})"
         omero.web.public.user: "{{ omero_web_public_user_override }}"
 
     - role: ome.iptables_raw
