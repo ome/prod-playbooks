@@ -50,26 +50,6 @@
         mode: 0644
       # Don't notify, nginx isn't installed yet
 
-  idr_omero_web_public_url_filters_webclient_exclude:
-    - action
-    - annotate_(file|tags|comment|rating|map)
-    - script_ui
-    - ome_tiff
-    - figure_script
-  idr_omero_web_public_url_filters:
-    - api/
-    - webadmin/myphoto/
-    - mapr/
-    - figure/
-    - iviewer/
-    - '$'
-    - gallery-api/
-    - gallery_settings/
-    - cell/
-    - tissue/
-    - webclient/(?!({{ idr_omero_web_public_url_filters_webclient_exclude | join('|') }}))
-    - webgateway/(?!(archived_files|download_as))
-
   roles:
 
     - role: ome.postgresql
@@ -97,6 +77,26 @@
 
     - role: ome.omero_web
       tags: ['web']
+      idr_omero_web_public_url_filters_webclient_exclude:
+        - action
+        - annotate_(file|tags|comment|rating|map)
+        - script_ui
+        - ome_tiff
+        - figure_script
+      idr_omero_web_public_url_filters:
+        - api/
+        - webadmin/myphoto/
+        - mapr/
+        - figure/
+        - iviewer/
+        - '$'
+        - gallery-api/
+        - gallery_settings/
+        - cell/
+        - tissue/
+        - webclient/(?!({{ idr_omero_web_public_url_filters_webclient_exclude | join('|') }}))
+        - webgateway/(?!(archived_files|download_as))
+
       omero_web_config_set:
         omero.web.apps:
            - "omero_iviewer"
