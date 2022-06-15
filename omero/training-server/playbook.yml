@@ -203,6 +203,26 @@
         group: "omero-server"
         force: yes
 
+    - name: Download the Dataset_Images_To_New_Figure.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/omero-guide-figure/master/scripts/Dataset_Images_To_New_Figure.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Dataset_Images_To_New_Figure.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
+    - name: Download the Figure_Images_To_Dataset.py script
+      become: yes
+      get_url:
+        url: https://raw.githubusercontent.com/ome/omero-guide-figure/master/scripts/Figure_Images_To_Dataset.py
+        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_Images_To_Dataset.py
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: yes
+
     - name: Create a workshop_scripts directory
       become: yes
       file:
@@ -412,7 +432,7 @@
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: False
     omero_server_release: "{{ omero_server_release_override | default('5.6.4') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.14.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.14.1') }}"
     omero_figure_release: "{{ omero_figure_release_override | default('4.4.3') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.11.3') }}"
