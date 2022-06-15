@@ -163,9 +163,9 @@
             }
 
         omero.web.public.enabled: true
-        omero.web.public.password: "{{ omero_web_public_password_override }}"
+        omero.web.public.password: "{{ omero_web_public_password_override | default('secret') }}"
         omero.web.public.url_filter: "^/({{ idr_omero_web_public_url_filters | join('|') }})"
-        omero.web.public.user: "{{ omero_web_public_user_override }}"
+        omero.web.public.user: "{{ omero_web_public_user_override | default('secret') }}"
 
     - role: ome.iptables_raw
 
