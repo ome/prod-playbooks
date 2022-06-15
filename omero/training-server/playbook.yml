@@ -206,7 +206,7 @@
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-figure/master/scripts/Dataset_Images_To_New_Figure.py
+        url: https://raw.githubusercontent.com/ome/omero-guide-figure/f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Dataset_Images_To_New_Figure.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Dataset_Images_To_New_Figure.py
         mode: 0755
         owner: "omero-server"
@@ -216,7 +216,7 @@
     - name: Download the Figure_Images_To_Dataset.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-figure/master/scripts/Figure_Images_To_Dataset.py
+        url: https://raw.githubusercontent.com/ome/omero-guide-figure/f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Figure_Images_To_Dataset.py
         dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_Images_To_Dataset.py
         mode: 0755
         owner: "omero-server"
