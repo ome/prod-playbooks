@@ -6,3 +6,9 @@
     yum:
       name: iproute
       state: present
+
+  - name: Install cron
+    become: true
+    yum:
+      name: cronie
+      state: present
