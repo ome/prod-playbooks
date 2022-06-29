@@ -496,7 +496,7 @@
       omero.ldap.user_filter: "(objectClass=person)"
       omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
       omero.ldap.username: "uid=admin,ou=system"
-      omero.server.nodedescriptors: "master:Blitz-0,Tables-0,Processor-0,Indexer-0"
+      omero.server.nodedescriptors: "master:Blitz-0,Indexer-0,Processor-0,Storm,Tables-0"
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
