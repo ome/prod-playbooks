@@ -318,7 +318,7 @@
     omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
     omero_signup_release: "{{ omero_signup_release_override | default('0.3.2') }}"
 
-    omero_server_release: "{{ omero_server_release_override | default('5.6.4') }}"
+    omero_server_release: "{{ omero_server_release_override | default('5.6.5') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.14.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
     java_jdk_install: True
