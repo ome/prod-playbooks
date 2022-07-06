@@ -117,6 +117,13 @@
       omero_web_python_addons:
         - "django-redis==5.0.0"
 
+    - role: ome.postgresql_backup
+      postgresql_backup_compress: true
+      postgresql_backup_dir: /OMERO/pgbackup
+      postgresql_backup_filename_format: "nightly-omero-%a.pgdump.gz"
+      postgresql_backup_minimum_expected_size: 100000000
+
+
   tasks:
     - name: find OMERO.server log configuration
       become: yes
