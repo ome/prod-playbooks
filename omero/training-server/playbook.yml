@@ -432,7 +432,7 @@
     #omero_server_datadir_chown: True
     #temporal upgrade force for omero server workaround
     #omero_server_checkupgrade_comparator: '!='
-    postgresql_version: "10"
+    postgresql_version: "13"
     omero_server_selfsigned_certificates: True
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
