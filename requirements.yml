@@ -68,7 +68,7 @@
   version: 0.2.1
 
 - src: ome.postgresql_client
-  version: 0.1.2
+  version: 0.2.0
 
 - src: ome.prometheus
   version: 0.5.1
