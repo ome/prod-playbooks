@@ -3,8 +3,6 @@
 # Set https_letsencrypt_enabled to True in production to ensure certbot
 # handles the letsencrypt certificate setup
 
-- include: database.yml
-
 - hosts: ome-outreach
   pre_tasks:
 
@@ -51,6 +49,8 @@
         dest: /etc/nginx/conf.d/websockets.conf
         mode: 0644
       # Don't notify, nginx isn't installed yet
+
+    - include: database.yml
 
   roles:
 
