@@ -1,0 +1,17 @@
+---
+- hosts: ome-outreach
+  roles:
+    - role: ome.postgresql
+      postgresql_databases:
+      - name: omero
+      postgresql_users:
+      - user: omero
+        password: omero
+        databases: [omero]
+      postgresql_version: "10"
+
+    - role: ome.postgresql_backup
+      postgresql_backup_compress: true
+      postgresql_backup_dir: /OMERO/pgbackup
+      postgresql_backup_filename_format: "nightly-omero-%a.pgdump.gz"
+      postgresql_backup_minimum_expected_size: 100000000

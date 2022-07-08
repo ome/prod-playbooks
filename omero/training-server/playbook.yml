@@ -3,6 +3,8 @@
 # Set https_letsencrypt_enabled to True in production to ensure certbot
 # handles the letsencrypt certificate setup
 
+- include: database.yml
+
 - hosts: ome-outreach
   pre_tasks:
 
@@ -52,19 +54,7 @@
 
   roles:
 
-    - role: ome.postgresql
-      postgresql_databases:
-      - name: omero
-      postgresql_users:
-      - user: omero
-        password: omero
-        databases: [omero]
 
-    - role: ome.postgresql_backup
-      postgresql_backup_compress: true
-      postgresql_backup_dir: /OMERO/pgbackup
-      postgresql_backup_filename_format: "nightly-omero-%a.pgdump.gz"
-      postgresql_backup_minimum_expected_size: 100000000
 
     - role: ome.versioncontrol_utils
 
@@ -432,7 +422,6 @@
     #omero_server_datadir_chown: True
     #temporal upgrade force for omero server workaround
     #omero_server_checkupgrade_comparator: '!='
-    postgresql_version: "10"
     omero_server_selfsigned_certificates: True
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
