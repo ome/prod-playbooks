@@ -62,7 +62,7 @@
   version: 0.3.0
 
 - src: ome.postgresql
-  version: 5.0.2
+  version: 5.2.0
 
 - src: ome.postgresql_backup
   version: 0.2.1
