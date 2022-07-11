@@ -25,7 +25,12 @@
         - user: "{{ omero_server_dbuser | default('omero') }}"
           password: "{{ omero_server_dbpassword | default('omero') }}"
           databases: [omero]
-      postgresql_version: "10"
+
+    - role: ome.postgresql_backup
+      postgresql_backup_compress: true
+      postgresql_backup_dir: /OMERO/pgbackup
+      postgresql_backup_filename_format: "nightly-omero-%a.pgdump.gz"
+      postgresql_backup_minimum_expected_size: 100000000
 
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -140,6 +145,7 @@
         - omero-web
 
   vars:
+    postgresql_version: "13"
     omero_server_release: 5.6.3
     omero_web_release: 5.14.1
     omero_web_apps_release:
