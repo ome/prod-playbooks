@@ -103,7 +103,7 @@
       }}
 
     omero_web_release: "{{ omero_web_release_override | default('5.14.1') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('4.4.3') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('5.0.0') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.11.3') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
