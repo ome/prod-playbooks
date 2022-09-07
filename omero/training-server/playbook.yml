@@ -102,6 +102,8 @@
         - tissue/
         - webclient/(?!({{ idr_omero_web_public_url_filters_webclient_exclude | join('|') }}))
         - webgateway/(?!(archived_files|download_as))
+      omero_web_python_addons:
+        - "omero-py>={{ omero_py_release }}"
 
       omero_web_config_set:
         omero.web.apps:
@@ -444,6 +446,7 @@
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.11.3') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.5.0') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.12.0') }}"
 
     # The omero_web_apps_* vars are used by the ome.omero_web role under
     # Python 3 otherwise ignored

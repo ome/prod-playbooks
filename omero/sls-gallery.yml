@@ -110,6 +110,7 @@
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
       omero_web_python_addons:
         - "django-redis==5.0.0"
+        - "omero-py>={{ omero_py_release }}"
 
   tasks:
     - name: find OMERO.server log configuration
@@ -150,3 +151,4 @@
     omero_web_release: 5.15.0
     omero_web_apps_release:
       omero_iviewer: 0.11.3
+    omero_py_release: "{{ omero_py_release_override | default('5.12.0') }}"
