@@ -21,6 +21,8 @@
     # OMERO.web configuration in host_vars in different repository
     - role: ome.omero_web
       omero_web_systemd_limit_nofile: 16384
+      omero_web_python_addons:
+        - "omero-py>={{ omero_py_release }}"
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
     # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
@@ -102,7 +104,8 @@
         (omero_web_config_set_for_host | default({})))
       }}
 
-    omero_web_release: "{{ omero_web_release_override | default('5.14.1') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.15.0') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.12.0') }}"
     omero_figure_release: "{{ omero_figure_release_override | default('5.0.0') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
     omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.11.3') }}"
