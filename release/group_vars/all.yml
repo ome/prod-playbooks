@@ -17,6 +17,7 @@ public_folders:
   dicom: 'DICOM'
   ecat7: 'ECAT7'
   flex: 'Flex'
+  fv1000: 'Olympus-FluoView'
   gatan: 'Gatan'
   hamamatsu: 'Hamamatsu-NDPI'
   hamamatsu-vms: 'Hamamatsu-VMS'
