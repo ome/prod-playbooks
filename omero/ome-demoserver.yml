@@ -374,6 +374,7 @@
       omero.mail.from: "{{ omero_server_mail_from }}"
       omero.mail.host: "{{ omero_server_mail_host }}"
       omero.new_user_group: "My Data"
+      omero.server.nodedescriptors: "master:Blitz-0,Indexer-0,Processor-0,Storm,Tables-0"
       omero.search.batch: 100
       omero.throttling.method_time.error: 60000
 
