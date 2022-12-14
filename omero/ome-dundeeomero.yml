@@ -209,6 +209,7 @@
     postgresql_version: "11"
     filesystem: "xfs"
     omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
 
     omero_server_config_set_production:
       omero.db.poolsize: 60
