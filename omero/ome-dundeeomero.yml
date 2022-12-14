@@ -239,6 +239,7 @@
       # For OMERO.figure script
       - "reportlab<3.6"
       - markdown
+      - "omero-py>={{ omero_py_release }}"
 
     # Workaround lack of restriction on temp file sizes
     # https://github.com/ome/omero-web/issues/118
