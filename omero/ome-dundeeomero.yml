@@ -74,7 +74,7 @@
     # Note - had to have these set to `install-mock` to progress role
     # installation before changing config to restored DB from other system.
     - role: ome.omero_server
-      omero_server_release: 5.6.5
+      omero_server_release: 5.6.6
       omero_server_datadir_manage: "{{ molecule_test | default(False) }}"
       omero_server_systemd_limit_nofile: 16384
       omero_server_systemd_after: >-
@@ -208,7 +208,8 @@
     nginx_version: 1.18.0
     postgresql_version: "11"
     filesystem: "xfs"
-    omero_figure_release: "{{ omero_figure_release_override | default('5.0.0') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
 
     omero_server_config_set_production:
       omero.db.poolsize: 60
@@ -239,6 +240,7 @@
       # For OMERO.figure script
       - "reportlab<3.6"
       - markdown
+      - "omero-py>={{ omero_py_release }}"
 
     # Workaround lack of restriction on temp file sizes
     # https://github.com/ome/omero-web/issues/118

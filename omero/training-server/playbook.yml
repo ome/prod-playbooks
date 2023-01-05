@@ -75,6 +75,7 @@
         - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
         - "omero-cli-render=={{ omero_cli_render_release }}"
         - "omero-metadata=={{ omero_metadata_release }}"
+        - "omero-py>={{ omero_py_release }}"
         - "reportlab<3.6"
         - markdown
         - scipy
@@ -439,14 +440,14 @@
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: False
-    omero_server_release: "{{ omero_server_release_override | default('5.6.5') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.15.0') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('5.0.0') }}"
+    omero_server_release: "{{ omero_server_release_override | default('5.6.6') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.16.0') }}"
+    omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
     omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.11.3') }}"
+    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.12.0') }}"
     omero_mapr_release: "{{ omero_mapr_release_override | default('0.5.0') }}"
     omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
-    omero_py_release: "{{ omero_py_release_override | default('5.12.0') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
 
     # The omero_web_apps_* vars are used by the ome.omero_web role under
     # Python 3 otherwise ignored
