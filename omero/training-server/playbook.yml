@@ -107,6 +107,7 @@
         - "omero-py>={{ omero_py_release }}"
 
       omero_web_config_set:
+        omero.web.show_forgot_password: false
         omero.web.apps:
            - "omero_iviewer"
            - "omero_figure"
