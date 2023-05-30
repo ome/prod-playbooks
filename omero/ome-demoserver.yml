@@ -382,7 +382,7 @@
       - "omero-cli-duplicate=={{ omero_cli_duplicate_release }}"
       - "omero-cli-render=={{ omero_cli_render_release }}"
       - "omero-metadata=={{ omero_metadata_release }}"
-      - "omero-demo-cleanup==git+https://github.com/ome/omero-demo-cleanup"
+      - "omero-demo-cleanup==0.2.0"
       # For OMERO.figure script
       - "reportlab<3.6"
       - markdown
