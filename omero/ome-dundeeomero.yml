@@ -218,9 +218,12 @@
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
       omero.jvmcfg.system_memory: 17000
-      omero.ldap.base: "{{ omero_server_ldap_base | default('example') }}"
+      omero.ldap.base: "{{ omero_server_ldap_base }}"
       omero.ldap.config: true
-      omero.ldap.urls: "{{ omero_server_ldap_urls | default('ldap://example.org') }}"
+      omero.ldap.urls: "ldaps://{{ ldap_host }}:636"
+      omero.ldap.username: "{{ omero_server_ldap_username }}"
+      omero.ldap.password: "{{ omero_server_ldap_password | default('') }}"
+      omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
       omero.mail.config: true
       omero.mail.from: "{{ omero_server_mail_from | default('omero@example.org') }}"
       omero.mail.host: "{{ omero_server_mail_host | default('smtp.example.org') }}"
