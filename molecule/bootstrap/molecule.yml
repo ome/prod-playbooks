@@ -5,7 +5,7 @@ dependency:
     role-file: requirements.yml
 driver:
   name: docker
-lint: |
+lint:
     yamllint .
     ansible-lint
     flake8
