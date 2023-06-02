@@ -9,8 +9,6 @@ lint: |
     yamllint .
     ansible-lint
     flake8
-  # TODO: enable
-  enabled: False
 platforms:
   - name: ome-pg-prod1.openmicroscopy.org
     image: centos/systemd

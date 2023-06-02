@@ -7,8 +7,6 @@ lint: |
     yamllint .
     ansible-lint
     flake8
-  # TODO: enable
-  enabled: False
 platforms:
   - name: release
     image: centos:7
