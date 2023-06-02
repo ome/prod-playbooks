@@ -5,8 +5,10 @@ dependency:
     role-file: requirements.yml
 driver:
   name: docker
-#lint:
-#  name: yamllint
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
 platforms:
   - name: omedev
     image: centos:7
@@ -24,5 +26,3 @@ scenario:
     - syntax
 verifier:
   name: testinfra
-  lint:
-    name: flake8
