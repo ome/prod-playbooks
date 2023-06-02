@@ -54,5 +54,3 @@ scenario:
   name: docker-prod
 verifier:
   name: testinfra
-  lint:
-    name: flake8

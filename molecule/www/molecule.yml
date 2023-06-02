@@ -25,5 +25,3 @@ scenario:
   name: www
 verifier:
   name: testinfra
-  lint:
-    name: flake8
