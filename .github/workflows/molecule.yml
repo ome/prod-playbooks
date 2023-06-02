@@ -28,7 +28,7 @@ jobs:
         scenario: ${{fromJson(needs.list-scenarios.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v3
-      - uses: ome/action-ome-ansible-molecule@main
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
       - name: Install Ansible & Molecule
