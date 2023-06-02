@@ -20,7 +20,7 @@ jobs:
     name: Test
     needs:
       - list-scenarios
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       # Keep running so we can see if other tests pass
       fail-fast: false
