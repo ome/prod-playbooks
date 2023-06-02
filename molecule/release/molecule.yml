@@ -3,7 +3,7 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
+lint: |
     yamllint .
     ansible-lint
     flake8
