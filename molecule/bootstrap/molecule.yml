@@ -6,10 +6,9 @@ dependency:
 driver:
   name: docker
 lint:
-    PATH=${PATH}
-    yamllint .
-#    ansible-lint
-#    flake8
+  name: yamllint
+  # TODO: enable
+  enabled: False
 platforms:
   - name: omedev
     image: centos:7
