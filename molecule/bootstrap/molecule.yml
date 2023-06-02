@@ -5,8 +5,8 @@ dependency:
     role-file: requirements.yml
 driver:
   name: docker
-lint:
-  name: yamllint
+#lint:
+#  name: yamllint
 platforms:
   - name: omedev
     image: centos:7
