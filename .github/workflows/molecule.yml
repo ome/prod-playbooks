@@ -12,7 +12,7 @@ jobs:
     outputs:
       matrix: ${{ steps.listscenarios.outputs.scenarios }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: listscenarios
         uses: ome/action-ansible-molecule-list-scenarios@main
 
@@ -27,7 +27,12 @@ jobs:
       matrix:
         scenario: ${{fromJson(needs.list-scenarios.outputs.matrix)}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ome/action-ome-ansible-molecule@main
         with:
-          scenario: ${{ matrix.scenario }}
+          python-version: '3.9'
+      - name: Install Ansible & Molecule
+        run: pip install "ansible<8" ansible-lint flake8 \
+          "molecule<5" molecule-plugins[docker] pytest-testinfra
+      - name: Run molecule
+        run: molecule test -s "${{ matrix.scenario }}"
