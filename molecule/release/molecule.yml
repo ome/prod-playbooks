@@ -35,5 +35,3 @@ scenario:
   name: release
 verifier:
   name: testinfra
-  lint:
-    name: flake8
