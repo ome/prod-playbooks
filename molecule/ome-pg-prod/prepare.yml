@@ -1,8 +1,8 @@
 # Workaround lack of cron on Docker
 - hosts: ome-pg-prod1.openmicroscopy.org
   tasks:
-  - name: Install cron
-    become: yes
-    yum:
-      name: cronie
-      state: present
+   - name: Install cron
+     become: yes
+     yum:
+       name: cronie
+       state: present

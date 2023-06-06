@@ -73,7 +73,7 @@
           metrics_path: /metrics/9100
           scheme: https
           static_configs:
-          - targets: "{{ monitored_node_exporter_hosts }}"
+            - targets: "{{ monitored_node_exporter_hosts }}"
 
         - job_name: omero-web
           basic_auth:
@@ -82,7 +82,7 @@
           metrics_path: /django_prometheus/metrics
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_web_hosts }}"
+            - targets: "{{ monitored_omero_web_hosts }}"
 
         - job_name: jmx-blitz
           basic_auth:
@@ -91,7 +91,7 @@
           metrics_path: /metrics/9180
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_server_hosts }}"
+            - targets: "{{ monitored_omero_server_hosts }}"
 
         - job_name: jmx-indexer
           basic_auth:
@@ -100,7 +100,7 @@
           metrics_path: /metrics/9181
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_server_hosts }}"
+            - targets: "{{ monitored_omero_server_hosts }}"
 
         - job_name: jmx-pixeldata
           basic_auth:
@@ -109,7 +109,7 @@
           metrics_path: /metrics/9182
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_server_hosts }}"
+            - targets: "{{ monitored_omero_server_hosts }}"
 
         - job_name: postgres-exporter
           basic_auth:
@@ -118,7 +118,7 @@
           metrics_path: /metrics/9187
           scheme: https
           static_configs:
-          - targets: "{{ monitored_postgres_hosts }}"
+            - targets: "{{ monitored_postgres_hosts }}"
 
         - job_name: omero-server
           basic_auth:
@@ -127,11 +127,12 @@
           metrics_path: /metrics/9449
           scheme: https
           static_configs:
-          - targets: "{{ monitored_omero_server_hosts }}"
+            - targets: "{{ monitored_omero_server_hosts }}"
 
 # Federated metrics from the IDR
 # To get all federated metrics so you can decide what to fetch:
-# curl -G https://idr.openmicroscopy.org/prometheus/federate --data-urlencode 'match[]={__name__=~".+"}'
+# curl -G https://idr.openmicroscopy.org/prometheus/federate \
+# --data-urlencode 'match[]={__name__=~".+"}'
 
         - job_name: federate-{{ idr_internal_1 }}
           honor_labels: true
@@ -142,11 +143,11 @@
               - '{job="node-exporter"}'
               - '{job="omero-server"}'
           scheme: https
-          static_configs:
-          - targets:
-            - "{{ idr_internal_1 }}.openmicroscopy.org"
-            labels:
-              prometheussrc: "{{ idr_internal_1 }}"
+            static_configs:
+            - targets:
+              - "{{ idr_internal_1 }}.openmicroscopy.org"
+              labels:
+                prometheussrc: "{{ idr_internal_1 }}"
 
         - job_name: federate-{{ idr_internal_2 }}
           honor_labels: true
@@ -157,11 +158,11 @@
               - '{job="node-exporter"}'
               - '{job="omero-server"}'
           scheme: https
-          static_configs:
-          - targets:
-            - "{{ idr_internal_2 }}.openmicroscopy.org"
-            labels:
-              prometheussrc: "{{ idr_internal_2 }}"
+            static_configs:
+            - targets:
+              - "{{ idr_internal_2 }}.openmicroscopy.org"
+              labels:
+                prometheussrc: "{{ idr_internal_2 }}"
 
         - job_name: federate-idr-production
           honor_labels: true
@@ -172,11 +173,11 @@
               - '{job="node-exporter"}'
               - '{job="omero-server"}'
           scheme: https
-          static_configs:
-          - targets:
-            - idr.openmicroscopy.org
-            labels:
-              prometheussrc: idr-production
+            static_configs:
+            - targets:
+              - idr.openmicroscopy.org
+              labels:
+                prometheussrc: idr-production
 
         - job_name: federate-idr-analysis
           basic_auth:
@@ -193,11 +194,11 @@
               - '{__name__="container_cpu_user_seconds_total"}'
               - '{__name__="container_memory_rss"}'
           scheme: https
-          static_configs:
-          - targets:
-            - idr-analysis.openmicroscopy.org
-            labels:
-              prometheussrc: idr-analysis
+            static_configs:
+            - targets:
+              - idr-analysis.openmicroscopy.org
+              labels:
+                prometheussrc: idr-analysis
 
     # The prometheus role sets the prometheus_internal_ip variable that is
     # used later
@@ -291,8 +292,10 @@
         image: minio/minio:RELEASE.2020-10-18T21-54-12Z
         command: gateway nas /data
         env:
-          MINIO_ACCESS_KEY: "{{ ome_miniodev_access_key | default('minio') }}"
-          MINIO_SECRET_KEY: "{{ ome_miniodev_secret_key | default('minio123') }}"
+          MINIO_ACCESS_KEY: "{{ ome_miniodev_access_key \
+                        | default('minio') }}"
+          MINIO_SECRET_KEY: "{{ ome_miniodev_secret_key \
+                        | default('minio123') }}"
         name: miniodev
         state: started
         published_ports:
@@ -323,21 +326,31 @@
 
   vars:
 
-    monitored_node_exporter_hosts: "{{ ome_monitored_node_exporter_hosts | default([]) }}"
-    monitored_postgres_hosts: "{{ ome_monitored_postgres_hosts | default([]) }}"
-    monitored_omero_server_hosts: "{{ ome_monitored_omero_server_hosts | default([]) }}"
-    monitored_omero_web_hosts: "{{ ome_monitored_omero_web_hosts | default([]) }}"
+    monitored_node_exporter_hosts: "{{ ome_monitored_node_exporter_hosts\
+    | default([]) }}"
+    monitored_postgres_hosts: "{{ ome_monitored_postgres_hosts\
+    | default([]) }}"
+    monitored_omero_server_hosts: "{{ ome_monitored_omero_server_hosts\
+    | default([]) }}"
+    monitored_omero_web_hosts: "{{ ome_monitored_omero_web_hosts\
+    | default([]) }}"
 
     prometheus_docker_user: 909
     redmine_docker_user: 999
 
-    idr_internal_1: "{{ ome_monitored_idr_internal_1 | default('idr1') }}"
-    idr_internal_2: "{{ ome_monitored_idr_internal_2 | default('idr2') }}"
+    idr_internal_1: "{{ ome_monitored_idr_internal_1\
+    | default('idr1') }}"
+    idr_internal_2: "{{ ome_monitored_idr_internal_2\
+    | default('idr2') }}"
 
-    scrape_username: "{{ ome_monitored_scrape_username | default('monitoring') }}"
-    scrape_password: "{{ ome_monitored_scrape_password | default('monitoring') }}"
-    scrape_idr_username: "{{ ome_monitored_scrape_idr_username | default('monitoring') }}"
-    scrape_idr_password: "{{ ome_monitored_scrape_idr_password | default('monitoring') }}"
+    scrape_username: "{{ ome_monitored_scrape_username\
+    | default('monitoring') }}"
+    scrape_password: "{{ ome_monitored_scrape_password\
+    | default('monitoring') }}"
+    scrape_idr_username: "{{ ome_monitored_scrape_idr_username\
+    | default('monitoring') }}"
+    scrape_idr_password: "{{ ome_monitored_scrape_idr_password\
+    | default('monitoring') }}"
 
     nginx_version: 1.18.0
 

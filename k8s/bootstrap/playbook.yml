@@ -1,4 +1,4 @@
 ---
 - hosts: vlan-10ge-servers
   roles:
-  - role: ome.network
+   - role: ome.network

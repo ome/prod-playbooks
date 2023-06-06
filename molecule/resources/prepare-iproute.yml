@@ -1,14 +1,14 @@
 # Install iproute for ansible network vars
 - hosts: all
   tasks:
-  - name: Install iproute
-    become: yes
-    yum:
-      name: iproute
-      state: present
+   - name: Install iproute
+     become: yes
+     yum:
+       name: iproute
+       state: present
 
-  - name: Install cron
-    become: true
-    yum:
-      name: cronie
-      state: present
+   - name: Install cron
+     become: true
+     yum:
+       name: cronie
+       state: present
