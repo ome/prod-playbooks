@@ -33,7 +33,7 @@ jobs:
           python-version: '3.8'
       - name: Install Ansible & Molecule
         run: |
-            pip install wheel "ome-ansible-molecule==0.7.0a1"
-            pip install -U molecule molecule-plugins[docker]
+            pip install "ansible<8" ansible-lint flake8
+            pip install "molecule<5" molecule-plugins[docker] pytest-testinfra
       - name: Run molecule
         run: molecule test -s "${{ matrix.scenario }}"
