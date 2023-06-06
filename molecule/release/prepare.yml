@@ -10,11 +10,11 @@
   tasks:
     - name: Create existing released components
       file:
-       path: "{{ item }}/component/3.1.8"
-       state: directory
-       owner: root
-       group: root
-       mode: 01555
+        path: "{{ item }}/component/3.1.8"
+        state: directory
+        owner: root
+        group: root
+        mode: 01555
       with_items: "{{ www_folders }}"
     - name: Create minor version directory
       file:
