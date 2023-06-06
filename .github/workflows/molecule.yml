@@ -33,7 +33,7 @@ jobs:
           python-version: '3.8'
       - name: Install Ansible & Molecule
         run: |
-            pip install "ansible<8" ansible-lint flake8
+            pip install "ansible<8" "ansible-lint<6.13" flake8
             pip install "molecule<5" "ansible-compat<4"
             pip install molecule-plugins[docker] pytest-testinfra
       - name: Run molecule
