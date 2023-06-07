@@ -6,7 +6,10 @@
 # - Migrate database with pg_dump, pg_restore.
 # - Upgrade database.
 #   Do run shape_color_argb_to_rgba.sql.
-#   UPDATE shape SET points = REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*', '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points LIKE 'points[%';
+#   UPDATE shape SET points =
+#   REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*',
+#  '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points
+#   LIKE 'points[%';
 # - bin/omero db password for root and public users.
 # - systemctl start omero-{server,web}
 
@@ -90,10 +93,16 @@
             - webindex
           viewname: "webindex_custom"
         omero.web.ui.top_links:
-          - ["Virtual Microscope", "webindex", {"title": "Virtual Microscope"}]
-          - ["HELP", "https://help.openmicroscopy.org/virtual-microscope.html", {"title": "Help", "target": "new"}]
+          - - "Virtual Microscope"
+            - "webindex"
+            - {"title": "Virtual Microscope"}
+          - - "HELP"
+            - "https://help.openmicroscopy.org/virtual-microscope.html"
+            - {"title": "Help", "target": "new"}
         omero.web.ui.right_plugins:
-          - ["Acquisition", "webclient/data/includes/right_plugin.acquisition.js.html", "metadata_tab"]
+          - - "Acquisition"
+            - "webclient/data/includes/right_plugin.acquisition.js.html"
+            - "metadata_tab"
         omero.web.caches:
           default:
             BACKEND: django_redis.cache.RedisCache
@@ -104,17 +113,27 @@
           - "omero_iviewer"
           - "virtualmicroscope"
         omero.web.open_with:
-          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
-          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - - "Image viewer"
+            - "webgateway"
+            - supported_objects: ["image"]
+              script_url: "webclient/javascript/ome.openwith_viewer.js"
+          - - "omero_iviewer"
+            - "omero_iviewer_index"
+            - supported_objects: ["images", "dataset", "well"]
+              script_url": "omero_iviewer/openwith.js"
+              label: "OMERO.iviewer"
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.public.enabled: true
-        omero.web.public.password: "{{ omero_web_public_password | default('public') }}"
+        omero.web.public.password: >-
+          "{{ omero_web_public_password | default('public') }}"
         omero.web.public.url_filter: "/(webgateway|gallery)/"
-        omero.web.public.user: "{{ omero_web_public_user | default('public') }}"
+        omero.web.public.user: >-
+          "{{ omero_web_public_user | default('public') }}"
       omero_web_apps_packages:
         - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
-        - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
+        - "omero-virtual-microscope==\
+        {{ omero_web_apps_release.omero_virtual_microscope }}"
       omero_web_python_addons:
         - "django-redis==5.0.0"
         - "omero-py>={{ omero_py_release }}"
@@ -138,7 +157,8 @@
       become: yes
       replace:
         path: "{{ item.path }}"
-        regexp: "(\\<fileNamePattern\\>\\$\\{omero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
+        regexp: "(\\<fileNamePattern\\>\\$\\{om\
+          ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
         replace: "\\1.gz\\2"
         backup: yes
       with_items: "{{ logbacks.files }}"
