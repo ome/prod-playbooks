@@ -9,10 +9,12 @@
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: yes
       yum:
-        name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+        name: "http://li.nux.ro/download/nux/dextop/el7/x86_64\
+          /nux-dextop-release-0-5.el7.nux.noarch.rpm"
         state: present
 
-    - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
+    # web server is included for decoupled OMERO.web
+    - name: OMERO.figure server-side&script prerequisites & web server
       become: yes
       yum:
         name: "{{ item }}"
@@ -31,7 +33,8 @@
         - gcc
         - python-ldap
 
-    # Since Nginx isn't installed until later the directories are created in advance
+    # Since Nginx isn't installed until later
+    # the directories are created in advance
     - name: Create nginx include directories
       become: yes
       file:
@@ -54,11 +57,11 @@
 
     - role: ome.postgresql
       postgresql_databases:
-      - name: omero
-      postgresql_users:
-      - user: omero
-        password: omero
-        databases: [omero]
+        - name: omero
+        postgresql_users:
+        - user: omero
+          password: omero
+          databases: [omero]
 
     - role: ome.postgresql_backup
       postgresql_backup_compress: true
@@ -101,7 +104,9 @@
         - gallery_settings/
         - cell/
         - tissue/
-        - webclient/(?!({{ idr_omero_web_public_url_filters_webclient_exclude | join('|') }}))
+        - >
+          webclient/(?!({{ idr_omero_web_public_url_filters_webclient_exclude
+          | join('|') }}))
         - webgateway/(?!(archived_files|download_as))
       omero_web_python_addons:
         - "omero-py>={{ omero_py_release }}"
@@ -116,20 +121,51 @@
            - "omero_parade"
            - "omero_mapr"
         omero.web.ui.center_plugins:
-          - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
-          - ["Parade", "omero_parade/init.js.html", "omero_parade"]
+          - - "Auto Tag"
+            - "omero_webtagging_autotag/auto_tag_init.js.html"
+            - "auto_tag_panel"
+          - - "Parade"
+            - "omero_parade/init.js.html"
+            - "omero_parade"
         omero.web.ui.top_links:
-          - ["Data", "webindex", {"title": "Browse Data via Projects, Tags etc"}]
-          - ["History", "history", {"title": "History"}]
-          - ["Help", "https://help.openmicroscopy.org/", {"title": "Open OMERO user guide in a new tab", "target": "new"}]
-          - ["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]
-          - ["Tag Search", "tagsearch"]
-          - ["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]
-          - ["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]
+          - - "Data"
+            - "webindex"
+            - title: "Browse Data via Projects, Tags etc"
+          - - "History"
+            - "history"
+            - title: "History"
+          - - "Help"
+            - "https://help.openmicroscopy.org/"
+            - title: "Open OMERO user guide in a new tab"
+              target: "new"
+          - - "Figure"
+            - "figure_index"
+            - title: "Open Figure in new tab"
+              target: "_blank"
+          - - "Tag Search"
+            - "tagsearch"
+          - - "Genes"
+            - query_string: {"experimenter": -1}
+              viewname: "maprindex_gene" 
+            - title": "Find Gene annotations"
+          - - "Key-Value"
+            - viewname: "maprindex_keyvalue"
+            - title: "Search for manually-added Key-Value pairs"
         omero.web.open_with:
-          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
-          - ["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]
-          - ["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]
+          - - "Image viewer"
+            - "webgateway"
+            - supported_objects: ["image"]
+              script_url: "webclient/javascript/ome.openwith_viewer.js"
+          - - omero_figure
+            - new_figure
+            - supported_objects: ["images"]
+              target: "_blank"
+              label: "OMERO.figure"
+          - - omero_fpbioimage
+            - fpbioimage_index
+            - supported_objects: ["image"]
+              script_url: "fpbioimage/openwith.js"
+              label: "FPBioimage"
           - - omero_iviewer
             - omero_iviewer_index
             - supported_objects:
@@ -172,15 +208,18 @@
             }
 
         omero.web.public.enabled: true
-        omero.web.public.password: "{{ omero_web_public_password_override | default('secret') }}"
-        omero.web.public.url_filter: "^/({{ idr_omero_web_public_url_filters | join('|') }})"
-        omero.web.public.user: "{{ omero_web_public_user_override | default('secret') }}"
+        omero.web.public.password: >-
+          {{ omero_web_public_password_override | default('secret') }}
+        omero.web.public.url_filter: >-
+          ^/({{ idr_omero_web_public_url_filters | join('|') }})
+        omero.web.public.user: >-
+          {{ omero_web_public_user_override | default('secret') }}
 
     - role: ome.iptables_raw
 
     - role: ome.docker
       docker_additional_options:
-        # Manually configure to avoid conflicts between Docker and system rules
+        # Manually configure to avoid conflicts betw Docker and system rules
         iptables: false
 
     - role: ome.cli_utils
@@ -205,8 +244,12 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        url: >-
+          https://raw.githubusercontent.com/ome/omero-figure/v{{
+          omero_figure_release
+          }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/figure_scripts/Figure_To_Pdf.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -215,8 +258,11 @@
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-figure/f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Dataset_Images_To_New_Figure.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Dataset_Images_To_New_Figure.py
+        url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
+          /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
+          /Dataset_Images_To_New_Figure.py"
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/figure_scripts/Dataset_Images_To_New_Figure.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -225,8 +271,11 @@
     - name: Download the Figure_Images_To_Dataset.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-figure/f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Figure_Images_To_Dataset.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_Images_To_Dataset.py
+        url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
+          /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
+          /Figure_Images_To_Dataset.py"
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/figure_scripts/Figure_Images_To_Dataset.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -235,7 +284,8 @@
     - name: Create a workshop_scripts directory
       become: yes
       file:
-        path: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts
+        path: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/workshop_scripts"
         state: directory
         mode: 0755
         recurse: yes
@@ -245,8 +295,11 @@
     - name: Download the Scipy_Gaussian_Filter.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-python/v{{ ome_training_scripts_release }}/scripts/scipy_gaussian_filter.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/Scipy_Gaussian_Filter.py
+        url: >-
+          https://raw.githubusercontent.com/ome/omero-guide-python/v{{
+          ome_training_scripts_release }}/scripts/scipy_gaussian_filter.py
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/workshop_scripts/Scipy_Gaussian_Filter.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -255,8 +308,11 @@
     - name: Download the simple_frap.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-python/v{{ ome_training_scripts_release }}/scripts/simple_frap.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap.py
+        url: >-
+          https://raw.githubusercontent.com/ome/omero-guide-python/v{{
+          ome_training_scripts_release }}/scripts/simple_frap.py
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/workshop_scripts/simple_frap.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -265,8 +321,11 @@
     - name: Download the simple_frap_with_figure.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-python/v{{ ome_training_scripts_release }}/scripts/simple_frap_with_figure.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/workshop_scripts/simple_frap_with_figure.py
+        url: >-
+          https://raw.githubusercontent.com/ome/omero-guide-python/v{{
+          ome_training_scripts_release }}/scripts/simple_frap_with_figure.py
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/workshop_scripts/simple_frap_with_figure.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
@@ -283,7 +342,9 @@
     - name: Download the ldap scripts
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{ apache_docker_release }}/bin/ldapmanager
+        url: >-
+          https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{
+          apache_docker_release }}/bin/ldapmanager
         dest: /home/ldap/ldapmanager
         mode: 0755
         force: yes
@@ -304,7 +365,8 @@
        name: "importer1"
        state: present
        groups: "{{ omero_server_system_managedrepo_group }}"
-       password: "{{ os_system_users_password | password_hash('sha512', 'ome') }}"
+       password: >-
+        {{ os_system_users_password | password_hash('sha512', 'ome') }}
 
     - name: Allow managed repo group to login
       become: yes
