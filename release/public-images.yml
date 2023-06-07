@@ -4,9 +4,9 @@
   tasks:
     - name: create symlinks for public images
       file:
-        force: yes
+        force: true
         src: "../../../repos/curated/{{ item.key }}/public/"
-        dest:  >
+        dest: >
            "/uod/idr/www/downloads.
            openmicroscopy.org/
            images/{{ item.value }}"
@@ -14,9 +14,9 @@
       with_dict: "{{ public_folders }}"
     - name: check public images
       file:
-        force: yes
+        force: true
         src: "{{ item.src }}"
-        dest:  >
+        dest: >
            "/uod/idr/www/downloads.
            openmicroscopy.org/
            images/{{ item.dest }}"
