@@ -145,9 +145,9 @@
           scheme: https
           static_configs:
             - targets:
-              - "{{ idr_internal_1 }}.openmicroscopy.org"
-              labels:
-                prometheussrc: "{{ idr_internal_1 }}"
+                - "{{ idr_internal_1 }}.openmicroscopy.org"
+                labels:
+                  prometheussrc: "{{ idr_internal_1 }}"
 
         - job_name: federate-{{ idr_internal_2 }}
           honor_labels: true
@@ -160,9 +160,9 @@
           scheme: https
           static_configs:
             - targets:
-              - "{{ idr_internal_2 }}.openmicroscopy.org"
-              labels:
-                prometheussrc: "{{ idr_internal_2 }}"
+                - "{{ idr_internal_2 }}.openmicroscopy.org"
+                labels:
+                  prometheussrc: "{{ idr_internal_2 }}"
 
         - job_name: federate-idr-production
           honor_labels: true
@@ -175,9 +175,9 @@
           scheme: https
           static_configs:
             - targets:
-              - idr.openmicroscopy.org
-              labels:
-                prometheussrc: idr-production
+                - idr.openmicroscopy.org
+                labels:
+                  prometheussrc: idr-production
 
         - job_name: federate-idr-analysis
           basic_auth:
@@ -196,9 +196,9 @@
           scheme: https
           static_configs:
             - targets:
-              - idr-analysis.openmicroscopy.org
-              labels:
-                prometheussrc: idr-analysis
+                - idr-analysis.openmicroscopy.org
+                labels:
+                  prometheussrc: idr-analysis
 
     # The prometheus role sets the prometheus_internal_ip variable that is
     # used later
