@@ -1,34 +1,35 @@
 ---
-# Playbook which runs the necessary root-level steps so that a host can be managed by others
+# Playbook which runs the necessary root-level steps
+# so that a host can be managed by others
 - hosts: omedev
   roles:
 
-  - role: ome.network
+    - role: ome.network
 
-  - role: ome.lvm_partition
-    lvm_lvname: var_log
-    lvm_lvmount: /var/log
-    lvm_lvsize: 4g
-    lvm_lvfilesystem: xfs
-    lvm_vgname: VolGroup00
-  - role: ome.lvm_partition
-    lvm_lvname: root
-    lvm_lvmount: /
-    lvm_lvsize: 100%FREE
-    lvm_lvfilesystem: xfs
-    lvm_vgname: VolGroup00
-    lvm_shrink: False
+    - role: ome.lvm_partition
+      lvm_lvname: var_log
+      lvm_lvmount: /var/log
+      lvm_lvsize: 4g
+      lvm_lvfilesystem: xfs
+      lvm_vgname: VolGroup00
+    - role: ome.lvm_partition
+      lvm_lvname: root
+      lvm_lvmount: /
+      lvm_lvsize: 100%FREE
+      lvm_lvfilesystem: xfs
+      lvm_vgname: VolGroup00
+      lvm_shrink: False
 
-  - role: ome.sudoers
-    sudoers_individual_commands:
-    - user: "%omedev"
-      become: ALL
-      command: "NOPASSWD: ALL"
+    - role: ome.sudoers
+      sudoers_individual_commands:
+        - user: "%omedev"
+          become: ALL
+          command: "NOPASSWD: ALL"
 
-  - role: ome.upgrade_distpackages
-    upgrade_distpackages_reboot_kernel: True
+    - role: ome.upgrade_distpackages
+      upgrade_distpackages_reboot_kernel: True
 
 
 - hosts: vlan-10ge-servers, vlan-ome-idr-docker
   roles:
-  - role: ome.network
+    - role: ome.network
