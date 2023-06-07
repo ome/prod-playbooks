@@ -143,11 +143,11 @@
               - '{job="node-exporter"}'
               - '{job="omero-server"}'
           scheme: https
-            static_configs:
-            - targets:
-              - "{{ idr_internal_1 }}.openmicroscopy.org"
-              labels:
-                prometheussrc: "{{ idr_internal_1 }}"
+          static_configs:
+          - targets:
+            - "{{ idr_internal_1 }}.openmicroscopy.org"
+            labels:
+              prometheussrc: "{{ idr_internal_1 }}"
 
         - job_name: federate-{{ idr_internal_2 }}
           honor_labels: true
