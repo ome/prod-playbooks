@@ -17,16 +17,20 @@
     - role: ome.deploy_archive
       become: yes
       deploy_archive_dest_dir: /var/www
-      deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/phpbbforum-20190718.tar.gz
-      deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
+      deploy_archive_src_url: "https://downloads.openmicroscopy.org/web-\
+        archive/phpbbforum-20190718.tar.gz"
+      deploy_archive_sha256: "e9d7a7eefbacf42ddbdf92b201584913cb6d94ec\
+        331750f811232b2e91aa5b40"
       # This file is patched later so only unzip if it doesn't exist
       when: not _phpbbforum_style_file_st.stat.exists
 
     - role: ome.deploy_archive
       become: yes
       deploy_archive_dest_dir: /var/www
-      deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/schemas_documentation-20211213.tar.gz
-      deploy_archive_sha256: 27cc5def458112a2e259484906f2bc8c0e0e2bd0a728b0a478302537d67117ec
+      deploy_archive_src_url: "https://downloads.openmicroscopy.org/web-\
+        archive/schemas_documentation-20211213.tar.gz"
+      deploy_archive_sha256: "27cc5def458112a2e259484906f2bc8c0e0e2bd\
+        0a728b0a478302537d67117ec"
       # This file is patched later so only unzip if it doesn't exist
       when: not _schemas_doc_file_st.stat.exists
 
@@ -49,7 +53,9 @@
       cron:
         name: "Deploy the website"
         special_time: hourly
-        job: "/usr/local/bin/deploy 2>&1 > /dev/null || /usr/local/bin/deploy -f"
+        job: >-
+          /usr/local/bin/deploy 2>&1 >
+          /dev/null || /usr/local/bin/deploy -f
 
     - name: Update static phpbb stylesheet
       become: yes
@@ -70,5 +76,6 @@
         path: "{{ phpbbforum_style_file }}"
 
   vars:
-    phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"
+    phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy\
+      .org/community/style.php?id=7&lang=en"
     schemas_doc_file: "/var/www/schemas_documentation/OME-2016-06/ome.html"

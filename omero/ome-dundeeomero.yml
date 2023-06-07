@@ -68,10 +68,10 @@
       postgresql_databases:
         - name: "{{ omero_server_dbname | default('omero') }}"
       postgresql_users:
-      - user: "{{ omero_server_dbuser | default('omero') }}"
-        password: "{{ omero_server_dbpassword | default('omero') }}"
-        databases:
-          - "{{ omero_server_dbname | default('omero') }}"
+        - user: "{{ omero_server_dbuser | default('omero') }}"
+          password: "{{ omero_server_dbpassword | default('omero') }}"
+          databases:
+            - "{{ omero_server_dbname | default('omero') }}"
 
 
     # Note - had to have these set to `install-mock` to progress role

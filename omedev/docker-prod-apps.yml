@@ -144,10 +144,10 @@
               - '{job="omero-server"}'
           scheme: https
           static_configs:
-          - targets:
-            - "{{ idr_internal_1 }}.openmicroscopy.org"
-            labels:
-              prometheussrc: "{{ idr_internal_1 }}"
+            - targets:
+              - "{{ idr_internal_1 }}.openmicroscopy.org"
+              labels:
+                prometheussrc: "{{ idr_internal_1 }}"
 
         - job_name: federate-{{ idr_internal_2 }}
           honor_labels: true
@@ -158,7 +158,7 @@
               - '{job="node-exporter"}'
               - '{job="omero-server"}'
           scheme: https
-            static_configs:
+          static_configs:
             - targets:
               - "{{ idr_internal_2 }}.openmicroscopy.org"
               labels:
@@ -173,7 +173,7 @@
               - '{job="node-exporter"}'
               - '{job="omero-server"}'
           scheme: https
-            static_configs:
+          static_configs:
             - targets:
               - idr.openmicroscopy.org
               labels:
@@ -194,7 +194,7 @@
               - '{__name__="container_cpu_user_seconds_total"}'
               - '{__name__="container_memory_rss"}'
           scheme: https
-            static_configs:
+          static_configs:
             - targets:
               - idr-analysis.openmicroscopy.org
               labels:

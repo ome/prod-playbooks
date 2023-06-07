@@ -13,7 +13,7 @@
       - user: idr-redmine
         password: "{{ idr_redmine_postgres_password | default('idr-redmine') }}"
         databases:
-        - idr-redmine
+         - idr-redmine
      postgresql_server_auth:
       - database: idr-redmine
         user: idr-redmine

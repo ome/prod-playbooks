@@ -7,8 +7,8 @@
       - name: Install open-vm-tools if system is a VMware vm
         become: yes
         yum:
-          name: open-vm-tools
-          state: installed
+            name: open-vm-tools
+            state: installed
         when: >
             ((ansible_virtualization_type is defined)
             and (ansible_virtualization_type == "VMware"))
@@ -16,48 +16,48 @@
       # Two tasks here which could instead use the role at
       # https://github.com/openmicroscopy/ansible-role-lvm-partition/,
       # but that role
-      # will change the device name to symlinks rather than 
+      # will change the device name to symlinks rather than
       # existing device ID.
       - name: storage | Resize root LV
         tags: lvm
         become: yes
         lvol:
-          lv: root
-          vg: "{{ lvm_vgname  }}"
-          size: "{{ provision_root_lvsize }}"
-          shrink: no
+            lv: root
+            vg: "{{ lvm_vgname  }}"
+            size: "{{ provision_root_lvsize }}"
+            shrink: no
 
       # Grow the filesystem to fill the LV
       - name: storage | Resize root FS
         tags: lvm
         become: yes
         filesystem:
-          fstype: "{{ filesystem }}"
-          dev: /dev/mapper/{{ lvm_vgname }}-root
-          resizefs: yes
+            fstype: "{{ filesystem }}"
+            dev: /dev/mapper/{{ lvm_vgname }}-root
+            resizefs: yes
 
       - name: storage | Resize var_log LV
         tags: lvm
         become: yes
         lvol:
-          lv: var_log
-          vg: "{{ lvm_vgname  }}"
-          size: "{{ provision_varlog_lvsize }}"
-          shrink: no
+            lv: var_log
+            vg: "{{ lvm_vgname  }}"
+            size: "{{ provision_varlog_lvsize }}"
+            shrink: no
 
       # Grow the filesystem to fill the LV
       - name: storage | Resize var_log FS
         tags: lvm
         become: yes
         filesystem:
-          fstype: "{{ filesystem }}"
-          dev: /dev/mapper/{{ lvm_vgname }}-var_log
-          resizefs: yes
+            fstype: "{{ filesystem }}"
+            dev: /dev/mapper/{{ lvm_vgname }}-var_log
+            resizefs: yes
 
   roles:
-    # Now OME are using RHEL without Spacewalk, 
+    # Now OME are using RHEL without Spacewalk,
     # the current best-method of
-    # checking `is server deployed in Dundee/SLS` 
+    # checking `is server deployed in Dundee/SLS`
     # is checking for the SLS nameservers.
       - role: ome.system_monitor_agent
         tags: monitoring
@@ -65,16 +65,16 @@
 
       - role: ome.sudoers
         sudoers_individual_commands:
-        - user: "%omedev"
-          become: ALL
-          command: "NOPASSWD: /usr/local/bin/deploy *"
+            - user: "%omedev"
+              become: ALL
+              command: "NOPASSWD: /usr/local/bin/deploy *"
 
   post_tasks:
 
       - name: Check_MK logwatch plugin | check for plugin existence
         tags: monitoring
         stat:
-          path: "{{ check_mk_agent_plugin_path }}/mk_logwatch"
+            path: "{{ check_mk_agent_plugin_path }}/mk_logwatch"
         register: check_mk_logwatch_plugin_st
 
       - name: Check_MK logwatch plugin | activate the plugin
@@ -89,7 +89,7 @@
       - name: Check_MK logwatch plugin | check for default config file
         tags: monitoring
         stat:
-          path: "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
+            path: "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
         register: check_mk_logwatch_plugin_conf_st
 
       - name: Check_MK logwatch plugin | copy the default config
@@ -104,7 +104,8 @@
   vars:
       # Check_MK (system monitoring) paths
       check_mk_agent_plugin_path: /usr/share/check-mk-agent/available-plugins
-      check_mk_agent_config_example_path: /usr/share/check_mk/agents/cfg_examples
+      check_mk_agent_config_example_path: "/usr/share\
+        /check_mk/agents/cfg_examples"
       check_mk_agent_config_path: /etc/check-mk-agent
 
       filesystem: "ext4"

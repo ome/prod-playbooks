@@ -4,5 +4,5 @@
    - name: Install cron
      become: yes
      yum:
-       name: cronie
-       state: present
+      name: cronie
+      state: present

@@ -96,14 +96,14 @@
 - hosts: omero-web
 
   tasks:
-  - name: Create nginx proxy for prometheus web exporters
-    become: yes
-    copy:
-      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
-      src: confd-nested-proxy-exporters-web.conf
-      mode: 0644
-    notify:
-      - restart nginx
+    - name: Create nginx proxy for prometheus web exporters
+      become: yes
+      copy:
+        dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
+        src: confd-nested-proxy-exporters-web.conf
+        mode: 0644
+      notify:
+        - restart nginx
 
   handlers:
     - name: restart nginx
