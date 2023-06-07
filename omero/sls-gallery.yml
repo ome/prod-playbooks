@@ -92,9 +92,17 @@
           args:
             - userdata
         omero.web.ui.top_links:
-          - ["Image Gallery", "webindex", {"title": "Image Gallery"}]
-          - ["HELP", "https://help.openmicroscopy.org/web-client.html", {"title": "Help", "target": "new"}]
-          - ["SLS Homepage", "https://www.lifesci.dundee.ac.uk/", {"title": "SLS Homepage", "target": "new"}]
+          - - "Image Gallery"
+            - "webindex"
+            - title: "Image Gallery"
+          - - "HELP"
+            - "https://help.openmicroscopy.org/web-client.html"
+            - title: "Help"
+              target": "new"
+          - - "SLS Homepage"
+            - "https://www.lifesci.dundee.ac.uk/"
+            - title: "SLS Homepage"
+              target: "new"
         omero.web.caches:
           default:
             BACKEND: django_redis.cache.RedisCache
@@ -103,8 +111,15 @@
         omero.web.apps:
           - "omero_iviewer"
         omero.web.open_with:
-          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
-          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - - "Image viewer"
+            - "webgateway"
+            - supported_objects: ["image"]
+              script_url: "webclient/javascript/ome.openwith_viewer.js"
+          - - "omero_iviewer"
+            - "omero_iviewer_index"
+            - supported_objects": ["images", "dataset", "well"]
+              script_url": "omero_iviewer/openwith.js"
+              label: "OMERO.iviewer"
         omero.web.viewer.view: omero_iviewer.views.index
       omero_web_apps_packages:
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
@@ -124,7 +139,8 @@
       become: yes
       replace:
         path: "{{ item.path }}"
-        regexp: "(\\<fileNamePattern\\>\\$\\{omero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
+        regexp: "(\\<fileNamePattern\\>\\$\\{om\
+          ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
         replace: "\\1.gz\\2"
         backup: yes
       with_items: "{{ logbacks.files }}"
