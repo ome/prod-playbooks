@@ -58,7 +58,7 @@
     - role: ome.postgresql
       postgresql_databases:
         - name: omero
-        postgresql_users:
+      postgresql_users:
         - user: omero
           password: omero
           databases: [omero]
@@ -113,13 +113,13 @@
 
       omero_web_config_set:
         omero.web.apps:
-           - "omero_iviewer"
-           - "omero_figure"
-           - "omero_fpbioimage"
-           - "omero_webtagging_autotag"
-           - "omero_webtagging_tagsearch"
-           - "omero_parade"
-           - "omero_mapr"
+          - "omero_iviewer"
+          - "omero_figure"
+          - "omero_fpbioimage"
+          - "omero_webtagging_autotag"
+          - "omero_webtagging_tagsearch"
+          - "omero_parade"
+          - "omero_mapr"
         omero.web.ui.center_plugins:
           - - "Auto Tag"
             - "omero_webtagging_autotag/auto_tag_init.js.html"
@@ -146,7 +146,7 @@
             - "tagsearch"
           - - "Genes"
             - query_string: {"experimenter": -1}
-              viewname: "maprindex_gene" 
+              viewname: "maprindex_gene"
             - title": "Find Gene annotations"
           - - "Key-Value"
             - viewname: "maprindex_keyvalue"
@@ -362,11 +362,11 @@
     - name: Add operating system user "importer1"
       become: true
       user:
-       name: "importer1"
-       state: present
-       groups: "{{ omero_server_system_managedrepo_group }}"
-       password: >-
-        {{ os_system_users_password | password_hash('sha512', 'ome') }}
+        name: "importer1"
+        state: present
+        groups: "{{ omero_server_system_managedrepo_group }}"
+        password: >-
+          {{ os_system_users_password | password_hash('sha512', 'ome') }}
 
     - name: Allow managed repo group to login
       become: yes
@@ -382,7 +382,7 @@
         image: openmicroscopy/apacheds:{{ apache_docker_release }}
         name: ldap
         published_ports:
-        - "10389:10389"
+          - "10389:10389"
         state: started
         restart_policy: always
 
@@ -435,7 +435,7 @@
         command: server /srv/minio
         env_file: /etc/minio/docker-minio.env
         published_ports:
-        - "9000:9000"
+          - "9000:9000"
         state: started
         restart_policy: always
         volumes:
@@ -480,19 +480,21 @@
         state: present
 
     # TODO: Move to an independent role, currently bundled in
-    # https://github.com/manics/ansible-role-minio-s3-gateway/blob/0.1.0/tasks/minio-client.yml
+    # https://github.com/manics/ansible-role-minio-s3-gateway/
+    # blob/0.1.0/tasks/minio-client.yml
     - name: Download minio client
       become: true
       get_url:
-        url:
-          https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2020-11-25T23-04-07Z
-        checksum:
-          sha256:985c43f9bec8fdc4ef2ee44c63c9657e10c4cfeb5cb949179d6d693f7428c314
+        url: "https://dl.min.io/client/mc/release\
+          /linux-amd64/archive/mc.RELEASE.2020-11-25T23-04-07Z"
+        checksum: "sha256:985c43f9bec8fdc4ef2ee44c63\
+          c9657e10c4cfeb5cb949179d6d693f7428c314"
         dest: /usr/local/bin/mc
         mode: u=rwx,g=rx,o=rx
 
   # Crypted passwords generated using
-  # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+  # https://docs.ansible.com/ansible/latest/reference_appendices/
+  # faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
   vars:
     #omero_server_datadir_chown: True
     #temporal upgrade force for omero server workaround
@@ -502,14 +504,22 @@
     omero_server_system_managedrepo_group: managed_repo_group
     omero_server_datadir_managedrepo_mode: u=rwX,g=srwX,o=rX,+t
     omero_server_datadir_chown: False
-    omero_server_release: "{{ omero_server_release_override | default('5.6.6') }}"
-    omero_web_release: "{{ omero_web_release_override | default('5.16.0') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.12.0') }}"
-    omero_mapr_release: "{{ omero_mapr_release_override | default('0.5.0') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
-    omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
+    omero_server_release: >-
+      {{ omero_server_release_override | default('5.6.6') }}
+    omero_web_release: >-
+      {{ omero_web_release_override | default('5.16.0') }}
+    omero_figure_release: >-
+      {{ omero_figure_release_override | default('5.1.0') }}
+    omero_fpbioimage_release: >-
+      {{ omero_fpbioimage_release_override | default('0.4.0') }}
+    omero_iviewer_release: >-
+      {{ omero_iviewer_release_override | default('0.12.0') }}
+    omero_mapr_release: >-
+      {{ omero_mapr_release_override | default('0.5.0') }}
+    omero_parade_release: >-
+      {{ omero_parade_release_override | default('0.2.3') }}
+    omero_py_release: >-
+      {{ omero_py_release_override | default('5.13.1') }}
 
     # The omero_web_apps_* vars are used by the ome.omero_web role under
     # Python 3 otherwise ignored
@@ -522,16 +532,27 @@
       - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
       - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
 
-    ome_training_scripts_release: "{{ ome_training_scripts_release_override | default('0.2.0') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.2.0') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
-    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
-    omero_metadata_release: "{{ omero_metadata_release_overrride | default('0.8.0') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.7.0') }}"
-    os_system_users_password: "{{ os_system_users_password_override | default('ome') }}"
-    apache_docker_release: "{{ apache_docker_release_override | default('0.6.0') }}"
-    omero_ms_zarr_release: "{{ omero_ms_zarr_release_override | default('latest') }}"
-    minio_docker_release: "{{ minio_docker_release_override | default('RELEASE.2020-11-25T22-36-25Z') }}"
+    ome_training_scripts_release: >-
+      {{ ome_training_scripts_release_override | default('0.2.0') }}
+    omero_webtagging_autotag_release: >-
+      {{ omero_webtagging_autotag_release_override | default('3.2.0') }}
+    omero_webtagging_tagsearch_release: >-
+      {{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}
+    omero_cli_duplicate_release: >-
+      {{ omero_cli_duplicate_release_override | default('0.4.0') }}
+    omero_metadata_release: >-
+      {{ omero_metadata_release_overrride | default('0.8.0') }}
+    omero_cli_render_release: >-
+      {{ omero_cli_render_release_override | default('0.7.0') }}
+    os_system_users_password: >-
+      {{ os_system_users_password_override | default('ome') }}
+    apache_docker_release: >-
+      {{ apache_docker_release_override | default('0.6.0') }}
+    omero_ms_zarr_release: >-
+      {{ omero_ms_zarr_release_override | default('latest') }}
+    minio_docker_release: >-
+      {{ minio_docker_release_override |
+      default('RELEASE.2020-11-25T22-36-25Z') }}
     ldap_password: "{{ ldap_password_override | default ('secret') }}"
     omero_server_config_set:
       #omero.fs.importUsers: "fm1"
@@ -549,7 +570,8 @@
       omero.glacier2.IceSSL.CertFile: server.p12
       # This password doesn't need to be secret
       omero.glacier2.IceSSL.Password: secret
-      omero.fs.repo.path: "%user%_%userId%/%thread%//%year%-%month%/%day%/%time%"
+      omero.fs.repo.path: >-
+        %user%_%userId%/%thread%//%year%-%month%/%day%/%time%
       omero.ldap.config: "true"
       omero.ldap.urls: "ldap://localhost:10389"
       omero.ldap.base: "dc=openmicroscopy,dc=org"
@@ -560,9 +582,11 @@
       omero.ldap.password: "{{ ldap_password }}"
       omero.ldap.sync_on_login: "true"
       omero.ldap.user_filter: "(objectClass=person)"
-      omero.ldap.user_mapping: "omeName=uid,firstName=givenName,lastName=sn,email=mail"
+      omero.ldap.user_mapping: >-
+        omeName=uid,firstName=givenName,lastName=sn,email=mail
       omero.ldap.username: "uid=admin,ou=system"
-      omero.server.nodedescriptors: "master:Blitz-0,Indexer-0,Processor-0,Storm,Tables-0"
+      omero.server.nodedescriptors: >-
+        master:Blitz-0,Indexer-0,Processor-0,Storm,Tables-0
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
