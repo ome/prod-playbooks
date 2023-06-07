@@ -25,7 +25,8 @@
         - "omero-py>={{ omero_py_release }}"
 
     # Now OME are using RHEL without Spacewalk, the current best-method of
-    # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
+    # checking `is server deployed in Dundee/SLS` is
+    # checking for the SLS nameservers.
     - role: ome.system_monitor_agent
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
@@ -57,10 +58,13 @@
       replace:
         dest: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
-        replace: "worker_processes {{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }};"
+        replace: >-
+          "worker_processes {{ ((ansible_processor_count *
+          ansible_processor_cores) / 2) |round|int }};"
 
     # post 2.3 'dest' should be renamed 'path'
-    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+    # cf https://www.digitalocean.com/community/tutorials/
+    # how-to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
       become: yes
       replace:
@@ -106,12 +110,18 @@
 
     omero_web_release: "{{ omero_web_release_override | default('5.16.0') }}"
     omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
-    omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.12.0') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.2.0') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
+    omero_figure_release: >-
+      "{{ omero_figure_release_override | default('5.1.0') }}"
+    omero_fpbioimage_release: >-
+      "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: >-
+      "{{ omero_iviewer_release_override | default('0.12.0') }}"
+    omero_parade_release: >-
+      "{{ omero_parade_release_override | default('0.2.3') }}"
+    omero_webtagging_autotag_release: >-
+      "{{ omero_webtagging_autotag_release_override | default('3.2.0') }}"
+    omero_webtagging_tagsearch_release: >-
+      "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
 
     omero_web_apps_names:
       - omero_figure
