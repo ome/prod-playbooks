@@ -4,35 +4,38 @@
 
   roles:
 
-  - role: ome.prometheus_jmx
+    - role: ome.prometheus_jmx
 
-  - role: ome.prometheus_postgres
-    prometheus_postgres_dbname: omero
+    - role: ome.prometheus_postgres
+      prometheus_postgres_dbname: omero
 
-  # For restart handlers
-  - role: ome.omero_common
+    # For restart handlers
+    - role: ome.omero_common
 
-  - role: ome.omero_prometheus_exporter
-    omero_prometheus_exporter_omero_user: "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
-    omero_prometheus_exporter_omero_password: "{{ secret_omero_prometheus_exporter_omero_password | default('omero') }}"
+    - role: ome.omero_prometheus_exporter
+      omero_prometheus_exporter_omero_user: >-
+        "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
+      omero_prometheus_exporter_omero_password: >-
+        "{{ secret_omero_prometheus_exporter_omero_password
+        | default('omero') }}"
 
   tasks:
 
-  - name: omero-server prometheus jmx agents
-    become: yes
-    copy:
-      dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
-      src: omero-server-config-prometheus.omero
-      mode: 0644
-    notify:
-    - restart omero-server
+    - name: omero-server prometheus jmx agents
+      become: yes
+      copy:
+        dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
+        src: omero-server-config-prometheus.omero
+        mode: 0644
+      notify:
+        - restart omero-server
 
 
 - hosts: omero-web
 
   roles:
 
-  - role: ome.omero_web_django_prometheus
+    - role: ome.omero_web_django_prometheus
 
 
 # NOTE: This assumes omero-web.conf is present and includes
@@ -41,46 +44,48 @@
 
   roles:
 
-  - role: ome.prometheus_node
+    - role: ome.prometheus_node
 
   # Autodetect whether selinux is enabled
-  - role: ome.selinux_utils
+    - role: ome.selinux_utils
 
   tasks:
 
-  - name: nginx selinux allow network connect
-    become: yes
-    seboolean:
-      name: httpd_can_network_connect
-      state: yes
-      persistent: yes
-    when: selinux_enabled
+    - name: nginx selinux allow network connect
+      become: yes
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+      when: selinux_enabled
 
-  - name: Create monitoring htpasswd
-    become: yes
-    copy:
-      content: "{{ secret_monitoring_nginx_htpasswd | default(monitoring_nginx_htpasswd) }}"
-      dest: /etc/nginx/monitoring.htpasswd
-      mode: 0644
+    - name: Create monitoring htpasswd
+      become: yes
+      copy:
+        content: >-
+          "{{ secret_monitoring_nginx_htpasswd |
+          default(monitoring_nginx_htpasswd) }}"
+        dest: /etc/nginx/monitoring.htpasswd
+        mode: 0644
 
-  # This is fine to apply to all servers because if an exporter doesn't
-  # exist it will return an error, and we know which exporters to expect
-  # when scraping
-  - name: Create nginx proxy for prometheus exporters
-    become: yes
-    copy:
-      dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
-      src: confd-nested-proxy-exporters.conf
-      mode: 0644
-    notify:
-    - restart nginx
+    # This is fine to apply to all servers because if an exporter doesn't
+    # exist it will return an error, and we know which exporters to expect
+    # when scraping
+    - name: Create nginx proxy for prometheus exporters
+      become: yes
+      copy:
+        dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
+        src: confd-nested-proxy-exporters.conf
+        mode: 0644
+      notify:
+        - restart nginx
 
   handlers:
-  - name: restart nginx
-    become: yes
-    service:
-      name: nginx
-      state: restarted
+    - name: restart nginx
+      become: yes
+      service:
+        name: nginx
+        state: restarted
 
   vars:
     # monitoring:monitoring
@@ -98,11 +103,11 @@
       src: confd-nested-proxy-exporters-web.conf
       mode: 0644
     notify:
-    - restart nginx
+      - restart nginx
 
   handlers:
-  - name: restart nginx
-    become: yes
-    service:
-      name: nginx
-      state: restarted
+    - name: restart nginx
+      become: yes
+      service:
+        name: nginx
+        state: restarted
