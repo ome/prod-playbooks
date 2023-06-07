@@ -3,71 +3,71 @@
 - hosts: www
 
   pre_tasks:
-  - name: Check if phpbbforum already unzipped
-    stat:
-      path: "{{ phpbbforum_style_file }}"
-    register: _phpbbforum_style_file_st
+    - name: Check if phpbbforum already unzipped
+      stat:
+        path: "{{ phpbbforum_style_file }}"
+      register: _phpbbforum_style_file_st
 
-  - name: Check if schemas_documentation already unzipped
-    stat:
-      path: "{{ schemas_doc_file }}"
-    register: _schemas_doc_file_st
+    - name: Check if schemas_documentation already unzipped
+      stat:
+        path: "{{ schemas_doc_file }}"
+      register: _schemas_doc_file_st
 
   roles:
-  - role: ome.deploy_archive
-    become: yes
-    deploy_archive_dest_dir: /var/www
-    deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/phpbbforum-20190718.tar.gz
-    deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
-    # This file is patched later so only unzip if it doesn't exist
-    when: not _phpbbforum_style_file_st.stat.exists
+    - role: ome.deploy_archive
+      become: yes
+      deploy_archive_dest_dir: /var/www
+      deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/phpbbforum-20190718.tar.gz
+      deploy_archive_sha256: e9d7a7eefbacf42ddbdf92b201584913cb6d94ec331750f811232b2e91aa5b40
+      # This file is patched later so only unzip if it doesn't exist
+      when: not _phpbbforum_style_file_st.stat.exists
 
-  - role: ome.deploy_archive
-    become: yes
-    deploy_archive_dest_dir: /var/www
-    deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/schemas_documentation-20211213.tar.gz
-    deploy_archive_sha256: 27cc5def458112a2e259484906f2bc8c0e0e2bd0a728b0a478302537d67117ec
-    # This file is patched later so only unzip if it doesn't exist
-    when: not _schemas_doc_file_st.stat.exists
+    - role: ome.deploy_archive
+      become: yes
+      deploy_archive_dest_dir: /var/www
+      deploy_archive_src_url: https://downloads.openmicroscopy.org/web-archive/schemas_documentation-20211213.tar.gz
+      deploy_archive_sha256: 27cc5def458112a2e259484906f2bc8c0e0e2bd0a728b0a478302537d67117ec
+      # This file is patched later so only unzip if it doesn't exist
+      when: not _schemas_doc_file_st.stat.exists
 
   tasks:
-  - name: install deployment script
-    become: yes
-    template:
-      src: files/deploy
-      dest: /usr/local/bin/deploy
-      mode: 0555
+    - name: install deployment script
+      become: yes
+      template:
+        src: files/deploy
+        dest: /usr/local/bin/deploy
+        mode: 0555
 
-  - name: Install Cron daemon
-    become: yes
-    yum:
-     name: cronie
-     state: installed
+    - name: Install Cron daemon
+      become: yes
+      yum:
+        name: cronie
+        state: installed
 
-  - name: Add cron job updating the website
-    become: yes
-    cron:
-      name: "Deploy the website"
-      special_time: hourly
-      job: "/usr/local/bin/deploy 2>&1 > /dev/null || /usr/local/bin/deploy -f"
+    - name: Add cron job updating the website
+      become: yes
+      cron:
+        name: "Deploy the website"
+        special_time: hourly
+        job: "/usr/local/bin/deploy 2>&1 > /dev/null || /usr/local/bin/deploy -f"
 
-  - name: Update static phpbb stylesheet
-    become: yes
-    blockinfile:
-      block: |
-        form,
-        .quick-login,
-        .buttons,
-        #jumpbox~h3,
-        #jumpbox~p,
-        .headerspace~h3,
-        .headerspace~p,
-        ul.linklist.rightside,
-        ul.linklist li.rightside {
-            display: none;
-        }
-      marker: "/* {mark} ANSIBLE MANAGED BLOCK */"
-      path: "{{ phpbbforum_style_file }}"
+    - name: Update static phpbb stylesheet
+      become: yes
+      blockinfile:
+        block: |
+          form,
+          .quick-login,
+          .buttons,
+          #jumpbox~h3,
+          #jumpbox~p,
+          .headerspace~h3,
+          .headerspace~p,
+          ul.linklist.rightside,
+          ul.linklist li.rightside {
+              display: none;
+          }
+        marker: "/* {mark} ANSIBLE MANAGED BLOCK */"
+        path: "{{ phpbbforum_style_file }}"
 
   vars:
     phpbbforum_style_file: "/var/www/phpbbforum/www.openmicroscopy.org/community/style.php?id=7&lang=en"
