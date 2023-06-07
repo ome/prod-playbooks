@@ -51,11 +51,17 @@ public_folders:
 # List containing special public images/folders that do not meet the standard
 # layout above
 special_public_folders:
-  - { src: '../../../../repos/curated/samples/carlos/big.tiff', dest: 'gateway_tests/big.tiff'}
-  - { src: '../../../../repos/curated/samples/ome/CHOBI_d3d.dv', dest: 'gateway_tests/CHOBI_d3d.dv'}
-  - { src: '../../../../repos/curated/samples/ome/tinyTest.d3d.dv',
-      dest: 'gateway_tests/tinyTest.d3d.dv' }
-  - { src: '../../../../repos/curated/cellomics/public/', dest: 'HCS/BBBC'}
-  - { src: '../../../../repos/curated/incell/public/', dest: 'HCS/INCELL2000'}
-  - { src: '../../../../repos/curated/perkinelmer-operetta/public/', dest: 'HCS/Operetta'}
-  - { src: '../../../repos/curated/zip/u-track/', dest: 'u-track'}
+  - src: '../../../../repos/curated/samples/carlos/big.tiff'
+    dest: 'gateway_tests/big.tiff'
+  - src: '../../../../repos/curated/samples/ome/CHOBI_d3d.dv'
+    dest: 'gateway_tests/CHOBI_d3d.dv'
+  - src: '../../../../repos/curated/samples/ome/tinyTest.d3d.dv'
+    dest: 'gateway_tests/tinyTest.d3d.dv'
+  - src: '../../../../repos/curated/cellomics/public/'
+    dest: 'HCS/BBBC'
+  - src: '../../../../repos/curated/incell/public/'
+    dest: 'HCS/INCELL2000'
+  - src: '../../../../repos/curated/perkinelmer-operetta/public/'
+    dest: 'HCS/Operetta'
+  - src: '../../../repos/curated/zip/u-track/'
+    dest: 'u-track'
