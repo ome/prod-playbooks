@@ -1,6 +1,7 @@
 # Install OMERO.server, OMERO.web and prepare the OME (UoD/SLS) prerequisites
 
-# To allow the OMERO.web plugins to upgrade, also pass `--extra-vars upgrade_webapps=True`
+# To allow the OMERO.web plugins to upgrade
+# also pass `--extra-vars upgrade_webapps=True`
 
 - hosts: ome-demoservers
   pre_tasks:
@@ -13,7 +14,8 @@
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
 
-    # Perhaps alter the role at https://github.com/openmicroscopy/ansible-role-lvm-partition/
+    # Perhaps alter the role at
+    # https://github.com/openmicroscopy/ansible-role-lvm-partition/
     # to make some of the variables non-required.
     - name: Resize root FS without altering mount options
       tags: lvm
@@ -46,7 +48,8 @@
 
   roles:
     # Now OME are using RHEL without Spacewalk, the current best-method of
-    # checking `is server deployed in Dundee/SLS` is checking for the SLS nameservers.
+    # checking `is server deployed in Dundee/SLS` is
+    # checking for the SLS nameservers.
     - role: ome.system_monitor_agent
       tags: monitoring
       when: "'10.1.255.216' in ansible_dns.nameservers"
@@ -99,10 +102,10 @@
       postgresql_databases:
         - name: omero
       postgresql_users:
-      - user: "{{ omero_server_dbuser | default('omero') }}"
-        password: "{{ omero_server_dbpassword | default('omero') }}"
-        databases:
-          - omero
+        - user: "{{ omero_server_dbuser | default('omero') }}"
+          password: "{{ omero_server_dbpassword | default('omero') }}"
+          databases:
+            - omero
 
     - role: ome.omero_server
       # Defaults overridden in private configuration
@@ -119,7 +122,8 @@
         - "omero-figure=={{ omero_figure_release }}"
         - "omero-fpbioimage=={{ omero_fpbioimage_release }}"
         - "omero-webtagging-autotag=={{ omero_webtagging_autotag_release }}"
-        - "omero-webtagging-tagsearch=={{ omero_webtagging_tagsearch_release }}"
+        - "omero-webtagging-tagsearch==\
+          {{ omero_webtagging_tagsearch_release }}"
         - "omero-iviewer=={{ omero_iviewer_release }}"
         - "omero-parade=={{ omero_parade_release }}"
         - "omero-signup=={{ omero_signup_release }}"
@@ -131,16 +135,17 @@
       omero_user_admin_user: root
       omero_user_admin_pass: "{{ omero_server_rootpassword }}"
       omero_group_create:
-      - name: public
-        type: read-only
-      - name: "My Data"
-        type: private
+        - name: public
+          type: read-only
+        - name: "My Data"
+          type: private
       omero_user_create:
-      - login: "{{ secret_omero_web_public_user | default('public') }}"
-        firstname: Public
-        lastname: User
-        password: "{{ secret_omero_web_public_password | default('public') }}"
-        groups: "--group-name public"
+        - login: "{{ secret_omero_web_public_user | default('public') }}"
+          firstname: Public
+          lastname: User
+          password: >-
+            "{{ secret_omero_web_public_password | default('public') }}"
+          groups: "--group-name public"
 
     - role: ome.ssl_certificate
       tags: ssl
@@ -166,9 +171,12 @@
       replace:
         path: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
-        replace: "worker_processes {{ ((ansible_processor_count * ansible_processor_cores) / 2) |round|int }};"
+        replace: >-
+          "worker_processes {{ ((ansible_processor_count *
+          ansible_processor_cores) / 2) |round|int }};"
 
-    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+    # cf https://www.digitalocean.com/community/tutorials/
+    # how-to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
       become: yes
       replace:
@@ -214,7 +222,8 @@
       become: yes
       template:
         src: templates/omero-web-config-for-webapps.j2
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
+        dest: >-
+          "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
         owner: "root"
         group: "root"
         mode: "u=rw,go=r"
@@ -254,7 +263,10 @@
     - name: Check_MK postgres plugin | activate the plugin
       tags: monitoring
       become: yes
-      command: cp "{{ check_mk_agent_plugin_path }}/mk_postgres" /usr/share/check-mk-agent/plugins/ creates=/usr/share/check-mk-agent/plugins/mk_postgres
+      command: >
+        cp "{{ check_mk_agent_plugin_path }}/mk_postgres"
+        /usr/share/check-mk-agent/plugins/
+        creates=/usr/share/check-mk-agent/plugins/mk_postgres
       when: check_mk_postgres_plugin_st.stat.exists
 
     - name: Check_MK logwatch plugin | check for plugin existence
@@ -266,7 +278,10 @@
     - name: Check_MK logwatch plugin | activate the plugin
       tags: monitoring
       become: yes
-      command: cp "{{ check_mk_agent_plugin_path }}/mk_logwatch" /usr/share/check-mk-agent/plugins/ creates=/usr/share/check-mk-agent/plugins/mk_logwatch
+      command: >
+        cp "{{ check_mk_agent_plugin_path }}/mk_logwatch"
+        /usr/share/check-mk-agent/plugins/
+        creates=/usr/share/check-mk-agent/plugins/mk_logwatch
       when: check_mk_logwatch_plugin_st.stat.exists
 
     - name: Check_MK logwatch plugin | check for default config file
@@ -293,7 +308,9 @@
     - name: Create a figure scripts directory
       become: yes
       file:
-        path: "{{ omero_server_basedir }}/OMERO.server/lib/scripts/omero/figure_scripts"
+        path: >-
+          "{{ omero_server_basedir }}/OMERO.server/lib/
+          scripts/omero/figure_scripts"
         state: directory
         mode: 0755
         recurse: yes
@@ -302,27 +319,42 @@
     - name: Download the Figure_To_Pdf.py script
       become: yes
       get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/{{ omero_figure_script_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
-        dest: "{{ omero_server_basedir }}/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py"
+        url: >-
+          https://raw.githubusercontent.com/ome/omero-figure/
+          {{ omero_figure_script_release }}/omero_figure/scripts/omero/
+          figure_scripts/Figure_To_Pdf.py
+        dest: >-
+          "{{ omero_server_basedir }}/OMERO.server/lib/
+          scripts/omero/figure_scripts/Figure_To_Pdf.py"
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
         force: yes
 
   vars:
-    omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
-    omero_figure_script_release: "{{ omero_figure_script_release_override | default('v5.1.0') }}"
-    omero_fpbioimage_release: "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
-    omero_iviewer_release: "{{ omero_iviewer_release_override | default('0.12.0') }}"
-    omero_parade_release: "{{ omero_parade_release_override | default('0.2.3') }}"
-    omero_webtagging_autotag_release: "{{ omero_webtagging_autotag_release_override | default('3.2.0') }}"
-    omero_webtagging_tagsearch_release: "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
-    omero_signup_release: "{{ omero_signup_release_override | default('0.3.2') }}"
+    omero_figure_release: >-
+      "{{ omero_figure_release_override | default('5.1.0') }}"
+    omero_figure_script_release: >-
+      "{{ omero_figure_script_release_override | default('v5.1.0') }}"
+    omero_fpbioimage_release: >-
+      "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+    omero_iviewer_release: >-
+      "{{ omero_iviewer_release_override | default('0.12.0') }}"
+    omero_parade_release: >-
+      "{{ omero_parade_release_override | default('0.2.3') }}"
+    omero_webtagging_autotag_release: >-
+      "{{ omero_webtagging_autotag_release_override | default('3.2.0') }}"
+    omero_webtagging_tagsearch_release: >-
+      "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
+    omero_signup_release: >-
+      "{{ omero_signup_release_override | default('0.3.2') }}"
 
-    omero_server_release: "{{ omero_server_release_override | default('5.6.6') }}"
+    omero_server_release: >-
+      "{{ omero_server_release_override | default('5.6.6') }}"
     omero_web_release: "{{ omero_web_release_override | default('5.16.0') }}"
     omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
-    # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
+    # For https://github.com/openmicroscopy/ansible-role-java,
+    # which is a dependency.
     java_jdk_install: True
 
     # Check_MK (system monitoring) paths
@@ -331,9 +363,12 @@
     check_mk_agent_config_path: /etc/check-mk-agent
 
     # Pip versions
-    omero_cli_duplicate_release: "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
-    omero_cli_render_release: "{{ omero_cli_render_release_override | default('0.8.0') }}"
-    omero_metadata_release: "{{ omero_cli_metadata_release_override | default('0.10.0') }}"
+    omero_cli_duplicate_release: >-
+      "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
+    omero_cli_render_release: >-
+      "{{ omero_cli_render_release_override | default('0.8.0') }}"
+    omero_metadata_release: >-
+      "{{ omero_cli_metadata_release_override | default('0.10.0') }}"
 
     # Signup
     omero_signup_email_body: >-
@@ -343,14 +378,19 @@
       password: {password}\n\n
       Use these login details as follows\n
       1. In your browser, go to demo.openmicroscopy.org and log in.\n
-      2. Download the OMERO.insight [1] desktop application to import your first data into OMERO.\n
-      3. Following the steps in the omero-guide [2], change the server address to\n
+      2. Download the OMERO.insight [1] desktop application to im
+      port your first data into OMERO.\n
+      3. Following the steps in the omero-guide [2], change the server ad
+      dress to\n
       demo.openmicroscopy.org and connect\n
       using the login details as above to import your data.\n
-      4. Use the walkthrough example [3] to get ideas about how to start using OMERO.\n
+      4. Use the walkthrough example [3] to get ideas about ho
+      w to start using OMERO.\n
       OME Team\n\n
-      [1] https://omero-guides.readthedocs.io/en/latest/upload/docs/import-desktop-client.html \n
-      [2] https://omero-guides.readthedocs.io/en/latest/upload/docs/import-desktop-client.html#step-by-step \n
+      [1] https://omero-guides.readthedocs.io/en/latest\
+      /upload/docs/import-desktop-client.html \n
+      [2] https://omero-guides.readthedocs.io/en/latest/upload/\
+      docs/import-desktop-client.html#step-by-step \n
       [3] https://omero-guides.readthedocs.io/en/latest/example.html \n'
 
     postgresql_version: "11"
@@ -394,16 +434,23 @@
       omero.mail.config: true
       omero.mail.from: "{{ omero_server_mail_from }}"
       omero.mail.host: "{{ omero_server_mail_host }}"
-      # https://www.openmicroscopy.org/site/support/omero5.3/sysadmins/public.html
-      omero.web.public.user: "{{ secret_omero_web_public_user | default('public') }}"
-      omero.web.public.password: "{{ secret_omero_web_public_password | default('public') }}"
+      # https://www.openmicroscopy.org/site/support
+      # /omero5.3/sysadmins/public.html
+      omero.web.public.user: >-
+        "{{ secret_omero_web_public_user | default('public') }}"
+      omero.web.public.password: >-
+        "{{ secret_omero_web_public_password | default('public') }}"
       omero.web.public.enabled: True
       omero.web.public.server_id: 1
-      omero.web.public.url_filter: "^/(webgateway/(?!(archived_files|download_as))|webclient/annotation/([0-9]+)/)"
+      omero.web.public.url_filter: >-
+        "^/(webgateway/(?!(archived_files|download_as))| webclient
+        /annotation/([0-9]+)/)"
       omero.web.server_list: [["localhost", 4064, "omero"]]
       # Advice is (2*cores + 1) from OME docs.
-      omero.web.wsgi_workers: "{{ (2 * (ansible_processor_count * ansible_processor_cores)) + 1 }}"
-      omero.web.admins:  "{{ omero_web_admins }}"
+      omero.web.wsgi_workers: >-
+        "{{ (2 * (ansible_processor_count *
+        ansible_processor_cores)) + 1 }}"
+      omero.web.admins: "{{ omero_web_admins }}"
       # https://pypi.org/project/omero-iviewer/ - set iviewer to default viewer
       omero.web.viewer.view: omero_iviewer.views.index
       omero.web.nginx_server_extra_config:
