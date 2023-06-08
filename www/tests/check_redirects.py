@@ -37,8 +37,8 @@ redirect_uris = [
      '/events/12th-annual-users-meeting-2017.html'),
     ('/site/community/minutes/meetings/11th-annual-users-meeting-2016',
      '/events/11th-annual-users-meeting-2016.html'),
-    ('/site/community/minutes/meetings/10th-annual-users-meeting-june-2015', '/events/10th-annual-users-meeting-june-2015.html'),
-    ('/site/community/minutes/meetings/9th-annual-users-meeting-june-2014', '/events/9th-annual-users-meeting-june-2014.html'),
+    ('/site/community/minutes/meetings/10th-annual-users-meeting-june-2015', '/events/10th-annual-users-meeting-june-2015.html'),# noqa
+    ('/site/community/minutes/meetings/9th-annual-users-meeting-june-2014', '/events/9th-annual-users-meeting-june-2014.html'),# noqa
     ('/site/community/jobs', '/careers'),
 
     ('/site/products', '/products'),
@@ -68,12 +68,9 @@ redirect_uris = [
 ]
 external_uris = [
     ('/omero-blog', 'http://blog.openmicroscopy.org'),
-    ('/site/about/development-teams/glencoe-software',
-     'https://www.glencoesoftware.com/team.html'),
-    ('/site/community/scripts',
-     'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),# noqa
-    ('/site/support/bio-formats', 
-     'https://docs.openmicroscopy.org/latest/bio-formats/'),
+    ('/site/about/development-teams/glencoe-software', 'https://www.glencoesoftware.com/team.html'),# noqa
+    ('/site/community/scripts', 'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),# noqa
+    ('/site/support/bio-formats', 'https://docs.openmicroscopy.org/latest/bio-formats/'),# noqa
     ('/site/support/bio-formats5', 'https://docs.openmicroscopy.org/latest/bio-formats5/'),# noqa
     ('/site/support/bio-formats5.3', 'https://docs.openmicroscopy.org/latest/bio-formats5.3/'),# noqa
     ('/site/support/bio-formats5.4', 'https://docs.openmicroscopy.org/latest/bio-formats5.4/'),# noqa
