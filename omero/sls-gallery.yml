@@ -137,7 +137,7 @@
 
     - name: OMERO.server logs are compressed on rollover
       become: true
-      replace:
+      ansible.builtin.replace:
         path: "{{ item.path }}"
         regexp: "(\\<fileNamePattern\\>\\$\\{om\
           ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
