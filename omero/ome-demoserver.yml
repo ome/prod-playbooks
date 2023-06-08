@@ -161,7 +161,7 @@
     - name: reload web server
       listen: ssl certificate changed
       become: true
-      service:
+      ansible.builtin.service:
         name: nginx
         state: reloaded
 

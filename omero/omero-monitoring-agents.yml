@@ -83,7 +83,7 @@
   handlers:
     - name: restart nginx
       become: true
-      service:
+      ansible.builtin.service:
         name: nginx
         state: restarted
 
@@ -108,6 +108,6 @@
   handlers:
     - name: restart nginx
       become: true
-      service:
+      ansible.builtin.service:
         name: nginx
         state: restarted

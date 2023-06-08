@@ -154,7 +154,7 @@
 
     - name: OMERO.web starts on boot
       become: true
-      service:
+      ansible.builtin.service:
         name: "{{ item }}.service"
         enabled: true
       loop:

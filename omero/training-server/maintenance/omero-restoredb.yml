@@ -44,7 +44,7 @@
 
     - name: Stop OMERO.server
       become: true
-      service:
+      ansible.builtin.service:
         name: omero-server
         state: stopped
 
@@ -71,7 +71,7 @@
 
     - name: Start OMERO.server
       become: true
-      service:
+      ansible.builtin.service:
         name: omero-server
         state: started
 
