@@ -174,7 +174,8 @@
         path: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
         replace: >-
-          "worker_processes {{ ((ansible_processor_count * ansible_processor_cores) / 2) | round | int }};"
+          worker_processes {{ ((ansible_processor_count *
+          ansible_processor_cores) / 2) | round | int }};
 
     # cf https://www.digitalocean.com/community/tutorials/
     # how-to-optimize-nginx-configuration

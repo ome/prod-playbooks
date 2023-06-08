@@ -253,7 +253,7 @@
 
     - name: Run docker grafana
       become: true
-      docker_container:
+      community.docker.docker_container:
         image: grafana/grafana:7.2.0
         env:
           GF_SERVER_ROOT_URL: '%(protocol)s://%(domain)s:%(http_port)s/grafana/'
@@ -267,14 +267,14 @@
           - grafana-data:/var/lib/grafana
       register: _grafana_container
 
-    - name: prometheus htpasswd parent directory
+    - name: Prometheus htpasswd parent directory
       become: true
       ansible.builtin.file:
         path: /etc/nginx
         state: directory
         mode: 0755
 
-    - name: prometheus htpasswd file
+    - name: Prometheus htpasswd file
       become: true
       ansible.builtin.copy:
         dest: /etc/nginx/prometheus.htpasswd
@@ -289,7 +289,7 @@
     # This is a dev Minio server so expose the port directly
     - name: Run docker minio dev server
       become: true
-      docker_container:
+      community.docker.docker_container:
         image: minio/minio:RELEASE.2020-10-18T21-54-12Z
         command: gateway nas /data
         env:
@@ -307,7 +307,7 @@
 
     - name: Run docker nginx proxy
       become: true
-      docker_container:
+      community.docker.docker_container:
         image: library/nginx:{{ nginx_version }}
         name: nginx
         networks:
