@@ -361,7 +361,7 @@
 
     - name: Add operating system user "importer1"
       become: true
-      user:
+      ansible.builtin.user:
         name: "importer1"
         state: present
         groups: "{{ omero_server_system_managedrepo_group }}"
