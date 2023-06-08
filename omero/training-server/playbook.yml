@@ -413,7 +413,7 @@
 
     - name: Check if minio admin credentials exists
       become: true
-      stat:
+      ansible.builtin.stat:
         path: /etc/minio/docker-minio.env
       register: _minio_docker_env_st
 

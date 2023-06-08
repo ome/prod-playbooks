@@ -257,7 +257,7 @@
 
     - name: Check_MK postgres plugin | check for plugin existence
       tags: monitoring
-      stat:
+      ansible.builtin.stat:
         path: "{{ check_mk_agent_plugin_path }}/mk_postgres"
       register: check_mk_postgres_plugin_st
 
@@ -272,7 +272,7 @@
 
     - name: Check_MK logwatch plugin | check for plugin existence
       tags: monitoring
-      stat:
+      ansible.builtin.stat:
         path: "{{ check_mk_agent_plugin_path }}/mk_logwatch"
       register: check_mk_logwatch_plugin_st
 
@@ -287,7 +287,7 @@
 
     - name: Check_MK logwatch plugin | check for default config file
       tags: monitoring
-      stat:
+      ansible.builtin.stat:
         path: "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
       register: check_mk_logwatch_plugin_conf_st
 

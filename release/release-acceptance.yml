@@ -8,7 +8,7 @@
       when: product is not defined and version is not defined
 
     - name: Check the release component exist
-      stat:
+      ansible.builtin.stat:
         path: "{{ item }}/{{ product }}/{{ version }}/"
       register: s
       with_items: "{{ www_folders }}"

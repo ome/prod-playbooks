@@ -4,12 +4,12 @@
 
   pre_tasks:
     - name: Check if phpbbforum already unzipped
-      stat:
+      ansible.builtin.stat:
         path: "{{ phpbbforum_style_file }}"
       register: _phpbbforum_style_file_st
 
     - name: Check if schemas_documentation already unzipped
-      stat:
+      ansible.builtin.stat:
         path: "{{ schemas_doc_file }}"
       register: _schemas_doc_file_st
 
