@@ -59,7 +59,7 @@
 
     - name: Update static phpbb stylesheet
       become: true
-      blockinfile:
+      ansible.builtin.blockinfile:
         block: |
           form,
           .quick-login,
