@@ -6,7 +6,7 @@
       git:
         dest: /uod/idr/metadata/{{ item.name }}
         repo: https://github.com/IDR/{{ item.name }}
-        update: yes
+        update: true
         version: "{{ item.version }}"
       loop: "{{ studies | default([]) }}"
 

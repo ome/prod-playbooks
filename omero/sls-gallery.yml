@@ -142,7 +142,7 @@
         regexp: "(\\<fileNamePattern\\>\\$\\{om\
           ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
         replace: "\\1.gz\\2"
-        backup: yes
+        backup: true
       with_items: "{{ logbacks.files }}"
 
     - name: OMERO.web configuration is installed

@@ -124,7 +124,7 @@
       become: true
       systemd:
         name: nginx
-        enabled: yes
+        enabled: true
 
     # post 2.3 'dest' should be renamed 'path'
     - name: NGINX - Performance tuning - worker processes
@@ -177,7 +177,7 @@
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
         owner: root
 
     - name: Download the Figure_To_Pdf.py script

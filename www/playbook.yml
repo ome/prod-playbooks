@@ -25,7 +25,7 @@
             lv: root
             vg: "{{ lvm_vgname  }}"
             size: "{{ provision_root_lvsize }}"
-            shrink: no
+            shrink: false
 
       # Grow the filesystem to fill the LV
       - name: storage | Resize root FS
@@ -34,7 +34,7 @@
         filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-root
-            resizefs: yes
+            resizefs: true
 
       - name: storage | Resize var_log LV
         tags: lvm
@@ -43,7 +43,7 @@
             lv: var_log
             vg: "{{ lvm_vgname  }}"
             size: "{{ provision_varlog_lvsize }}"
-            shrink: no
+            shrink: false
 
       # Grow the filesystem to fill the LV
       - name: storage | Resize var_log FS

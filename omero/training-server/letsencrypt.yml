@@ -9,7 +9,7 @@
       become: true
       file:
         path: /srv/www/letsencrypt/.well-known/
-        recurse: yes
+        recurse: true
         state: directory
         mode: 0755
 
@@ -28,7 +28,7 @@
     # For renewals we configure Nginx to serve the challenge
     - role: ome.certbot
       become: true
-      certbot_create_if_missing: yes
+      certbot_create_if_missing: true
       certbot_admin_email: "{{ letsencrypt_email }}"
       certbot_domains:
         - "{{ https_certificate_domain }}"

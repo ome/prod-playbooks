@@ -24,7 +24,7 @@
         lv: root
         vg: VolGroup00
         size: "{{ provision_root_lvsize }}"
-        shrink: no
+        shrink: false
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: true
@@ -314,7 +314,7 @@
           scripts/omero/figure_scripts"
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
         owner: root
 
     - name: Download the Figure_To_Pdf.py script

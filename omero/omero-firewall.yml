@@ -17,7 +17,7 @@
       become: true
       iptables_raw_25:
         name: ssh_and_established
-        keep_unmanaged: no
+        keep_unmanaged: false
         rules: |
           -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
           -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT

@@ -237,7 +237,7 @@
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
         owner: "omero-server"
         group: "omero-server"
 
@@ -288,7 +288,7 @@
           /omero/workshop_scripts"
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
         owner: "omero-server"
         group: "omero-server"
 
@@ -337,7 +337,7 @@
         path: /home/ldap
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
 
     - name: Download the ldap scripts
       become: true
@@ -355,7 +355,7 @@
         path: /home/DropBox/trainer-1
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
         owner: "omero-server"
         group: "omero-server"
 
@@ -400,7 +400,7 @@
         network_mode: host
         restart_policy: always
         state: started
-        pull: yes
+        pull: true
         volumes:
           - "/OMERO:/OMERO:ro"
 

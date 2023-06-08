@@ -5,6 +5,6 @@
     - name: update presentations
       git:
         repo: https://github.com/ome/presentations
-        force: no
-        update: yes
+        force: false
+        update: true
         dest: "/uod/idr/www/downloads.openmicroscopy.org/presentations"
