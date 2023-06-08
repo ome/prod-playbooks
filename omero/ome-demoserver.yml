@@ -319,7 +319,7 @@
 
     - name: Download the Figure_To_Pdf.py script
       become: true
-      get_url:
+      ansible.builtin.get_url:
         ansible.builtin.url: >-
           https://raw.githubusercontent.com/ome/omero-figure/
           {{ omero_figure_script_release }}/omero_figure/scripts/omero/
