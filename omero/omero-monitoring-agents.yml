@@ -23,7 +23,7 @@
 
     - name: omero-server prometheus jmx agents
       become: true
-      copy:
+      ansible.builtin.copy:
         dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
         src: omero-server-config-prometheus.omero
         mode: 0644
@@ -61,7 +61,7 @@
 
     - name: Create monitoring htpasswd
       become: true
-      copy:
+      ansible.builtin.copy:
         content: >-
           "{{ secret_monitoring_nginx_htpasswd |
           default(monitoring_nginx_htpasswd) }}"
@@ -73,7 +73,7 @@
     # when scraping
     - name: Create nginx proxy for prometheus exporters
       become: true
-      copy:
+      ansible.builtin.copy:
         dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
         src: confd-nested-proxy-exporters.conf
         mode: 0644
@@ -98,7 +98,7 @@
   tasks:
     - name: Create nginx proxy for prometheus web exporters
       become: true
-      copy:
+      ansible.builtin.copy:
         dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
         src: confd-nested-proxy-exporters-web.conf
         mode: 0644

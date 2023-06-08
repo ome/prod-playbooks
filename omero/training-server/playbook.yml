@@ -419,7 +419,7 @@
 
     - name: Create random minio admin credentials file
       become: true
-      copy:
+      ansible.builtin.copy:
         content: |
           MINIO_ACCESS_KEY={{ lookup('password', '/dev/null length=12') }}
           MINIO_SECRET_KEY={{ lookup('password', '/dev/null length=24') }}

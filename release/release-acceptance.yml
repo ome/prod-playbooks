@@ -53,7 +53,7 @@
       when: not prerelease
 
     - name: Create minor version redirects
-      copy:
+      ansible.builtin.copy:
         dest: "{{ item }}/{{ product }}/{{ minorversion }}/.htaccess"
         content: "Redirect 301 /{{ product }}/{{ minorversion }} \
           /{{ product }}/{{ version }}"
@@ -70,7 +70,7 @@
       when: not prerelease
 
     - name: Create major version redirects
-      copy:
+      ansible.builtin.copy:
         dest: "{{ item }}/{{ product }}/{{ majorversion }}/.htaccess"
         content: "Redirect 301 /{{ product }}/{{ majorversion }} \
           /{{ product }}/{{ version }}"
@@ -87,7 +87,7 @@
       when: not prerelease
 
     - name: Create latest version redirect
-      copy:
+      ansible.builtin.copy:
         dest: "{{ item }}/{{ product }}/latest/.htaccess"
         content: "Redirect 301 /{{ product }}/latest \
           /{{ product }}/{{ version }}"

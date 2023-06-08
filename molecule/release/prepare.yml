@@ -22,7 +22,7 @@
         state: directory
       with_items: "{{ www_folders }}"
     - name: Create minor version redirects
-      copy:
+      ansible.builtin.copy:
         dest: "{{ item }}/component/3.1/.htaccess"
         content: "Redirect 301 /component/3.1 /component/3.1.8"
       with_items: "{{ www_folders }}"
@@ -32,7 +32,7 @@
         state: directory
       with_items: "{{ www_folders }}"
     - name: Create major version redirects
-      copy:
+      ansible.builtin.copy:
         dest: "{{ item }}/component/3/.htaccess"
         content: "Redirect 301 /component/3 /component/3.1.8"
       with_items: "{{ www_folders }}"
@@ -42,7 +42,7 @@
         state: directory
       with_items: "{{ www_folders }}"
     - name: Create latest version redirects
-      copy:
+      ansible.builtin.copy:
         dest: "{{ item }}/component/latest/.htaccess"
         content: "Redirect 301 /component/latest /component/3.1.8"
       with_items: "{{ www_folders }}"

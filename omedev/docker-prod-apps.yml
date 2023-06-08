@@ -275,7 +275,7 @@
 
     - name: prometheus htpasswd file
       become: true
-      copy:
+      ansible.builtin.copy:
         dest: /etc/nginx/prometheus.htpasswd
         # default: admin:monitoring
         content: >-
