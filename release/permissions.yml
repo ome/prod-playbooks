@@ -2,14 +2,16 @@
 - hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
-    - file:
+    - name: set perms /uod/idr/www
+      file:
         path: /uod/idr/www
         state: directory
         owner: root
         group: root
         mode: 0755
 
-    - file:
+    - name: set perms2
+      file:
         path: "{{ item }}"
         state: directory
         owner: root
@@ -17,13 +19,15 @@
         mode: 0755
       with_items: "{{ www_folders }}"
 
-    - find:
+    - name: set perms3 www_folders
+      find:
         paths: "{{ www_folders }}"
         file_type: "directory"
         recurse: "no"
       register: "products"
 
-    - file:
+    - name: set perms3
+      file:
         path: "{{ item }}"
         state: directory
         owner: root
