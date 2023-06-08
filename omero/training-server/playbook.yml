@@ -244,7 +244,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: true
       get_url:
-        url: >-
+        ansible.builtin.url: >-
           https://raw.githubusercontent.com/ome/omero-figure/v{{
           omero_figure_release
           }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
@@ -258,7 +258,7 @@
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: true
       get_url:
-        url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
+        ansible.builtin.url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
           /Dataset_Images_To_New_Figure.py"
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -271,7 +271,7 @@
     - name: Download the Figure_Images_To_Dataset.py script
       become: true
       get_url:
-        url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
+        ansible.builtin.url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
           /Figure_Images_To_Dataset.py"
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -295,7 +295,7 @@
     - name: Download the Scipy_Gaussian_Filter.py script
       become: true
       get_url:
-        url: >-
+        ansible.builtin.url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
           ome_training_scripts_release }}/scripts/scipy_gaussian_filter.py
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -308,7 +308,7 @@
     - name: Download the simple_frap.py script
       become: true
       get_url:
-        url: >-
+        ansible.builtin.url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
           ome_training_scripts_release }}/scripts/simple_frap.py
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -321,7 +321,7 @@
     - name: Download the simple_frap_with_figure.py script
       become: true
       get_url:
-        url: >-
+        ansible.builtin.url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
           ome_training_scripts_release }}/scripts/simple_frap_with_figure.py
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -342,7 +342,7 @@
     - name: Download the ldap scripts
       become: true
       get_url:
-        url: >-
+        ansible.builtin.url: >-
           https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{
           apache_docker_release }}/bin/ldapmanager
         dest: /home/ldap/ldapmanager
@@ -485,7 +485,7 @@
     - name: Download minio client
       become: true
       get_url:
-        url: "https://dl.min.io/client/mc/release\
+        ansible.builtin.url: "https://dl.min.io/client/mc/release\
           /linux-amd64/archive/mc.RELEASE.2020-11-25T23-04-07Z"
         checksum: "sha256:985c43f9bec8fdc4ef2ee44c63\
           c9657e10c4cfeb5cb949179d6d693f7428c314"
