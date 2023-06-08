@@ -183,7 +183,8 @@
     - name: Download the Figure_To_Pdf.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: "https://raw.githubusercontent.com/ome/omero-figure\
+        ansible.builtin.url: "https://raw.githubusercontent.com/ome\
+          /omero-figure\
           /v{{ omero_figure_release }}/omero_figure/scripts\
           /omero/figure_scripts/Figure_To_Pdf.py"
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -195,7 +196,8 @@
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: "https://raw.githubusercontent.com/ome/omero-guide-figure
+        ansible.builtin.url: "https://raw.githubusercontent.com/ome\
+          /omero-guide-figure
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Dataset\
           _Images_To_New_Figure.py"
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -207,7 +209,8 @@
     - name: Download the Figure_Images_To_Dataset.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
+        ansible.builtin.url: "https://raw.githubusercontent.com/ome\
+          /omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Figure\
           _Images_To_Dataset.py"
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
