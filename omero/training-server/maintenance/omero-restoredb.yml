@@ -51,7 +51,7 @@
     # Assumes the owner and group information in the archive is correct
     - name: Restore OMERO data directory
       become: true
-      unarchive:
+      ansible.builtin.unarchive:
         src: "/tmp/{{ omero_restore_data_dump_file | basename }}"
         dest: /
         remote_src: true
