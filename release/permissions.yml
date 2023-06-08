@@ -3,7 +3,7 @@
   become: true
   tasks:
     - name: set perms /uod/idr/www
-      file:
+      ansible.builtin.file:
         path: /uod/idr/www
         state: directory
         owner: root
@@ -11,7 +11,7 @@
         mode: 0755
 
     - name: set perms2
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: root
@@ -27,7 +27,7 @@
       register: "products"
 
     - name: set perms3
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: root

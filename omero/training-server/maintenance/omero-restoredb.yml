@@ -76,7 +76,7 @@
         state: started
 
     - name: Delete temporary files
-      file:
+      ansible.builtin.file:
         path: "/tmp/{{ item | basename }}"
         state: absent
       with_items:

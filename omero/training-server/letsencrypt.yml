@@ -7,7 +7,7 @@
 
     - name: letsencrypt challenge directory
       become: true
-      file:
+      ansible.builtin.file:
         path: /srv/www/letsencrypt/.well-known/
         recurse: true
         state: directory

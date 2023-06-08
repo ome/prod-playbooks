@@ -29,13 +29,13 @@
         majorversion: "{{ version.split('.')[:1] | join('.') }}"
 
     - name: Remove .htaccess file
-      file:
+      ansible.builtin.file:
         path: "{{ item }}/{{ product }}/{{ version }}/.htaccess"
         state: absent
       with_items: "{{ www_folders }}"
 
     - name: Make release folders read-only and owned by root
-      file:
+      ansible.builtin.file:
         path: "{{ item }}/{{ product }}/{{ version }}"
         state: directory
         owner: root
@@ -45,7 +45,7 @@
       with_items: "{{ www_folders }}"
 
     - name: Create minor version directory
-      file:
+      ansible.builtin.file:
         path: "{{ item }}/{{ product }}/{{ minorversion }}"
         state: directory
         mode: 0755
@@ -62,7 +62,7 @@
       when: not prerelease
 
     - name: Create minor version directory
-      file:
+      ansible.builtin.file:
         path: "{{ item }}/{{ product }}/{{ majorversion }}"
         state: directory
         mode: 0755
@@ -79,7 +79,7 @@
       when: not prerelease
 
     - name: Create latest version directory
-      file:
+      ansible.builtin.file:
         path: "{{ item }}/{{ product }}/latest"
         state: directory
         mode: 0755

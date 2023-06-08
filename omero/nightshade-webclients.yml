@@ -74,7 +74,7 @@
 
     - name: NGINX - create nested includes directory
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
         mode: 0755

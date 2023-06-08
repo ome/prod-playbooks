@@ -114,7 +114,7 @@
     # thus we need to create another tmp
     - name: Create another temporary directory
       become: true
-      file:
+      ansible.builtin.file:
         path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
         state: directory
         mode: 0700
@@ -150,7 +150,7 @@
 
     - name: NGINX - create nested includes directory
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
         mode: 0755
@@ -167,13 +167,13 @@
 
     - name: PostgreSQL Nightly Backups | Remove old cron job
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/cron.daily/nightly-pg_dump-omero.sh
         state: absent
 
     - name: Create a figure scripts directory
       become: true
-      file:
+      ansible.builtin.file:
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
         state: directory
         mode: 0755

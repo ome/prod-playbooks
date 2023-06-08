@@ -8,7 +8,7 @@
 
     - name: Create Prometheus data directory
       become: true
-      file:
+      ansible.builtin.file:
         path: "{{ prometheus_docker_data_volume }}"
         owner: "{{ prometheus_docker_user }}"
         group: root
@@ -17,7 +17,7 @@
 
     - name: Create Minio data directory
       become: true
-      file:
+      ansible.builtin.file:
         path: "{{ nfs_minio_data_volume }}"
         owner: root
         group: root
@@ -26,7 +26,7 @@
 
     - name: Create Redmine data directory
       become: true
-      file:
+      ansible.builtin.file:
         path: "{{ redmine_tracker_docker_data_volume }}"
         owner: "{{ redmine_docker_user }}"
         group: "{{ redmine_docker_user }}"
@@ -268,7 +268,7 @@
 
     - name: prometheus htpasswd parent directory
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/nginx
         state: directory
         mode: 0755
