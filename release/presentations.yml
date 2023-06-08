@@ -2,6 +2,7 @@
 - hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
+    # yamllint disable-line rule:latest
     - name: update presentations
       ansible.builtin.git:
         repo: https://github.com/ome/presentations
