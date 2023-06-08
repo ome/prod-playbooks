@@ -3,7 +3,7 @@
   become: true
   tasks:
     - name: update presentations
-      git:
+      ansible.builtin.git:
         repo: https://github.com/ome/presentations
         force: false
         update: true

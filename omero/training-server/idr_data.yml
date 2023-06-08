@@ -3,7 +3,7 @@
   tasks:
     - name: Clone study metadata
       become: true
-      git:
+      ansible.builtin.git:
         dest: /uod/idr/metadata/{{ item.name }}
         repo: https://github.com/IDR/{{ item.name }}
         update: true
