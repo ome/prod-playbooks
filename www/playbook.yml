@@ -111,5 +111,5 @@
       filesystem: "ext4"
 
 
-- include: www-deploy.yml
+- import_playbook: www-deploy.yml
 # www-deploy.yml includes www-jekyll.yml

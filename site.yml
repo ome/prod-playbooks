@@ -3,32 +3,32 @@
 
 # For new hosts you may also need to run the bootstrap playbook to setup
 # networking and initial partitions:
-#- include: bootstrap/playbook.yml
+#- import_playbook: bootstrap/playbook.yml
 
 # deployment of two OMERO.web instances for hosting Dundee's production OMERO.
 # One of the two instances is for publication data ("ns-web-pub").
-- include: omero/nightshade-webclients.yml
+- import_playbook: omero/nightshade-webclients.yml
 
 # nightshade.openmicroscopy.org OMERO.server
-- include: omero/ome-dundeeomero.yml
+- import_playbook: omero/ome-dundeeomero.yml
 
 # https://demo.openmicroscopy.org OMERO.server and OMERO.web
-- include: omero/ome-demoserver.yml
+- import_playbook: omero/ome-demoserver.yml
 
 # Firewall configuration for all UoD OMERO servers
 # The training-server playbooks modify the firewall configuration so this must
 # be run first to setup the basic rules
-- include: omero/omero-firewall.yml
+- import_playbook: omero/omero-firewall.yml
 
 # https://outreach.openmicroscopy.org
 # https://workshop.openmicroscopy.org
-- include: omero/training-server/playbook.yml
+- import_playbook: omero/training-server/playbook.yml
 
 # Internal monitoring configuration for all UoD OMERO servers
-- include: omero/omero-monitoring-agents.yml
+- import_playbook: omero/omero-monitoring-agents.yml
 
 # https://www.openmicroscopy.org/
-- include: www/playbook.yml
+- import_playbook: www/playbook.yml
 
 # OME proxied service
-- include: web-proxy/playbook.yml
+- import_playbook: web-proxy/playbook.yml

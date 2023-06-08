@@ -353,4 +353,4 @@
           - default_type text/html
 
 
-- include: www-static.yml
+- import_playbook: www-static.yml
