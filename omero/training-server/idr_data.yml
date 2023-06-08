@@ -17,7 +17,7 @@
       loop: "{{ studies | default([]) }}"
 
     - name: Fail if data directory is missing
-      fail:
+      ansible.builtin.fail:
         msg: "/uod/idr/filesets/{{ item.item }} does not exist"
       when: not item.stat.exists
       loop: "{{ stat_results.results }}"
