@@ -20,7 +20,7 @@
       with_items: "{{ www_folders }}"
 
     - name: set perms3 www_folders
-      find:
+      ansible.builtin.find:
         paths: "{{ www_folders }}"
         file_type: "directory"
         recurse: "no"

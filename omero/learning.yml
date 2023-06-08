@@ -148,7 +148,7 @@
   tasks:
     - name: find OMERO.server log configuration
       become: true
-      find:
+      ansible.builtin.find:
         paths: /opt/omero/server/OMERO.server/etc/
         patterns: "logback*.xml"
       register: logbacks
