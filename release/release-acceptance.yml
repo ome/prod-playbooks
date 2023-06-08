@@ -1,5 +1,6 @@
 ---
-- hosts: idr0-slot3.openmicroscopy.org
+- name: Release acceptance
+  hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
     - name: Check mandatory variables are defined

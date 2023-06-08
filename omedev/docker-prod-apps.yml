@@ -2,7 +2,8 @@
 # Production Docker applications
 
 # May want to change this to a hostgroup
-- hosts: ome-dockr-prod1.openmicroscopy.org
+- name: Docker production applications
+  hosts: ome-dockr-prod1.openmicroscopy.org
 
   pre_tasks:
 

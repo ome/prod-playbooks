@@ -1,8 +1,9 @@
 ---
-- hosts: idr0-slot3.openmicroscopy.org
+- name: Public images
+  hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
-    - name: create symlinks for public images
+    - name: Create symlinks for public images
       ansible.builtin.file:
         force: true
         src: "../../../repos/curated/{{ item.key }}/public/"
@@ -12,7 +13,7 @@
            images/{{ item.value }}"
         state: link
       with_dict: "{{ public_folders }}"
-    - name: check public images
+    - name: Check public images
       ansible.builtin.file:
         force: true
         src: "{{ item.src }}"

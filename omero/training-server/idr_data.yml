@@ -1,5 +1,6 @@
 ---
-- hosts: ome-outreach
+- name: IDR data
+  hosts: ome-outreach
   tasks:
     - name: Clone study metadata
       become: true

@@ -1,6 +1,7 @@
 # Setup prometheus agents
 
-- hosts: omero-server
+- name: Monitoring agents
+  hosts: omero-server
 
   roles:
 
@@ -21,7 +22,7 @@
 
   tasks:
 
-    - name: omero-server prometheus jmx agents
+    - name: Omero-server prometheus jmx agents
       become: true
       ansible.builtin.copy:
         dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
@@ -30,8 +31,8 @@
       notify:
         - restart omero-server
 
-
-- hosts: omero-web
+- name: OMERO web
+  hosts: omero-web
 
   roles:
 
@@ -40,7 +41,8 @@
 
 # NOTE: This assumes omero-web.conf is present and includes
 # /etc/nginx/conf.d-nested-includes
-- hosts: monitored
+- name: Monitoring
+  hosts: monitored
 
   roles:
 
@@ -51,9 +53,9 @@
 
   tasks:
 
-    - name: nginx selinux allow network connect
+    - name: Nginx selinux allow network connect
       become: true
-      seboolean:
+      ansible.posix.seboolean:
         name: httpd_can_network_connect
         state: true
         persistent: true
@@ -81,7 +83,7 @@
         - restart nginx
 
   handlers:
-    - name: restart nginx
+    - name: Restart nginx
       become: true
       ansible.builtin.service:
         name: nginx
@@ -92,8 +94,8 @@
     monitoring_nginx_htpasswd: |
       monitoring:$apr1$njrafrtU$19wf/I15zPuSudlM5Y50Z0
 
-
-- hosts: omero-web
+- name: OMERO-web
+  hosts: omero-web
 
   tasks:
     - name: Create nginx proxy for prometheus web exporters
@@ -106,7 +108,7 @@
         - restart nginx
 
   handlers:
-    - name: restart nginx
+    - name: Restart nginx
       become: true
       ansible.builtin.service:
         name: nginx

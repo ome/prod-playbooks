@@ -1,7 +1,8 @@
 ---
 # Playbook which runs the necessary root-level steps
 # so that a host can be managed by others
-- hosts: omedev
+- name: Boot1
+  hosts: omedev
   roles:
 
     - role: ome.network
@@ -29,7 +30,7 @@
     - role: ome.upgrade_distpackages
       upgrade_distpackages_reboot_kernel: true
 
-
-- hosts: vlan-10ge-servers, vlan-ome-idr-docker
+- name: Network
+  hosts: vlan-10ge-servers, vlan-ome-idr-docker
   roles:
     - role: ome.network

@@ -19,8 +19,8 @@
 #   -e omero_restore_host=ome-training-1.openmicroscopy.org
 #   -e omero_restore_data_host=example.openmicroscopy.org
 
-
-- hosts: "{{ omero_restore_host | default('localhost') }}"
+- name: Restore DB
+  hosts: "{{ omero_restore_host | default('localhost') }}"
 
   vars:
     omero_restore_data_dump_file: "/uod/idr/repos/outreach/outreach\
@@ -33,7 +33,7 @@
   # This may take a long time with no output
     - name: Copy files
       # Don't become root, this should ensure ssh forwarding works
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ item }}"
         dest: "/tmp/{{ item | basename }}"
         partial: true

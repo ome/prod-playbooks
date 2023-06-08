@@ -1,11 +1,12 @@
 # Additional Nginx configuration including Let's Encrypt
 # Should be run when less than 30 days remain on the certificate
 
-- hosts: ome-outreach
+- name: Letsencrypt playbook
+  hosts: ome-outreach
 
   pre_tasks:
 
-    - name: letsencrypt challenge directory
+    - name: Letsencrypt challenge directory
       become: true
       ansible.builtin.file:
         path: /srv/www/letsencrypt/.well-known/
@@ -48,7 +49,7 @@
 
   tasks:
 
-    - name: letsencrypt nginx configuration
+    - name: Letsencrypt nginx configuration
       become: true
       ansible.builtin.template:
         src: templates/nginx-letsencrypt-conf.j2
@@ -58,7 +59,7 @@
         - reload nginx
 
   handlers:
-    - name: reload nginx
+    - name: Reload nginx
       become: true
       ansible.builtin.service:
         name: nginx

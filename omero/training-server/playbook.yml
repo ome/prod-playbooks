@@ -3,7 +3,8 @@
 # Set https_letsencrypt_enabled to True in production to ensure certbot
 # handles the letsencrypt certificate setup
 
-- hosts: ome-outreach
+- name: Outreach servers deployment and upgrade
+  hosts: ome-outreach
   pre_tasks:
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
@@ -244,7 +245,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: >-
+        url: >-
           https://raw.githubusercontent.com/ome/omero-figure/v{{
           omero_figure_release
           }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
@@ -258,7 +259,7 @@
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: "https://raw.githubusercontent.com/ome/\
+        url: "https://raw.githubusercontent.com/ome/\
           omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
           /Dataset_Images_To_New_Figure.py"
@@ -272,7 +273,7 @@
     - name: Download the Figure_Images_To_Dataset.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: "https://raw.githubusercontent.com\
+        url: "https://raw.githubusercontent.com\
           /ome/omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
           /Figure_Images_To_Dataset.py"
@@ -297,7 +298,7 @@
     - name: Download the Scipy_Gaussian_Filter.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: >-
+        url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
           ome_training_scripts_release }}/scripts/scipy_gaussian_filter.py
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -310,7 +311,7 @@
     - name: Download the simple_frap.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: >-
+        url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
           ome_training_scripts_release }}/scripts/simple_frap.py
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -323,7 +324,7 @@
     - name: Download the simple_frap_with_figure.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: >-
+        url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
           ome_training_scripts_release }}/scripts/simple_frap_with_figure.py
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
@@ -344,7 +345,7 @@
     - name: Download the ldap scripts
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: >-
+        url: >-
           https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{
           apache_docker_release }}/bin/ldapmanager
         dest: /home/ldap/ldapmanager
@@ -380,7 +381,7 @@
 
     - name: Run docker for ldap
       become: true
-      docker_container:
+      community.docker.docker_container:
         image: openmicroscopy/apacheds:{{ apache_docker_release }}
         name: ldap
         published_ports:
@@ -390,7 +391,7 @@
 
     - name: Run docker for omero-ms-zarr
       become: true
-      docker_container:
+      community.docker.docker_container:
         image: openmicroscopy/omero-ms-zarr:{{ omero_ms_zarr_release }}
         name: omero_ms_zarr
         env:
@@ -431,7 +432,7 @@
 
     - name: Run docker for minio
       become: true
-      docker_container:
+      community.docker.docker_container:
         image: minio/minio:{{ minio_docker_release }}
         name: minio
         command: server /srv/minio
@@ -487,7 +488,7 @@
     - name: Download minio client
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: "https://dl.min.io/client/mc/release\
+        url: "https://dl.min.io/client/mc/release\
           /linux-amd64/archive/mc.RELEASE.2020-11-25T23-04-07Z"
         checksum: "sha256:985c43f9bec8fdc4ef2ee44c63\
           c9657e10c4cfeb5cb949179d6d693f7428c314"
@@ -592,5 +593,8 @@
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
-- import_playbook: letsencrypt.yml
-- import_playbook: idr_data.yml
+- name: Import letsencrypt
+  import_playbook: letsencrypt.yml
+
+- name: Import idr data
+  import_playbook: idr_data.yml

@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Prepare release
+  hosts: all
   vars:
     www_folders:
       - /uod/idr/www/docs.openmicroscopy.org

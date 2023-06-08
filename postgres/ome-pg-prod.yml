@@ -1,5 +1,6 @@
 ---
-- hosts: ome-pg-prod1.openmicroscopy.org
+- name: Ome pg production
+  hosts: ome-pg-prod1.openmicroscopy.org
   roles:
 
    - role: ome.postgresql

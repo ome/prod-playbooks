@@ -3,7 +3,8 @@
 # To allow the OMERO.web plugins to upgrade
 # also pass `--extra-vars upgrade_webapps=True`
 
-- hosts: ome-demoservers
+- name: Demo server playbook
+  hosts: ome-demoservers
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: true
@@ -20,7 +21,7 @@
     - name: Resize root FS without altering mount options
       tags: lvm
       become: true
-      lvol:
+      community.general.system.lvol:
         lv: root
         vg: VolGroup00
         size: "{{ provision_root_lvsize }}"
@@ -158,7 +159,7 @@
       postgresql_backup_minimum_expected_size: 100000000
 
   handlers:
-    - name: reload web server
+    - name: Reload web server
       listen: ssl certificate changed
       become: true
       ansible.builtin.service:
@@ -173,8 +174,7 @@
         path: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
         replace: >-
-          "worker_processes {{ ((ansible_processor_count *
-          ansible_processor_cores) / 2) |round|int }};"
+          "worker_processes {{ ((ansible_processor_count * ansible_processor_cores) / 2) | round | int }};"
 
     # cf https://www.digitalocean.com/community/tutorials/
     # how-to-optimize-nginx-configuration
@@ -320,7 +320,7 @@
     - name: Download the Figure_To_Pdf.py script
       become: true
       ansible.builtin.get_url:
-        ansible.builtin.url: >-
+        url: >-
           https://raw.githubusercontent.com/ome/omero-figure/
           {{ omero_figure_script_release }}/omero_figure/scripts/omero/
           figure_scripts/Figure_To_Pdf.py

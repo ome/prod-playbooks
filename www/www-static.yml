@@ -1,6 +1,7 @@
 # Update the static website
 
-- hosts: www
+- name: Www static
+  hosts: www
 
   pre_tasks:
     - name: Check if phpbbforum already unzipped
@@ -35,7 +36,7 @@
       when: not _schemas_doc_file_st.stat.exists
 
   tasks:
-    - name: install deployment script
+    - name: Install deployment script
       become: true
       ansible.builtin.template:
         src: files/deploy

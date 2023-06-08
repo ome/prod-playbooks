@@ -1,8 +1,9 @@
 ---
-- hosts: idr0-slot3.openmicroscopy.org
+- name: Permissions
+  hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
-    - name: set perms /uod/idr/www
+    - name: Set perms /uod/idr/www
       ansible.builtin.file:
         path: /uod/idr/www
         state: directory
@@ -10,7 +11,7 @@
         group: root
         mode: 0755
 
-    - name: set perms2
+    - name: Set perms2
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -19,14 +20,14 @@
         mode: 0755
       with_items: "{{ www_folders }}"
 
-    - name: set perms3 www_folders
+    - name: Set perms3 www_folders
       ansible.builtin.find:
         paths: "{{ www_folders }}"
         file_type: "directory"
         recurse: "no"
       register: "products"
 
-    - name: set perms3
+    - name: Set perms3
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory

@@ -1,6 +1,7 @@
 # Install OMERO.web with a public user on localhost
 
-- hosts: ns-webclients
+- name: Ns webclients
+  hosts: ns-webclients
 
   roles:
 
@@ -31,7 +32,7 @@
       when: "'10.1.255.216' in ansible_dns.nameservers"
 
   handlers:
-    - name: reload nginx
+    - name: Reload nginx
       listen: ssl certificate changed
       become: true
       ansible.builtin.service:

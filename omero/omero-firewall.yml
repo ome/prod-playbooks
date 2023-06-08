@@ -1,6 +1,7 @@
 # Setup up iptables firewall on OMERO servers
 
-- hosts: monitored
+- name: Firewall
+  hosts: monitored
 
   roles:
 
@@ -61,7 +62,7 @@
           {% for s in gpfs_cluster_source | default([]) %}
           -A INPUT -p tcp -m tcp --dport 1191 -s {{ s }} -j ACCEPT
           {% endfor %}
-          {% if (checkmk_server_source  | default('')) %}
+          {% if (checkmk_server_source | default('')) %}
           -A INPUT -p tcp -m tcp --dport 6556 -s
           {{ checkmk_server_source }} -j ACCEPT
           {% endif %}

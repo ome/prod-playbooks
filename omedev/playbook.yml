@@ -1,7 +1,7 @@
 ---
 # OMEDEV servers
-
-- hosts: omedev-docker
+- name: Ome dev
+  hosts: omedev-docker
 
   roles:
 

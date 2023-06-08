@@ -1,7 +1,8 @@
 ---
 # Playbook for maintaining OME production web proxies
 
-- hosts: web-proxies
+- name: Web proxy
+  hosts: web-proxies
   roles:
     - role: ome.network
       tags: network
@@ -21,7 +22,7 @@
     - role: ome.nginx_proxy
 
   handlers:
-    - name: reload nginx
+    - name: Reload nginx
       listen: ssl certificate changed
       become: true
       ansible.builtin.service:

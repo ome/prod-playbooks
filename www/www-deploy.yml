@@ -1,6 +1,7 @@
 # Install NGINX
 
-- hosts: www
+- name: Www deploy
+  hosts: www
 
   roles:
     - role: ome.ssl_certificate
@@ -8,7 +9,7 @@
       tags: nginxconf
 
   handlers:
-    - name: reload nginx
+    - name: Reload nginx
       listen: ssl certificate changed
       become: true
       ansible.builtin.service:
@@ -352,5 +353,5 @@
               =404
           - default_type text/html
 
-
-- import_playbook: www-static.yml
+- name: Import www-static playbook
+  import_playbook: www-static.yml

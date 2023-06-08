@@ -15,5 +15,5 @@
       ansible.builtin.set_fact:
         redmine_tracker_db_host: "{{ hostname_ip.stdout }}"
 
-
-- import_playbook: ../../omedev/docker-prod-apps.yml
+- name: Import-playbook
+  import_playbook: ../../omedev/docker-prod-apps.yml

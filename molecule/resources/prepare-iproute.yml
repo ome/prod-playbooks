@@ -1,5 +1,6 @@
 # Install iproute for ansible network vars
-- hosts: all
+- name: Prepare iproute in resources
+  hosts: all
   tasks:
    - name: Install iproute
      become: true

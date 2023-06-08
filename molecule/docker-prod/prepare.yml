@@ -18,4 +18,5 @@
             - redmine
       postgresql_server_listen: "'*'"
 
-- import_playbook: ../../omedev/playbook.yml
+- name: Import playbook
+  import_playbook: ../../omedev/playbook.yml

@@ -1,6 +1,7 @@
 # Install NGINX, and prepare the OME (UoD/SLS) prerequisites
 
-- hosts: www
+- name: Playbook www
+  hosts: www
   environment:
       PATH: /usr/local/bin:{{ ansible_env.PATH }}
   pre_tasks:
@@ -39,17 +40,17 @@
       - name: storage | Resize var_log LV
         tags: lvm
         become: true
-        lvol:
+        community.general.system.lvol:
             lv: var_log
-            vg: "{{ lvm_vgname  }}"
+            vg: "{{ lvm_vgname }}"
             size: "{{ provision_varlog_lvsize }}"
             shrink: false
 
       # Grow the filesystem to fill the LV
-      - name: storage | Resize var_log FS
+      - name: Storage | Resize var_log FS
         tags: lvm
         become: true
-        filesystem:
+        community.general.system.filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-var_log
             resizefs: true
@@ -110,6 +111,6 @@
 
       filesystem: "ext4"
 
-
-- import_playbook: www-deploy.yml
+- name: Import www deploy
+  import_playbook: www-deploy.yml
 # www-deploy.yml includes www-jekyll.yml

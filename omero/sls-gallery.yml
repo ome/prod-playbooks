@@ -8,7 +8,8 @@
 # - bin/omero db password for root user.
 # - systemctl start omero-{server,web}
 
-- hosts: omero-sls-gallery
+- name: Sls gallery
+  hosts: omero-sls-gallery
   roles:
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -128,7 +129,7 @@
         - "omero-py>={{ omero_py_release }}"
 
   tasks:
-    - name: find OMERO.server log configuration
+    - name: Find OMERO.server log configuration
       become: true
       ansible.builtin.find:
         paths: /opt/omero/server/OMERO.server/etc/
