@@ -50,7 +50,7 @@
 
     - name: letsencrypt nginx configuration
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-letsencrypt-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/https.conf
         mode: 0644

@@ -4,7 +4,7 @@
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: true
-      yum:
+      ansible.builtin.yum:
         name: open-vm-tools
         state: present
       when: >
@@ -26,7 +26,7 @@
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: true
-      yum:
+      ansible.builtin.yum:
         name: "http://li.nux.ro/download/nux/dextop/el7\
           /x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
         state: present
@@ -34,7 +34,7 @@
     # web server is included for decoupled OMERO.web
     - name: OMERO.figure server-side&script prerequisites & web server
       become: true
-      yum:
+      ansible.builtin.yum:
         name: "{{ item }}"
         state: present
       with_items:
@@ -158,7 +158,7 @@
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - Configuration
       become: true
-      template:
+      ansible.builtin.template:
         src: nginx-omero.conf.j2
         dest: /etc/nginx/conf.d/omero-web.conf
         mode: 0644

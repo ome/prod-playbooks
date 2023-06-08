@@ -37,14 +37,14 @@
   tasks:
     - name: install deployment script
       become: true
-      template:
+      ansible.builtin.template:
         src: files/deploy
         dest: /usr/local/bin/deploy
         mode: 0555
 
     - name: Install Cron daemon
       become: true
-      yum:
+      ansible.builtin.yum:
         name: cronie
         state: installed
 

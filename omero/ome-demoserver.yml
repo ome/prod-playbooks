@@ -7,7 +7,7 @@
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: true
-      yum:
+      ansible.builtin.yum:
         name: open-vm-tools
         state: installed
       when: >
@@ -28,20 +28,20 @@
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: true
-      yum:
+      ansible.builtin.yum:
         name: "http://li.nux.ro/download/nux/dextop/el7\
           /x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
         state: present
 
     - name: Install Make Movie script Prerequisite | MEncoder - Package
       become: true
-      yum:
+      ansible.builtin.yum:
         name: mencoder
         state: present
 
     - name: Server-side script prerequisites
       become: true
-      yum:
+      ansible.builtin.yum:
         name: "{{ item }}"
         state: present
       with_items:
@@ -194,7 +194,7 @@
 
     - name: NGINX - SSL Configuration
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-confdnestedincludes-ssl-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/ssl.conf
         mode: 0644
@@ -203,7 +203,7 @@
 
     - name: NGINX - OMERO websockets
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-confdnestedincludes-omerows-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/omerows.conf
         mode: 0644
@@ -212,7 +212,7 @@
 
     - name: NGINX - websocket proxy support
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
         mode: 0644
@@ -221,7 +221,7 @@
 
     - name: Config for OMERO.web plugins
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/omero-web-config-for-webapps.j2
         dest: >-
           "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
@@ -233,7 +233,7 @@
 
     - name: OMERO.web config for CORS
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/omero-web-config-for-cors.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
         owner: "root"
@@ -244,7 +244,7 @@
 
     - name: OMERO.web config for signup app
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/omero-web-config-signup.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
         # Contains sensitive info
