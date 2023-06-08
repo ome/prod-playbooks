@@ -370,7 +370,7 @@
 
     - name: Allow managed repo group to login
       become: true
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/security/access.conf
         regexp: "{{ omero_server_system_managedrepo_group }}"
         insertbefore: BOF
