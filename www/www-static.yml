@@ -15,7 +15,7 @@
 
   roles:
     - role: ome.deploy_archive
-      become: yes
+      become: true
       deploy_archive_dest_dir: /var/www
       deploy_archive_src_url: "https://downloads.openmicroscopy.org/web-\
         archive/phpbbforum-20190718.tar.gz"
@@ -25,7 +25,7 @@
       when: not _phpbbforum_style_file_st.stat.exists
 
     - role: ome.deploy_archive
-      become: yes
+      become: true
       deploy_archive_dest_dir: /var/www
       deploy_archive_src_url: "https://downloads.openmicroscopy.org/web-\
         archive/schemas_documentation-20211213.tar.gz"
@@ -36,20 +36,20 @@
 
   tasks:
     - name: install deployment script
-      become: yes
+      become: true
       template:
         src: files/deploy
         dest: /usr/local/bin/deploy
         mode: 0555
 
     - name: Install Cron daemon
-      become: yes
+      become: true
       yum:
         name: cronie
         state: installed
 
     - name: Add cron job updating the website
-      become: yes
+      become: true
       cron:
         name: "Deploy the website"
         special_time: hourly
@@ -58,7 +58,7 @@
           /dev/null || /usr/local/bin/deploy -f
 
     - name: Update static phpbb stylesheet
-      become: yes
+      become: true
       blockinfile:
         block: |
           form,

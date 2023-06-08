@@ -7,7 +7,7 @@
   pre_tasks:
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
-      become: yes
+      become: true
       yum:
         name: "http://li.nux.ro/download/nux/dextop/el7/x86_64\
           /nux-dextop-release-0-5.el7.nux.noarch.rpm"
@@ -15,7 +15,7 @@
 
     # web server is included for decoupled OMERO.web
     - name: OMERO.figure server-side&script prerequisites & web server
-      become: yes
+      become: true
       yum:
         name: "{{ item }}"
         state: present
@@ -23,7 +23,7 @@
         - mencoder # For the 'make movie' script
 
     - name: Prerequisites for ldap
-      become: yes
+      become: true
       yum:
         name: "{{ item }}"
         state: present
@@ -36,7 +36,7 @@
     # Since Nginx isn't installed until later
     # the directories are created in advance
     - name: Create nginx include directories
-      become: yes
+      become: true
       file:
         path: "{{ item }}"
         state: directory
@@ -46,7 +46,7 @@
         - /etc/nginx/conf.d-nested-includes
 
     - name: NGINX - websocket proxy support
-      become: yes
+      become: true
       template:
         src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
@@ -226,13 +226,13 @@
 
   tasks:
     - name: Docker | python client
-      become: yes
+      become: true
       yum:
         name: docker-python
         state: present
 
     - name: Create a figure scripts directory
-      become: yes
+      become: true
       file:
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
         state: directory
@@ -242,7 +242,7 @@
         group: "omero-server"
 
     - name: Download the Figure_To_Pdf.py script
-      become: yes
+      become: true
       get_url:
         url: >-
           https://raw.githubusercontent.com/ome/omero-figure/v{{
@@ -256,7 +256,7 @@
         force: yes
 
     - name: Download the Dataset_Images_To_New_Figure.py script
-      become: yes
+      become: true
       get_url:
         url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
@@ -269,7 +269,7 @@
         force: yes
 
     - name: Download the Figure_Images_To_Dataset.py script
-      become: yes
+      become: true
       get_url:
         url: "https://raw.githubusercontent.com/ome/omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts\
@@ -282,7 +282,7 @@
         force: yes
 
     - name: Create a workshop_scripts directory
-      become: yes
+      become: true
       file:
         path: "/opt/omero/server/OMERO.server/lib/scripts\
           /omero/workshop_scripts"
@@ -293,7 +293,7 @@
         group: "omero-server"
 
     - name: Download the Scipy_Gaussian_Filter.py script
-      become: yes
+      become: true
       get_url:
         url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
@@ -306,7 +306,7 @@
         force: yes
 
     - name: Download the simple_frap.py script
-      become: yes
+      become: true
       get_url:
         url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
@@ -319,7 +319,7 @@
         force: yes
 
     - name: Download the simple_frap_with_figure.py script
-      become: yes
+      become: true
       get_url:
         url: >-
           https://raw.githubusercontent.com/ome/omero-guide-python/v{{
@@ -332,7 +332,7 @@
         force: yes
 
     - name: Create a directory for ldap scripts
-      become: yes
+      become: true
       file:
         path: /home/ldap
         state: directory
@@ -340,7 +340,7 @@
         recurse: yes
 
     - name: Download the ldap scripts
-      become: yes
+      become: true
       get_url:
         url: >-
           https://raw.githubusercontent.com/openmicroscopy/apacheds-docker/{{
@@ -350,7 +350,7 @@
         force: yes
 
     - name: Add DropBox folder for trainer-1
-      become: yes
+      become: true
       file:
         path: /home/DropBox/trainer-1
         state: directory
@@ -369,7 +369,7 @@
           {{ os_system_users_password | password_hash('sha512', 'ome') }}
 
     - name: Allow managed repo group to login
-      become: yes
+      become: true
       lineinfile:
         path: /etc/security/access.conf
         regexp: "{{ omero_server_system_managedrepo_group }}"
@@ -377,7 +377,7 @@
         line: "+:{{ omero_server_system_managedrepo_group }}:ALL"
 
     - name: Run docker for ldap
-      become: yes
+      become: true
       docker_container:
         image: openmicroscopy/apacheds:{{ apache_docker_release }}
         name: ldap
@@ -387,7 +387,7 @@
         restart_policy: always
 
     - name: Run docker for omero-ms-zarr
-      become: yes
+      become: true
       docker_container:
         image: openmicroscopy/omero-ms-zarr:{{ omero_ms_zarr_release }}
         name: omero_ms_zarr
@@ -405,20 +405,20 @@
           - "/OMERO:/OMERO:ro"
 
     - name: Create minio config directory
-      become: yes
+      become: true
       file:
         path: /etc/minio
         state: directory
         mode: 0755
 
     - name: Check if minio admin credentials exists
-      become: yes
+      become: true
       stat:
         path: /etc/minio/docker-minio.env
       register: _minio_docker_env_st
 
     - name: Create random minio admin credentials file
-      become: yes
+      become: true
       copy:
         content: |
           MINIO_ACCESS_KEY={{ lookup('password', '/dev/null length=12') }}
@@ -428,7 +428,7 @@
       when: not _minio_docker_env_st.stat.exists
 
     - name: Run docker for minio
-      become: yes
+      become: true
       docker_container:
         image: minio/minio:{{ minio_docker_release }}
         name: minio
@@ -442,7 +442,7 @@
           - "/srv/minio:/srv/minio"
 
     - name: Nginx - docker webservices support
-      become: yes
+      become: true
       template:
         src: templates/nginx-confdnestedincludes-{{ item }}.j2
         dest: /etc/nginx/conf.d-nested-includes/{{ item }}.conf
@@ -460,7 +460,7 @@
     # - incoming from host localhost
 
     - name: Iptables Docker forward rules
-      become: yes
+      become: true
       iptables_raw_25:
         name: docker_outreach_rules
         rules: |
@@ -469,7 +469,7 @@
         state: present
 
     - name: Iptables Docker nat rules
-      become: yes
+      become: true
       iptables_raw_25:
         name: docker_outreach_nat
         table: nat

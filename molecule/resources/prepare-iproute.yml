@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
    - name: Install iproute
-     become: yes
+     become: true
      yum:
       name: iproute
       state: present

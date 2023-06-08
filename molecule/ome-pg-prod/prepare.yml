@@ -2,7 +2,7 @@
 - hosts: ome-pg-prod1.openmicroscopy.org
   tasks:
    - name: Install cron
-     become: yes
+     become: true
      yum:
       name: cronie
       state: present

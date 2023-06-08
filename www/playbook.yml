@@ -5,7 +5,7 @@
       PATH: /usr/local/bin:{{ ansible_env.PATH }}
   pre_tasks:
       - name: Install open-vm-tools if system is a VMware vm
-        become: yes
+        become: true
         yum:
             name: open-vm-tools
             state: installed
@@ -20,7 +20,7 @@
       # existing device ID.
       - name: storage | Resize root LV
         tags: lvm
-        become: yes
+        become: true
         lvol:
             lv: root
             vg: "{{ lvm_vgname  }}"
@@ -30,7 +30,7 @@
       # Grow the filesystem to fill the LV
       - name: storage | Resize root FS
         tags: lvm
-        become: yes
+        become: true
         filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-root
@@ -38,7 +38,7 @@
 
       - name: storage | Resize var_log LV
         tags: lvm
-        become: yes
+        become: true
         lvol:
             lv: var_log
             vg: "{{ lvm_vgname  }}"
@@ -48,7 +48,7 @@
       # Grow the filesystem to fill the LV
       - name: storage | Resize var_log FS
         tags: lvm
-        become: yes
+        become: true
         filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-var_log
@@ -79,7 +79,7 @@
 
       - name: Check_MK logwatch plugin | activate the plugin
         tags: monitoring
-        become: yes
+        become: true
         command: >-
           cp "{{ check_mk_agent_plugin_path }}/mk_logwatch"
           /usr/share/check-mk-agent/plugins/
@@ -94,7 +94,7 @@
 
       - name: Check_MK logwatch plugin | copy the default config
         tags: monitoring
-        become: yes
+        become: true
         command: >-
           cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
           "{{ check_mk_agent_config_path }}/logwatch.cfg"

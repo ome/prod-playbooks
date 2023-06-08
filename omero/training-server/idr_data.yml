@@ -2,7 +2,7 @@
 - hosts: ome-outreach
   tasks:
     - name: Clone study metadata
-      become: yes
+      become: true
       git:
         dest: /uod/idr/metadata/{{ item.name }}
         repo: https://github.com/IDR/{{ item.name }}

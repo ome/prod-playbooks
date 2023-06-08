@@ -147,14 +147,14 @@
 
   tasks:
     - name: find OMERO.server log configuration
-      become: yes
+      become: true
       find:
         paths: /opt/omero/server/OMERO.server/etc/
         patterns: "logback*.xml"
       register: logbacks
 
     - name: OMERO.server logs are compressed on rollover
-      become: yes
+      become: true
       replace:
         path: "{{ item.path }}"
         regexp: "(\\<fileNamePattern\\>\\$\\{om\
@@ -164,7 +164,7 @@
       with_items: "{{ logbacks.files }}"
 
     - name: TLS certificate is installed for JVM
-      become: yes
+      become: true
       java_cert:
         cert_url: "{{ ldap_host }}"
         cert_port: 636
@@ -174,14 +174,14 @@
       notify: restart omero-server
 
     - name: OMERO.web configuration is installed
-      become: yes
+      become: true
       copy:
         src: "files/learning-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
 
     - name: OMERO.web starts on boot
-      become: yes
+      become: true
       service:
         name: "{{ item }}.service"
         enabled: true

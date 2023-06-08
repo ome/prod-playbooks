@@ -6,7 +6,7 @@
   pre_tasks:
 
     - name: letsencrypt challenge directory
-      become: yes
+      become: true
       file:
         path: /srv/www/letsencrypt/.well-known/
         recurse: yes
@@ -27,7 +27,7 @@
     # This will stop nginx when the certificate is first created
     # For renewals we configure Nginx to serve the challenge
     - role: ome.certbot
-      become: yes
+      become: true
       certbot_create_if_missing: yes
       certbot_admin_email: "{{ letsencrypt_email }}"
       certbot_domains:
@@ -49,7 +49,7 @@
   tasks:
 
     - name: letsencrypt nginx configuration
-      become: yes
+      become: true
       template:
         src: templates/nginx-letsencrypt-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/https.conf
@@ -59,7 +59,7 @@
 
   handlers:
     - name: reload nginx
-      become: yes
+      become: true
       service:
         name: nginx
         state: reloaded

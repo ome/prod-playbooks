@@ -6,7 +6,7 @@
 - hosts: ome-demoservers
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
-      become: yes
+      become: true
       yum:
         name: open-vm-tools
         state: installed
@@ -19,7 +19,7 @@
     # to make some of the variables non-required.
     - name: Resize root FS without altering mount options
       tags: lvm
-      become: yes
+      become: true
       lvol:
         lv: root
         vg: VolGroup00
@@ -27,20 +27,20 @@
         shrink: no
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
-      become: yes
+      become: true
       yum:
         name: "http://li.nux.ro/download/nux/dextop/el7\
           /x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
         state: present
 
     - name: Install Make Movie script Prerequisite | MEncoder - Package
-      become: yes
+      become: true
       yum:
         name: mencoder
         state: present
 
     - name: Server-side script prerequisites
-      become: yes
+      become: true
       yum:
         name: "{{ item }}"
         state: present
@@ -168,7 +168,7 @@
   post_tasks:
 
     - name: NGINX - Performance tuning - worker processes
-      become: yes
+      become: true
       replace:
         path: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
@@ -179,21 +179,21 @@
     # cf https://www.digitalocean.com/community/tutorials/
     # how-to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
-      become: yes
+      become: true
       replace:
         path: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
 
     - name: NGINX - create nested includes directory
-      become: yes
+      become: true
       file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
         mode: 0755
 
     - name: NGINX - SSL Configuration
-      become: yes
+      become: true
       template:
         src: templates/nginx-confdnestedincludes-ssl-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/ssl.conf
@@ -202,7 +202,7 @@
         - restart nginx
 
     - name: NGINX - OMERO websockets
-      become: yes
+      become: true
       template:
         src: templates/nginx-confdnestedincludes-omerows-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/omerows.conf
@@ -211,7 +211,7 @@
         - restart nginx
 
     - name: NGINX - websocket proxy support
-      become: yes
+      become: true
       template:
         src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
@@ -220,7 +220,7 @@
         - restart nginx
 
     - name: Config for OMERO.web plugins
-      become: yes
+      become: true
       template:
         src: templates/omero-web-config-for-webapps.j2
         dest: >-
@@ -232,7 +232,7 @@
         - restart omero-web
 
     - name: OMERO.web config for CORS
-      become: yes
+      become: true
       template:
         src: templates/omero-web-config-for-cors.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
@@ -243,7 +243,7 @@
         - restart omero-web
 
     - name: OMERO.web config for signup app
-      become: yes
+      become: true
       template:
         src: templates/omero-web-config-signup.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
@@ -263,7 +263,7 @@
 
     - name: Check_MK postgres plugin | activate the plugin
       tags: monitoring
-      become: yes
+      become: true
       command: >
         cp "{{ check_mk_agent_plugin_path }}/mk_postgres"
         /usr/share/check-mk-agent/plugins/
@@ -278,7 +278,7 @@
 
     - name: Check_MK logwatch plugin | activate the plugin
       tags: monitoring
-      become: yes
+      become: true
       command: >
         cp "{{ check_mk_agent_plugin_path }}/mk_logwatch"
         /usr/share/check-mk-agent/plugins/
@@ -293,7 +293,7 @@
 
     - name: Check_MK logwatch plugin | copy the default config
       tags: monitoring
-      become: yes
+      become: true
       command: >
         cp "{{ check_mk_agent_config_example_path }}/logwatch.cfg"
         "{{ check_mk_agent_config_path }}/logwatch.cfg"
@@ -301,13 +301,13 @@
       when: check_mk_logwatch_plugin_conf_st.stat.exists
 
     - name: PostgreSQL Nightly Backups | Remove old cron job
-      become: yes
+      become: true
       file:
         path: /etc/cron.daily/nightly-pg_dump-omero.sh
         state: absent
 
     - name: Create a figure scripts directory
-      become: yes
+      become: true
       file:
         path: >-
           "{{ omero_server_basedir }}/OMERO.server/lib/
@@ -318,7 +318,7 @@
         owner: root
 
     - name: Download the Figure_To_Pdf.py script
-      become: yes
+      become: true
       get_url:
         url: >-
           https://raw.githubusercontent.com/ome/omero-figure/

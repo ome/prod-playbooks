@@ -22,7 +22,7 @@
   tasks:
 
     - name: omero-server prometheus jmx agents
-      become: yes
+      become: true
       copy:
         dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
         src: omero-server-config-prometheus.omero
@@ -52,7 +52,7 @@
   tasks:
 
     - name: nginx selinux allow network connect
-      become: yes
+      become: true
       seboolean:
         name: httpd_can_network_connect
         state: yes
@@ -60,7 +60,7 @@
       when: selinux_enabled
 
     - name: Create monitoring htpasswd
-      become: yes
+      become: true
       copy:
         content: >-
           "{{ secret_monitoring_nginx_htpasswd |
@@ -72,7 +72,7 @@
     # exist it will return an error, and we know which exporters to expect
     # when scraping
     - name: Create nginx proxy for prometheus exporters
-      become: yes
+      become: true
       copy:
         dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
         src: confd-nested-proxy-exporters.conf
@@ -82,7 +82,7 @@
 
   handlers:
     - name: restart nginx
-      become: yes
+      become: true
       service:
         name: nginx
         state: restarted
@@ -97,7 +97,7 @@
 
   tasks:
     - name: Create nginx proxy for prometheus web exporters
-      become: yes
+      become: true
       copy:
         dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
         src: confd-nested-proxy-exporters-web.conf
@@ -107,7 +107,7 @@
 
   handlers:
     - name: restart nginx
-      become: yes
+      become: true
       service:
         name: nginx
         state: restarted

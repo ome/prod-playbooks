@@ -14,7 +14,7 @@
     # - ICMP echo (ping)
     # - ssh incoming connections
     - name: Iptables ssh and related
-      become: yes
+      become: true
       iptables_raw_25:
         name: ssh_and_established
         keep_unmanaged: no
@@ -35,7 +35,7 @@
     # servers:
     # http://www.chiark.greenend.org.uk/~peterb/network/drop-vs-reject
     - name: Iptables default
-      become: yes
+      become: true
       iptables_raw_25:
         name: default_rules
         rules: |
@@ -52,7 +52,7 @@
     # - GPFS
     # - Check_MK
     - name: Iptables OME ports
-      become: yes
+      become: true
       iptables_raw_25:
         name: ome_ports
         rules: |
