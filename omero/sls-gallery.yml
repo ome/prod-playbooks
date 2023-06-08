@@ -16,7 +16,7 @@
       lvm_lvmount: '/var/lib/pgsql'
       lvm_lvsize: 8G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.postgresql
       postgresql_databases:
@@ -38,7 +38,7 @@
       lvm_lvmount: '/OMERO'
       lvm_lvsize: 80G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -46,18 +46,18 @@
       lvm_lvmount: '/opt/omero'
       lvm_lvsize: 40G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.omero_server
       omero_server_config_set:
-        omero.client.ui.menu.dropdown.colleagues.enabled: False
+        omero.client.ui.menu.dropdown.colleagues.enabled: false
         omero.client.ui.menu.dropdown.everyone.label: "All images"
         omero.client.ui.menu.dropdown.leaders.label: "Gallery:"
         omero.db.poolsize: 50
         omero.jvmcfg.percent.blitz: 50
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
-        omero.ldap.config: True
+        omero.ldap.config: true
         omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: "{{ omero_server_ldap_username }}"
         omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
@@ -70,15 +70,15 @@
         omero.mail.host: "{{ omero_server_mail_host }}"
         omero.pixeldata.max_plane_height: 5120
         omero.pixeldata.max_plane_width: 5120
-      omero_server_selfsigned_certificates: True
+      omero_server_selfsigned_certificates: true
 
     - role: ome.redis
 
     - role: ome.nginx
 
     - role: ome.omero_web
-      omero_web_setup_nginx: False
-      omero_web_systemd_start: True
+      omero_web_setup_nginx: false
+      omero_web_systemd_start: true
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "SLS Gallery"]

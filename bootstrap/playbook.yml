@@ -18,7 +18,7 @@
       lvm_lvsize: 100%FREE
       lvm_lvfilesystem: xfs
       lvm_vgname: VolGroup00
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.sudoers
       sudoers_individual_commands:
@@ -27,7 +27,7 @@
           command: "NOPASSWD: ALL"
 
     - role: ome.upgrade_distpackages
-      upgrade_distpackages_reboot_kernel: True
+      upgrade_distpackages_reboot_kernel: true
 
 
 - hosts: vlan-10ge-servers, vlan-ome-idr-docker

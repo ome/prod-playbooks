@@ -219,7 +219,7 @@
   vars:
     # For https://github.com/openmicroscopy/ansible-role-java
     # which is a dependency.
-    java_jdk_install: True
+    java_jdk_install: true
 
     nginx_version: 1.18.0
     postgresql_version: "11"
@@ -255,7 +255,7 @@
         {{ omero_server_ice_admin_endpoints | default('tcp -h 127.0.0.1') }}
       omero.data.dir: "{{ omero_server_datadir | default('/OMERO') }}"
 
-    omero_server_selfsigned_certificates: True
+    omero_server_selfsigned_certificates: true
 
     # Production config can't be tested in molecule
     omero_server_config_set: >-

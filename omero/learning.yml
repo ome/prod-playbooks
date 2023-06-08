@@ -21,7 +21,7 @@
       lvm_lvmount: '/var/lib/pgsql'
       lvm_lvsize: 20G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.postgresql
       postgresql_databases:
@@ -37,7 +37,7 @@
       lvm_lvmount: '/OMERO'
       lvm_lvsize: 150G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -45,20 +45,20 @@
       lvm_lvmount: '/opt/omero'
       lvm_lvsize: 40G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.omero_server
       omero_server_python_addons:
         - "omero-py>={{ omero_py_release }}"
       omero_server_config_set:
-        omero.client.ui.menu.dropdown.colleagues.enabled: False
+        omero.client.ui.menu.dropdown.colleagues.enabled: false
         omero.client.ui.menu.dropdown.everyone.label: "All courses"
         omero.client.ui.menu.dropdown.leaders.label: "Courses:"
         omero.db.poolsize: 100
         omero.jvmcfg.percent.blitz: 50
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
-        omero.ldap.config: True
+        omero.ldap.config: true
         omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: "{{ omero_server_ldap_username }}"
         omero.ldap.password: "{{ omero_server_ldap_password | default('') }}"
@@ -69,20 +69,20 @@
         omero.mail.from: "{{ omero_server_mail_from }}"
         omero.mail.host: "{{ omero_server_mail_host }}"
         omero.policy.binary_access: "+read,+write,-image,-plate"
-        omero.security.ignore_case: True
+        omero.security.ignore_case: true
         omero.security.keyStore: "/etc/pki/java/cacerts"
         omero.security.trustStore: "/etc/pki/java/cacerts"
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
         omero.sessions.timeout: 3600000
-      omero_server_selfsigned_certificates: True
+      omero_server_selfsigned_certificates: true
 
     - role: ome.redis
 
     - role: ome.nginx
 
     - role: ome.omero_web
-      omero_web_setup_nginx: False
+      omero_web_setup_nginx: false
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "Virtual Microscope"]

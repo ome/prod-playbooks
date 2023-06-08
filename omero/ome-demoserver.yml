@@ -63,7 +63,7 @@
       lvm_lvmount: /var/lib/pgsql
       lvm_lvsize: "{{ provision_postgres_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
-      lvm_shrink: False
+      lvm_shrink: false
 
     # Disk Layout - OMERO | VG and LV (separate disk) for Binary Repository
     - role: ome.lvm_partition
@@ -73,7 +73,7 @@
       lvm_lvmount: "{{ omero_server_datadir }}"
       lvm_lvsize: "{{ provision_omero_server_datadir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
-      lvm_shrink: False
+      lvm_shrink: false
 
     # Disk Layout - OMERO.server | LV for dist & logs
     - role: ome.lvm_partition
@@ -83,7 +83,7 @@
       lvm_lvmount: "{{ omero_server_basedir }}"
       lvm_lvsize: "{{ provision_omero_server_basedir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
-      lvm_shrink: False
+      lvm_shrink: false
 
     # Disk Layout - OMERO.web | LV for dist & logs
     - role: ome.lvm_partition
@@ -93,7 +93,7 @@
       lvm_lvmount: "{{ omero_web_basedir }}"
       lvm_lvsize: "{{ provision_omero_web_basedir_lvsize }}"
       lvm_lvfilesystem: "{{ filesystem }}"
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.nginx
       nginx_version: 1.16.1
@@ -356,7 +356,7 @@
     omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
     # which is a dependency.
-    java_jdk_install: True
+    java_jdk_install: true
 
     # Check_MK (system monitoring) paths
     check_mk_agent_plugin_path: /usr/share/check-mk-agent/available-plugins
@@ -430,7 +430,7 @@
       - markdown
       - "omero-py>={{ omero_py_release }}"
 
-    omero_server_selfsigned_certificates: True
+    omero_server_selfsigned_certificates: true
 
     omero_web_config_set:
       omero.mail.config: true
@@ -442,7 +442,7 @@
         "{{ secret_omero_web_public_user | default('public') }}"
       omero.web.public.password: >-
         "{{ secret_omero_web_public_password | default('public') }}"
-      omero.web.public.enabled: True
+      omero.web.public.enabled: true
       omero.web.public.server_id: 1
       omero.web.public.url_filter: >-
         "^/(webgateway/(?!(archived_files|download_as))| webclient

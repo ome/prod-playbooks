@@ -41,7 +41,7 @@ provisioner:
 
     group_vars:
       # all:
-      #   molecule_test: True
+      #   molecule_test: true
       docker-hosts:
         # This should allow docker-in-docker to work
         docker_storage_driver: vfs
