@@ -20,7 +20,7 @@
 #   -e omero_restore_data_host=example.openmicroscopy.org
 
 
-- hosts: "{{ omero_restore_host | default("localhost") }}"
+- hosts: "{{ omero_restore_host | default('localhost') }}"
 
   vars:
     omero_restore_data_dump_file: "/uod/idr/repos/outreach/outreach\
