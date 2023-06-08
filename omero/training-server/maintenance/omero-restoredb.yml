@@ -59,13 +59,13 @@
     - name: Restore OMERO database
       become: true
       become_user: postgres
-      command: >-
+      ansible.builtin.command: >-
         pg_restore --clean -d omero
         "/tmp/{{ omero_restore_db_dump_file | basename }}"
 
     - name: Upgrade OMERO database
       become: omero-server
-      command: >-
+      ansible.builtin.command: >-
         /opt/omero/omego/bin/omego db upgrade
         --serverdir /opt/omero/server/OMERO.server
 
