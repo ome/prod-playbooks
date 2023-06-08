@@ -122,7 +122,7 @@
 
     - name: NGINX - enable service / start on boot
       become: true
-      systemd:
+      ansible.builtin.systemd:
         name: nginx
         enabled: true
 
