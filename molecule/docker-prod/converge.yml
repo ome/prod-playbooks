@@ -12,7 +12,7 @@
         - skip_ansible_lint
 
     - name: Set address of postgres for redmine
-      set_fact:
+      ansible.builtin.set_fact:
         redmine_tracker_db_host: "{{ hostname_ip.stdout }}"
 
 

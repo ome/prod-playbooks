@@ -20,11 +20,11 @@
       when: item.stat is not defined or not item.stat.exists
 
     - name: Check pre-release
-      set_fact:
+      ansible.builtin.set_fact:
         prerelease: "{{ '-' in version }}"
 
     - name: Define minor and major versions
-      set_fact:
+      ansible.builtin.set_fact:
         minorversion: "{{ version.split('.')[:2] | join('.') }}"
         majorversion: "{{ version.split('.')[:1] | join('.') }}"
 
