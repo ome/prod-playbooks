@@ -330,7 +330,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
   vars:
     omero_figure_release: >-

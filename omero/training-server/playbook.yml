@@ -253,7 +253,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: true
@@ -266,7 +266,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
     - name: Download the Figure_Images_To_Dataset.py script
       become: true
@@ -279,7 +279,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
     - name: Create a workshop_scripts directory
       become: true
@@ -303,7 +303,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
     - name: Download the simple_frap.py script
       become: true
@@ -316,7 +316,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
     - name: Download the simple_frap_with_figure.py script
       become: true
@@ -329,7 +329,7 @@
         mode: 0755
         owner: "omero-server"
         group: "omero-server"
-        force: yes
+        force: true
 
     - name: Create a directory for ldap scripts
       become: true
@@ -347,7 +347,7 @@
           apache_docker_release }}/bin/ldapmanager
         dest: /home/ldap/ldapmanager
         mode: 0755
-        force: yes
+        force: true
 
     - name: Add DropBox folder for trainer-1
       become: true

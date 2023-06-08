@@ -190,7 +190,7 @@
           /omero/figure_scripts/Figure_To_Pdf.py"
         mode: 0644
         owner: root
-        force: yes
+        force: true
 
     - name: Download the Dataset_Images_To_New_Figure.py script
       become: true
@@ -202,7 +202,7 @@
           /omero/figure_scripts/Dataset_Images_To_New_Figure.py"
         mode: 0644
         owner: root
-        force: yes
+        force: true
 
     - name: Download the Figure_Images_To_Dataset.py script
       become: true
@@ -214,7 +214,7 @@
           /omero/figure_scripts/Figure_Images_To_Dataset.py"
         mode: 0644
         owner: root
-        force: yes
+        force: true
 
   vars:
     # For https://github.com/openmicroscopy/ansible-role-java
