@@ -50,7 +50,7 @@
 
     - name: Add cron job updating the website
       become: true
-      cron:
+      ansible.builtin.cron:
         name: "Deploy the website"
         special_time: hourly
         job: >-
