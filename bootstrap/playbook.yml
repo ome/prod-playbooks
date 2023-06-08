@@ -1,7 +1,6 @@
 ---
 # Playbook which runs the necessary root-level steps
 # so that a host can be managed by others
-name: Bootstrap
 - hosts: omedev
   roles:
 
