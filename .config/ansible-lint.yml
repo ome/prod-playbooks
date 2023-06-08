@@ -1,0 +1,5 @@
+# .config/ansible-lint.yml
+skip_list:  # or 'skip_list' to silence them completely
+  - experimental  # all rules tagged as experimental
+  - latest[git]  # Result of the command may vary on subsequent runs.
+  - no-changed-when  # Commands should not change things if nothing needs doing.
