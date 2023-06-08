@@ -52,7 +52,7 @@
         filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-var_log
-            resizefs: yes
+            resizefs: true
 
   roles:
     # Now OME are using RHEL without Spacewalk,
