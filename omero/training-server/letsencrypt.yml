@@ -38,12 +38,12 @@
         - systemctl reload nginx
       certbot_auto_renew_args: --webroot --webroot-path /srv/www/letsencrypt/
       # May be useful for testing:
-      #certbot_create_args: --test-cert
-      #certbot_auto_renew_args: --test-cert --force-renewal
-      #--webroot --webroot-path /srv/www/letsencrypt/
+      # certbot_create_args: --test-cert
+      # certbot_auto_renew_args: --test-cert --force-renewal
+      # --webroot --webroot-path /srv/www/letsencrypt/
       # WARNING: If you have a test certificate and need to convert it to a
       # real certificate you may need to run
-      #   rm -rf /etc/letsencrypt/*
+      # rm -rf /etc/letsencrypt/*
       when: https_letsencrypt_enabled | default(False)
 
   tasks:

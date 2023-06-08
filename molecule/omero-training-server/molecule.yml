@@ -52,7 +52,7 @@ scenario:
     - prepare
     - converge
     # FIXME: Some tasks are not idempotent
-    #- idempotence
+    # - idempotence
     - verify
     - destroy
 verifier:

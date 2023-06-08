@@ -3,7 +3,7 @@
 
 # For new hosts you may also need to run the bootstrap playbook to setup
 # networking and initial partitions:
-#- import_playbook: bootstrap/playbook.yml
+# - import_playbook: bootstrap/playbook.yml
 
 # deployment of two OMERO.web instances for hosting Dundee's production OMERO.
 # One of the two instances is for publication data ("ns-web-pub").
