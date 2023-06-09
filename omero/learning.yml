@@ -126,10 +126,10 @@
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.public.enabled: true
         omero.web.public.password: >-
-          "{{ omero_web_public_password | default('public') }}"
+          {{ omero_web_public_password | default('public') }}
         omero.web.public.url_filter: "/(webgateway|gallery)/"
         omero.web.public.user: >-
-          "{{ omero_web_public_user | default('public') }}"
+          {{ omero_web_public_user | default('public') }}
       omero_web_apps_packages:
         - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}

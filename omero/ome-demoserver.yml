@@ -146,7 +146,7 @@
           firstname: Public
           lastname: User
           password: >-
-            "{{ secret_omero_web_public_password | default('public') }}"
+            {{ secret_omero_web_public_password | default('public') }}
           groups: "--group-name public"
 
     - role: ome.ssl_certificate
@@ -225,7 +225,7 @@
       ansible.builtin.template:
         src: templates/omero-web-config-for-webapps.j2
         dest: >-
-          "{{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero"
+          {{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero
         owner: "root"
         group: "root"
         mode: "u=rw,go=r"
@@ -335,24 +335,24 @@
 
   vars:
     omero_figure_release: >-
-      "{{ omero_figure_release_override | default('5.1.0') }}"
+      {{ omero_figure_release_override | default('5.1.0') }}
     omero_figure_script_release: >-
-      "{{ omero_figure_script_release_override | default('v5.1.0') }}"
+      {{ omero_figure_script_release_override | default('v5.1.0') }}
     omero_fpbioimage_release: >-
-      "{{ omero_fpbioimage_release_override | default('0.4.0') }}"
+      {{ omero_fpbioimage_release_override | default('0.4.0') }}
     omero_iviewer_release: >-
-      "{{ omero_iviewer_release_override | default('0.12.0') }}"
+      {{ omero_iviewer_release_override | default('0.12.0') }}
     omero_parade_release: >-
-      "{{ omero_parade_release_override | default('0.2.3') }}"
+      {{ omero_parade_release_override | default('0.2.3') }}
     omero_webtagging_autotag_release: >-
-      "{{ omero_webtagging_autotag_release_override | default('3.2.0') }}"
+      {{ omero_webtagging_autotag_release_override | default('3.2.0') }}
     omero_webtagging_tagsearch_release: >-
-      "{{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}"
+      {{ omero_webtagging_tagsearch_release_override | default('3.2.0') }}
     omero_signup_release: >-
-      "{{ omero_signup_release_override | default('0.3.2') }}"
+      {{ omero_signup_release_override | default('0.3.2') }}
 
     omero_server_release: >-
-      "{{ omero_server_release_override | default('5.6.6') }}"
+      {{ omero_server_release_override | default('5.6.6') }}
     omero_web_release: "{{ omero_web_release_override | default('5.16.0') }}"
     omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
@@ -366,11 +366,11 @@
 
     # Pip versions
     omero_cli_duplicate_release: >-
-      "{{ omero_cli_duplicate_release_override | default('0.4.0') }}"
+      {{ omero_cli_duplicate_release_override | default('0.4.0') }}
     omero_cli_render_release: >-
-      "{{ omero_cli_render_release_override | default('0.8.0') }}"
+      {{ omero_cli_render_release_override | default('0.8.0') }}
     omero_metadata_release: >-
-      "{{ omero_cli_metadata_release_override | default('0.10.0') }}"
+      {{ omero_cli_metadata_release_override | default('0.10.0') }}
 
     # Signup
     omero_signup_email_body: >-
@@ -440,9 +440,9 @@
       # https://www.openmicroscopy.org/site/support
       # /omero5.3/sysadmins/public.html
       omero.web.public.user: >-
-        "{{ secret_omero_web_public_user | default('public') }}"
+        {{ secret_omero_web_public_user | default('public') }}
       omero.web.public.password: >-
-        "{{ secret_omero_web_public_password | default('public') }}"
+        {{ secret_omero_web_public_password | default('public') }}
       omero.web.public.enabled: true
       omero.web.public.server_id: 1
       omero.web.public.url_filter: >-

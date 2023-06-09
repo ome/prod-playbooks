@@ -15,7 +15,7 @@
 
     - role: ome.omero_prometheus_exporter
       omero_prometheus_exporter_omero_user: >-
-        "{{ secret_omero_prometheus_exporter_omero_user | default('root') }}"
+        {{ secret_omero_prometheus_exporter_omero_user | default('root') }}
       omero_prometheus_exporter_omero_password: >-
         "{{ secret_omero_prometheus_exporter_omero_password
         | default('omero') }}"
