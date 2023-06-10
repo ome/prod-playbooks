@@ -310,8 +310,7 @@
     - name: Create a figure scripts directory
       become: true
       ansible.builtin.file:
-        path: >-
-          "{{ omero_server_basedir }}/OMERO.server/lib/
+        path: "{{ omero_server_basedir }}/OMERO.server/lib/\
           scripts/omero/figure_scripts"
         state: directory
         mode: 0755
@@ -321,12 +320,10 @@
     - name: Download the Figure_To_Pdf.py script
       become: true
       ansible.builtin.get_url:
-        url: >-
-          https://raw.githubusercontent.com/ome/omero-figure/
-          {{ omero_figure_script_release }}/omero_figure/scripts/omero/
-          figure_scripts/Figure_To_Pdf.py
-        dest: >-
-          "{{ omero_server_basedir }}/OMERO.server/lib/
+        url: "https://raw.githubusercontent.com/ome/omero-figure/\
+          {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
+          figure_scripts/Figure_To_Pdf.py"
+        dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
           scripts/omero/figure_scripts/Figure_To_Pdf.py"
         mode: 0755
         owner: "omero-server"
@@ -445,14 +442,13 @@
         {{ secret_omero_web_public_password | default('public') }}
       omero.web.public.enabled: true
       omero.web.public.server_id: 1
-      omero.web.public.url_filter: >-
-        "^/(webgateway/(?!(archived_files|download_as))| webclient
-        /annotation/([0-9]+)/)"
+      omero.web.public.url_filter: "^/(webgateway/(?!(archived_files|down\
+        load_as))|webclient/annotation/([0-9]+)/)"
       omero.web.server_list: [["localhost", 4064, "omero"]]
       # Advice is (2*cores + 1) from OME docs.
       omero.web.wsgi_workers: >-
-        "{{ (2 * (ansible_processor_count *
-        ansible_processor_cores)) + 1 }}"
+        {{ (2 * (ansible_processor_count *
+        ansible_processor_cores)) + 1 }}
       omero.web.admins: "{{ omero_web_admins }}"
       # https://pypi.org/project/omero-iviewer/ - set iviewer to default viewer
       omero.web.viewer.view: omero_iviewer.views.index

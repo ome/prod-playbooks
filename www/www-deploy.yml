@@ -18,8 +18,8 @@
 
   vars:
     nginx_proxy_worker_processes: >-
-      "{{ ((ansible_processor_count * ansible_processor_cores)
-       / 2) |round|int }}"
+      {{ ((ansible_processor_count * ansible_processor_cores)
+       / 2) |round|int }}
     nginx_proxy_worker_connections: 65000
     nginx_proxy_ssl: true
     nginx_proxy_ssl_certificate: "{{ ssl_certificate_bundled_path }}"
@@ -133,20 +133,17 @@
       - match: "~/site/community/minutes/meetings\
           /11th-annual-users-meeting-2016"
         dest: /events/11th-annual-users-meeting-2016.html
-      - match: >-
-          "~/site/community/minutes/meetings/
+      - match: "~/site/community/minutes/meetings/\
           10th-annual-users-meeting-june-2015"
         dest: /events/10th-annual-users-meeting-june-2015.html
-      - match: >-
-          "~/site/community/minutes/meetings/
+      - match: "~/site/community/minutes/meetings/\
           9th-annual-users-meeting-june-2014"
         dest: /events/9th-annual-users-meeting-june-2014.html
       - match: "~/site/community/jobs/?$"
         dest: /careers
       - match: "~/site/community/scripts/?$"
-        dest: >-
-          https://docs.openmicroscopy.org/
-          latest/omero/developers/scripts/index.html
+        dest: "https://docs.openmicroscopy.org/\
+          latest/omero/developers/scripts/index.html"
       - match: "~/site/community/(?<link>.*)$"
         dest: /support
 
@@ -206,8 +203,7 @@
         dest: https://docs.openmicroscopy.org/latest/ome-model/$link
       - match: "~/site/support/file-formats/?$"
         dest: https://docs.openmicroscopy.org/latest/ome-model/
-      - match: >-
-          "~/site/support/file-formats/schemas
+      - match: "~/site/support/file-formats/schemas\
           /specifications/compliant-file-specification/?$"
         dest: https://docs.openmicroscopy.org/latest/ome-model/specifications/
       - match: "~/site/support/ome-tiff/?$"
@@ -257,9 +253,8 @@
       - match: "~/info/OMERO.server"
         dest: https://docs.openmicroscopy.org/latest/omero/users/index.html
       - match: "~/info/permissions"
-        dest: >-
-          https://docs.openmicroscopy.org/latest
-          /omero/sysadmins/server-permissions.html
+        dest: "https://docs.openmicroscopy.org/latest\
+          /omero/sysadmins/server-permissions.html"
       - match: "~/info/demo"
         dest: http://help.openmicroscopy.org/demo-server.html
       - match: "~/info/cls"
@@ -275,15 +270,13 @@
       - match: "~/info/attribution"
         dest: /licensing/
       - match: "~/info/downgrade"
-        dest: >-
-          https://docs.openmicroscopy.org/latest/
-          omero/developers/Model/XsltTransformations.html
+        dest: "https://docs.openmicroscopy.org/latest/\
+          omero/developers/Model/XsltTransformations.html"
       - match: "~/info/flimfit"
         dest: http://flimfit.org
       - match: "~/info/scripts"
-        dest: >-
-          https://docs.openmicroscopy.org/latest/
-          omero/developers/scripts/index.html
+        dest: "https://docs.openmicroscopy.org/latest/\
+          omero/developers/scripts/index.html"
       - match: "~/info/bio-formats(/.*)?$"
         dest: https://docs.openmicroscopy.org/latest/bio-formats/
       - match: "~/info/slidebook"

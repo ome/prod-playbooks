@@ -17,8 +17,8 @@
       omero_prometheus_exporter_omero_user: >-
         {{ secret_omero_prometheus_exporter_omero_user | default('root') }}
       omero_prometheus_exporter_omero_password: >-
-        "{{ secret_omero_prometheus_exporter_omero_password
-        | default('omero') }}"
+        {{ secret_omero_prometheus_exporter_omero_password
+        | default('omero') }}
 
   tasks:
 
@@ -65,8 +65,8 @@
       become: true
       ansible.builtin.copy:
         content: >-
-          "{{ secret_monitoring_nginx_htpasswd |
-          default(monitoring_nginx_htpasswd) }}"
+          {{ secret_monitoring_nginx_htpasswd |
+          default(monitoring_nginx_htpasswd) }}
         dest: /etc/nginx/monitoring.htpasswd
         mode: 0644
 
