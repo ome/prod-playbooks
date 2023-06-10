@@ -25,7 +25,7 @@ provisioner:
     group_vars:
       all:
         molecule_test: true
-        postgresql_version: "9.6"
+        postgresql_version: "13"
       docker-hosts:
         # This should allow docker-in-docker to work
         docker_storage_driver: vfs

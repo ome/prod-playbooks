@@ -3,7 +3,7 @@
   hosts: ome-dockr-prod1.openmicroscopy.org
   roles:
     - role: ome.postgresql
-      postgresql_version: "12"
+      postgresql_version: "13"
       postgresql_server_auth:
         - database: redmine
           user: redmine
