@@ -26,5 +26,3 @@ scenario:
   name: ome-pg-prod
 verifier:
   name: testinfra
-  lint:
-    name: flake8
