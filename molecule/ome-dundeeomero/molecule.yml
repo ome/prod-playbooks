@@ -22,8 +22,8 @@ provisioner:
   name: ansible
   options:
     diff: true
-    skip-tags:
-      - "skip_molecule"
+    # skip-tags:
+    #   - "skip_molecule"
   inventory:
     group_vars:
       all:
