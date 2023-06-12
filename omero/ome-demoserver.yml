@@ -8,7 +8,7 @@
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: open-vm-tools
         state: installed
       when: >
@@ -29,20 +29,20 @@
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: "http://li.nux.ro/download/nux/dextop/el7\
           /x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
         state: present
 
     - name: Install Make Movie script Prerequisite | MEncoder - Package
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: mencoder
         state: present
 
     - name: Server-side script prerequisites
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: "{{ item }}"
         state: present
       with_items:

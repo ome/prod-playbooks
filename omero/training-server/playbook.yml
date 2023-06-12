@@ -9,7 +9,7 @@
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: "http://li.nux.ro/download/nux/dextop/el7/x86_64\
           /nux-dextop-release-0-5.el7.nux.noarch.rpm"
         state: present
@@ -17,7 +17,7 @@
     # web server is included for decoupled OMERO.web
     - name: OMERO.figure server-side&script prerequisites & web server
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: "{{ item }}"
         state: present
       with_items:
@@ -25,7 +25,7 @@
 
     - name: Prerequisites for ldap
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: "{{ item }}"
         state: present
       with_items:
@@ -228,7 +228,7 @@
   tasks:
     - name: Docker | python client
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: docker-python
         state: present
 

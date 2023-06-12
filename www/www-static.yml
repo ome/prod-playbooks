@@ -45,7 +45,7 @@
 
     - name: Install Cron daemon
       become: true
-      ansible.builtin.dnf:
+      ansible.builtin.yum:
         name: cronie
         state: installed
 
