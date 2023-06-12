@@ -4,12 +4,12 @@
   tasks:
    - name: Install iproute
      become: true
-     ansible.builtin.yum:
+     ansible.builtin.dnf:
       name: iproute
       state: present
 
    - name: Install cron
      become: true
-     ansible.builtin.yum:
+     ansible.builtin.dnf:
       name: cronie
       state: present

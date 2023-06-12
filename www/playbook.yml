@@ -7,7 +7,7 @@
   pre_tasks:
       - name: Install open-vm-tools if system is a VMware vm
         become: true
-        ansible.builtin.yum:
+        ansible.builtin.dnf:
             name: open-vm-tools
             state: installed
         when: >

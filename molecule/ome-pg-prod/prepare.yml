@@ -4,6 +4,6 @@
   tasks:
    - name: Install cron
      become: true
-     ansible.builtin.yum:
+     ansible.builtin.dnf:
       name: cronie
       state: present
