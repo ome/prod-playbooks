@@ -30,7 +30,7 @@
       ansible.builtin.yum:
         name: "http://li.nux.ro/download/nux/dextop/el7\
           /x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
-        state: present
+        state: latest
 
     # web server is included for decoupled OMERO.web
     - name: OMERO.figure server-side&script prerequisites & web server
