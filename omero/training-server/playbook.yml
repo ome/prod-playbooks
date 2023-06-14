@@ -114,59 +114,28 @@
 
       omero_web_config_set:
         omero.web.apps:
-          - "omero_iviewer"
-          - "omero_figure"
-          - "omero_fpbioimage"
-          - "omero_webtagging_autotag"
-          - "omero_webtagging_tagsearch"
-          - "omero_parade"
-          - "omero_mapr"
+           - "omero_iviewer"
+           - "omero_figure"
+           - "omero_fpbioimage"
+           - "omero_webtagging_autotag"
+           - "omero_webtagging_tagsearch"
+           - "omero_parade"
+           - "omero_mapr"
         omero.web.ui.center_plugins:
-          - - "Auto Tag"
-            - "omero_webtagging_autotag/auto_tag_init.js.html"
-            - "auto_tag_panel"
-          - - "Parade"
-            - "omero_parade/init.js.html"
-            - "omero_parade"
+          - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
+          - ["Parade", "omero_parade/init.js.html", "omero_parade"]
         omero.web.ui.top_links:
-          - - "Data"
-            - "webindex"
-            - title: "Browse Data via Projects, Tags etc"
-          - - "History"
-            - "history"
-            - title: "History"
-          - - "Help"
-            - "https://help.openmicroscopy.org/"
-            - title: "Open OMERO user guide in a new tab"
-              target: "new"
-          - - "Figure"
-            - "figure_index"
-            - title: "Open Figure in new tab"
-              target: "_blank"
-          - - "Tag Search"
-            - "tagsearch"
-          - - "Genes"
-            - query_string: {"experimenter": -1}
-              viewname: "maprindex_gene"
-            - title": "Find Gene annotations"
-          - - "Key-Value"
-            - viewname: "maprindex_keyvalue"
-            - title: "Search for manually-added Key-Value pairs"
+          - ["Data", "webindex", {"title": "Browse Data via Projects, Tags etc"}]
+          - ["History", "history", {"title": "History"}]
+          - ["Help", "https://help.openmicroscopy.org/", {"title": "Open OMERO user guide in a new tab", "target": "new"}]
+          - ["Figure", "figure_index", {"title": "Open Figure in new tab", "target": "_blank"}]
+          - ["Tag Search", "tagsearch"]
+          - ["Genes", {"query_string": {"experimenter": -1}, "viewname": "maprindex_gene"}, {"title": "Find Gene annotations"}]
+          - ["Key-Value", {"viewname": "maprindex_keyvalue"}, {"title": "Search for manually-added Key-Value pairs"}]
         omero.web.open_with:
-          - - "Image viewer"
-            - "webgateway"
-            - supported_objects: ["image"]
-              script_url: "webclient/javascript/ome.openwith_viewer.js"
-          - - omero_figure
-            - new_figure
-            - supported_objects: ["images"]
-              target: "_blank"
-              label: "OMERO.figure"
-          - - omero_fpbioimage
-            - fpbioimage_index
-            - supported_objects: ["image"]
-              script_url: "fpbioimage/openwith.js"
-              label: "FPBioimage"
+          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
+          - ["omero_figure", "new_figure", {"supported_objects":["images"], "target": "_blank", "label": "OMERO.figure"}]
+          - ["omero_fpbioimage", "fpbioimage_index", {"supported_objects":["image"], "script_url": "fpbioimage/openwith.js", "label": "FPBioimage"}]
           - - omero_iviewer
             - omero_iviewer_index
             - supported_objects:
@@ -209,12 +178,9 @@
             }
 
         omero.web.public.enabled: true
-        omero.web.public.password: >-
-          {{ omero_web_public_password_override | default('secret') }}
-        omero.web.public.url_filter: >-
-          ^/({{ idr_omero_web_public_url_filters | join('|') }})
-        omero.web.public.user: >-
-          {{ omero_web_public_user_override | default('secret') }}
+        omero.web.public.password: "{{ omero_web_public_password_override | default('secret') }}"
+        omero.web.public.url_filter: "^/({{ idr_omero_web_public_url_filters | join('|') }})"
+        omero.web.public.user: "{{ omero_web_public_user_override | default('secret') }}"
 
     - role: ome.iptables_raw
 
