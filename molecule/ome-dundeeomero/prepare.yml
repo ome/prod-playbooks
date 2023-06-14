@@ -1,7 +1,0 @@
-# Make url downloaded from r
-- name: Prepare ome-dundeeomero
-  hosts: ome-dundeeomero.openmicroscopy.org
-  tasks:
-   - name: Update ca-certificates
-     become: true
-     ansible.builtin.command: update-ca-certificates
