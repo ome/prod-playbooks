@@ -108,13 +108,13 @@
 
       omero_web_config_set:
         omero.web.apps:
-          - "omero_iviewer"
-          - "omero_figure"
-          - "omero_fpbioimage"
-          - "omero_webtagging_autotag"
-          - "omero_webtagging_tagsearch"
-          - "omero_parade"
-          - "omero_mapr"
+           - "omero_iviewer"
+           - "omero_figure"
+           - "omero_fpbioimage"
+           - "omero_webtagging_autotag"
+           - "omero_webtagging_tagsearch"
+           - "omero_parade"
+           - "omero_mapr"
         omero.web.ui.center_plugins:
           - ["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]
           - ["Parade", "omero_parade/init.js.html", "omero_parade"]
@@ -504,5 +504,8 @@
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
-- include: letsencrypt.yml
-- include: idr_data.yml
+- name: Import letsencrypt
+  import_playbook: letsencrypt.yml
+
+- name: Import idr data
+  import_playbook: idr_data.yml
