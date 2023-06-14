@@ -56,7 +56,7 @@
         dest: /etc/nginx/conf.d-nested-includes/https.conf
         mode: 0644
       notify:
-        - reload nginx
+        - Reload nginx
 
   handlers:
     - name: Reload nginx
