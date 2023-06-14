@@ -198,7 +198,7 @@
       become: true
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/ome\
-          /omero-guide-figure
+          /omero-guide-figure\
           /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Dataset\
           _Images_To_New_Figure.py"
         dest: "/opt/omero/server/OMERO.server/lib/scripts\
