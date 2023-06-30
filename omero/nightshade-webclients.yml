@@ -82,7 +82,7 @@
 
     - name: NGINX - SSL Configuration
       become: true
-      ansible.builtin.template:
+      template:
         src: templates/nginx-confdnestedincludes-ssl-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/ssl.conf
         mode: 0644
@@ -91,7 +91,7 @@
 
     - name: NGINX - Custom Paper Redirect
       become: true
-      ansible.builtin.template:
+      template:
         src: templates/nginx-confdnestedincludes-ns-pub-redirects-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/ns-pub-redirects.conf
         mode: 0644

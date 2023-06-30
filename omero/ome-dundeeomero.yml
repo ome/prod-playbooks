@@ -159,7 +159,7 @@
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - Configuration
       become: true
-      ansible.builtin.template:
+      template:
         src: nginx-omero.conf.j2
         dest: /etc/nginx/conf.d/omero-web.conf
         mode: 0644

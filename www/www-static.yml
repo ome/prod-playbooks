@@ -38,7 +38,7 @@
   tasks:
     - name: Install deployment script
       become: true
-      ansible.builtin.template:
+      template:
         src: files/deploy
         dest: /usr/local/bin/deploy
         mode: 0555
