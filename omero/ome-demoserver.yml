@@ -21,7 +21,7 @@
     - name: Resize root FS without altering mount options
       tags: lvm
       become: true
-      community.general.system.lvol:
+      lvol:
         lv: root
         vg: VolGroup00
         size: "{{ provision_root_lvsize }}"
