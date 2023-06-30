@@ -1,16 +1,15 @@
 # Additional Nginx configuration including Let's Encrypt
 # Should be run when less than 30 days remain on the certificate
 
-- name: Letsencrypt playbook
-  hosts: ome-outreach
+- hosts: ome-outreach
 
   pre_tasks:
 
-    - name: Letsencrypt challenge directory
-      become: true
-      ansible.builtin.file:
+    - name: letsencrypt challenge directory
+      become: yes
+      file:
         path: /srv/www/letsencrypt/.well-known/
-        recurse: true
+        recurse: yes
         state: directory
         mode: 0755
 
@@ -19,8 +18,7 @@
     # Assume Nginx is already installed
     # - role: ome.nginx
 
-    # If we're not using letsencrypt assume this is CI
-    # so use a self-signed cert
+    # If we're not using letsencrypt assume this is CI so use a self-signed cert
     - role: ome.ssl_certificate
       when: not (https_letsencrypt_enabled | default(False))
 
@@ -28,8 +26,8 @@
     # This will stop nginx when the certificate is first created
     # For renewals we configure Nginx to serve the challenge
     - role: ome.certbot
-      become: true
-      certbot_create_if_missing: true
+      become: yes
+      certbot_create_if_missing: yes
       certbot_admin_email: "{{ letsencrypt_email }}"
       certbot_domains:
         - "{{ https_certificate_domain }}"
@@ -39,39 +37,36 @@
         - systemctl reload nginx
       certbot_auto_renew_args: --webroot --webroot-path /srv/www/letsencrypt/
       # May be useful for testing:
-      # certbot_create_args: --test-cert
-      # certbot_auto_renew_args: --test-cert --force-renewal
-      # --webroot --webroot-path /srv/www/letsencrypt/
+      #certbot_create_args: --test-cert
+      #certbot_auto_renew_args: --test-cert --force-renewal --webroot --webroot-path /srv/www/letsencrypt/
       # WARNING: If you have a test certificate and need to convert it to a
       # real certificate you may need to run
-      # rm -rf /etc/letsencrypt/*
+      #   rm -rf /etc/letsencrypt/*
       when: https_letsencrypt_enabled | default(False)
 
   tasks:
 
-    - name: Letsencrypt nginx configuration
-      become: true
-      ansible.builtin.template:
-        src: templates/nginx-letsencrypt-conf.j2
-        dest: /etc/nginx/conf.d-nested-includes/https.conf
-        mode: 0644
-      notify:
-        - Reload nginx
+  - name: letsencrypt nginx configuration
+    become: yes
+    template:
+      src: templates/nginx-letsencrypt-conf.j2
+      dest: /etc/nginx/conf.d-nested-includes/https.conf
+      mode: 0644
+    notify:
+    - reload nginx
 
   handlers:
-    - name: Reload nginx
-      become: true
-      ansible.builtin.service:
-        name: nginx
-        state: reloaded
+  - name: reload nginx
+    become: yes
+    service:
+      name: nginx
+      state: reloaded
 
   vars:
     # Must be defined somewhere
     # https_certificate_domain:
     letsencrypt_email: sysadmin@openmicroscopy.org
     # This must match the expectations of certbot, do not change this:
-    https_letsencrypt_cert_path: >-
-      /etc/letsencrypt/live/{{ https_certificate_domain
-      | default('localhost') }}
+    https_letsencrypt_cert_path: "/etc/letsencrypt/live/{{ https_certificate_domain | default('localhost') }}"
     # In production set this to True:
     # https_letsencrypt_enabled:
