@@ -121,7 +121,7 @@
           - - "omero_iviewer"
             - "omero_iviewer_index"
             - supported_objects: ["images", "dataset", "well"]
-              script_url": "omero_iviewer/openwith.js"
+              script_url: "omero_iviewer/openwith.js"
               label: "OMERO.iviewer"
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.public.enabled: true
@@ -166,7 +166,7 @@
 
     - name: TLS certificate is installed for JVM
       become: true
-      community.general.system.java_cert:
+      java_cert:
         cert_url: "{{ ldap_host }}"
         cert_port: 636
         keystore_path: "/etc/pki/java/cacerts"
