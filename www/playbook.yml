@@ -19,7 +19,7 @@
       # but that role
       # will change the device name to symlinks rather than
       # existing device ID.
-      - name: Storage | Resize root LV
+      - name: storage | Resize root LV
         tags: lvm
         become: true
         lvol:
@@ -29,15 +29,15 @@
             shrink: false
 
       # Grow the filesystem to fill the LV
-      - name: Storage | Resize root FS
+      - name: storage | Resize root FS
         tags: lvm
         become: true
-        community.general.system.filesystem:
+        filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-root
             resizefs: true
 
-      - name: Storage | Resize var_log LV
+      - name: storage | Resize var_log LV
         tags: lvm
         become: true
         lvol:
@@ -47,10 +47,10 @@
             shrink: false
 
       # Grow the filesystem to fill the LV
-      - name: Storage | Resize var_log FS
+      - name: storage | Resize var_log FS
         tags: lvm
         become: true
-        community.general.system.filesystem:
+        filesystem:
             fstype: "{{ filesystem }}"
             dev: /dev/mapper/{{ lvm_vgname }}-var_log
             resizefs: true
