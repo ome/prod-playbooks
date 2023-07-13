@@ -22,7 +22,7 @@
       - name: Storage | Resize root LV
         tags: lvm
         become: true
-        community.general.system.lvol:
+        lvol:
             lv: root
             vg: "{{ lvm_vgname }}"
             size: "{{ provision_root_lvsize }}"
@@ -40,7 +40,7 @@
       - name: Storage | Resize var_log LV
         tags: lvm
         become: true
-        community.general.system.lvol:
+        lvol:
             lv: var_log
             vg: "{{ lvm_vgname }}"
             size: "{{ provision_varlog_lvsize }}"
