@@ -176,7 +176,7 @@
 
     - name: OMERO.web configuration is installed
       become: true
-      ansible.builtin.copy:
+      copy:
         src: "files/learning-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
