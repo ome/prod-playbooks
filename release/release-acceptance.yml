@@ -4,18 +4,18 @@
   become: true
   tasks:
     - name: Check mandatory variables are defined
-      ansible.builtin.fail:
+      fail:
         msg: Please pass 'product' and 'version' variables
       when: product is not defined and version is not defined
 
     - name: Check the release component exist
-      ansible.builtin.stat:
+      stat:
         path: "{{ item }}/{{ product }}/{{ version }}/"
       register: s
       with_items: "{{ www_folders }}"
 
     - name: Check the release component exist
-      ansible.builtin.fail:
+      fail:
         msg: "{{ item }} does not exist"
       with_items: "{{ s.results }}"
       when: item.stat is not defined or not item.stat.exists
@@ -30,13 +30,13 @@
         majorversion: "{{ version.split('.')[:1] | join('.') }}"
 
     - name: Remove .htaccess file
-      ansible.builtin.file:
+      file:
         path: "{{ item }}/{{ product }}/{{ version }}/.htaccess"
         state: absent
       with_items: "{{ www_folders }}"
 
     - name: Make release folders read-only and owned by root
-      ansible.builtin.file:
+      file:
         path: "{{ item }}/{{ product }}/{{ version }}"
         state: directory
         owner: root
@@ -46,7 +46,7 @@
       with_items: "{{ www_folders }}"
 
     - name: Create minor version directory
-      ansible.builtin.file:
+      file:
         path: "{{ item }}/{{ product }}/{{ minorversion }}"
         state: directory
         mode: 0755
@@ -54,7 +54,7 @@
       when: not prerelease
 
     - name: Create minor version redirects
-      ansible.builtin.copy:
+      copy:
         dest: "{{ item }}/{{ product }}/{{ minorversion }}/.htaccess"
         content: "Redirect 301 /{{ product }}/{{ minorversion }} \
           /{{ product }}/{{ version }}"
@@ -63,7 +63,7 @@
       when: not prerelease
 
     - name: Create minor version directory
-      ansible.builtin.file:
+      file:
         path: "{{ item }}/{{ product }}/{{ majorversion }}"
         state: directory
         mode: 0755
@@ -71,7 +71,7 @@
       when: not prerelease
 
     - name: Create major version redirects
-      ansible.builtin.copy:
+      copy:
         dest: "{{ item }}/{{ product }}/{{ majorversion }}/.htaccess"
         content: "Redirect 301 /{{ product }}/{{ majorversion }} \
           /{{ product }}/{{ version }}"
@@ -80,7 +80,7 @@
       when: not prerelease
 
     - name: Create latest version directory
-      ansible.builtin.file:
+      file:
         path: "{{ item }}/{{ product }}/latest"
         state: directory
         mode: 0755
@@ -88,7 +88,7 @@
       when: not prerelease
 
     - name: Create latest version redirect
-      ansible.builtin.copy:
+      copy:
         dest: "{{ item }}/{{ product }}/latest/.htaccess"
         content: "Redirect 301 /{{ product }}/latest \
           /{{ product }}/{{ version }}"
