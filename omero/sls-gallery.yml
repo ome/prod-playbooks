@@ -138,7 +138,7 @@
 
     - name: OMERO.server logs are compressed on rollover
       become: true
-      ansible.builtin.replace:
+      replace:
         path: "{{ item.path }}"
         regexp: "(\\<fileNamePattern\\>\\$\\{om\
           ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
@@ -148,7 +148,7 @@
 
     - name: OMERO.web configuration is installed
       become: true
-      ansible.builtin.copy:
+      copy:
         src: "files/sls-gallery-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
