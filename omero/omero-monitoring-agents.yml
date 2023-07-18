@@ -24,7 +24,7 @@
 
     - name: Omero-server prometheus jmx agents
       become: true
-      ansible.builtin.copy:
+      copy:
         dest: "{{ omero_common_basedir }}/server/config/prometheus.omero"
         src: omero-server-config-prometheus.omero
         mode: 0644
@@ -55,7 +55,7 @@
 
     - name: Nginx selinux allow network connect
       become: true
-      ansible.posix.seboolean:
+      seboolean:
         name: httpd_can_network_connect
         state: true
         persistent: true
@@ -63,7 +63,7 @@
 
     - name: Create monitoring htpasswd
       become: true
-      ansible.builtin.copy:
+      copy:
         content: >-
           {{ secret_monitoring_nginx_htpasswd |
           default(monitoring_nginx_htpasswd) }}
@@ -75,7 +75,7 @@
     # when scraping
     - name: Create nginx proxy for prometheus exporters
       become: true
-      ansible.builtin.copy:
+      copy:
         dest: /etc/nginx/conf.d-nested-includes/proxy-exporters.conf
         src: confd-nested-proxy-exporters.conf
         mode: 0644
@@ -85,7 +85,7 @@
   handlers:
     - name: restart nginx
       become: true
-      ansible.builtin.service:
+      service:
         name: nginx
         state: restarted
 
@@ -100,7 +100,7 @@
   tasks:
     - name: Create nginx proxy for prometheus web exporters
       become: true
-      ansible.builtin.copy:
+      copy:
         dest: /etc/nginx/conf.d-nested-includes/proxy-exporters-web.conf
         src: confd-nested-proxy-exporters-web.conf
         mode: 0644
@@ -110,6 +110,6 @@
   handlers:
     - name: restart nginx
       become: true
-      ansible.builtin.service:
+      service:
         name: nginx
         state: restarted
