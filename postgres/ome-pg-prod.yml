@@ -1,32 +1,31 @@
 ---
-- name: Ome pg production
-  hosts: ome-pg-prod1.openmicroscopy.org
+- hosts: ome-pg-prod1.openmicroscopy.org
   roles:
 
-   - role: ome.postgresql
-     postgresql_version: "9.6"
-     postgresql_server_listen: "'*'"
-     postgresql_databases:
-      - name: idr-redmine
-        owner: idr-redmine
-        restrict: true
-     postgresql_users:
-      - user: idr-redmine
-        password: "{{ idr_redmine_postgres_password | default('idr-redmine') }}"
-        databases:
-         - idr-redmine
-     postgresql_server_auth:
-      - database: idr-redmine
-        user: idr-redmine
-        address: "{{ idr_redmine_postgres_auth_ip | default('0.0.0.0/0') }}"
-      - database: idr-redmine
-        user: idr-redmine
-        address: "{{ idr_redmine_postgres_auth_ip2 | default('0.0.0.0/0') }}"
+  - role: ome.postgresql
+    postgresql_version: "9.6"
+    postgresql_server_listen: "'*'"
+    postgresql_databases:
+    - name: idr-redmine
+      owner: idr-redmine
+      restrict: True
+    postgresql_users:
+    - user: idr-redmine
+      password: "{{ idr_redmine_postgres_password | default('idr-redmine') }}"
+      databases:
+      - idr-redmine
+    postgresql_server_auth:
+    - database: idr-redmine
+      user: idr-redmine
+      address: "{{ idr_redmine_postgres_auth_ip | default('0.0.0.0/0') }}"
+    - database: idr-redmine
+      user: idr-redmine
+      address: "{{ idr_redmine_postgres_auth_ip2 | default('0.0.0.0/0') }}"
 
-   - role: ome.nfs_mount
-      # Parameters for this role are internal
+  - role: ome.nfs_mount
+    # Parameters for this role are internal
 
-   - role: ome.postgresql_backup
-     postgresql_backup_dir: /mnt/backups/
-     postgresql_backup_filename_format: "{{ ansible_hostname }}-%a.pgdump"
-     postgresql_backup_minimum_expected_size: 100000
+  - role: ome.postgresql_backup
+    postgresql_backup_dir: /mnt/backups/
+    postgresql_backup_filename_format: "{{ ansible_hostname }}-%a.pgdump"
+    postgresql_backup_minimum_expected_size: 100000
