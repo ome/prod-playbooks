@@ -33,7 +33,7 @@
   # This may take a long time with no output
     - name: Copy files
       # Don't become root, this should ensure ssh forwarding works
-      ansible.posix.synchronize:
+      synchronize:
         src: "{{ item }}"
         dest: "/tmp/{{ item | basename }}"
         partial: true
