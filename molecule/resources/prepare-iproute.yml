@@ -1,14 +1,15 @@
 # Install iproute for ansible network vars
-- hosts: all
+- name: Prepare iproute in resources
+  hosts: all
   tasks:
-  - name: Install iproute
-    become: yes
-    yum:
+   - name: Install iproute
+     become: true
+     ansible.builtin.yum:
       name: iproute
       state: present
 
-  - name: Install cron
-    become: true
-    yum:
+   - name: Install cron
+     become: true
+     ansible.builtin.yum:
       name: cronie
       state: present

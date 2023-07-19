@@ -5,10 +5,10 @@ dependency:
     role-file: requirements.yml
 driver:
   name: docker
-lint:
-  name: yamllint
-  # TODO: enable
-  enabled: False
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
 platforms:
   - name: www
     image: centos/systemd
@@ -25,5 +25,3 @@ scenario:
   name: www
 verifier:
   name: testinfra
-  lint:
-    name: flake8

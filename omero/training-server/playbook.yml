@@ -504,5 +504,8 @@
 
     external_nic: "{{ ansible_default_ipv4.interface }}"
 
-- include: letsencrypt.yml
-- include: idr_data.yml
+- name: Import letsencrypt
+  import_playbook: letsencrypt.yml
+
+- name: Import idr data
+  import_playbook: idr_data.yml

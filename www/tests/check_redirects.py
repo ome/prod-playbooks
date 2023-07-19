@@ -33,10 +33,12 @@ redirect_uris = [
     ('/site/community/mailing-lists', '/support'),
     ('/site/events', '/events'),
     ('/site/community/minutes/conference-calls', '/on-the-web'),
-    ('/site/community/minutes/meetings/12th-annual-users-meeting-2017', '/events/12th-annual-users-meeting-2017.html'),
-    ('/site/community/minutes/meetings/11th-annual-users-meeting-2016', '/events/11th-annual-users-meeting-2016.html'),
-    ('/site/community/minutes/meetings/10th-annual-users-meeting-june-2015', '/events/10th-annual-users-meeting-june-2015.html'),
-    ('/site/community/minutes/meetings/9th-annual-users-meeting-june-2014', '/events/9th-annual-users-meeting-june-2014.html'),
+    ('/site/community/minutes/meetings/12th-annual-users-meeting-2017',
+     '/events/12th-annual-users-meeting-2017.html'),
+    ('/site/community/minutes/meetings/11th-annual-users-meeting-2016',
+     '/events/11th-annual-users-meeting-2016.html'),
+    ('/site/community/minutes/meetings/10th-annual-users-meeting-june-2015', '/events/10th-annual-users-meeting-june-2015.html'),# noqa
+    ('/site/community/minutes/meetings/9th-annual-users-meeting-june-2014', '/events/9th-annual-users-meeting-june-2014.html'),# noqa
     ('/site/community/jobs', '/careers'),
 
     ('/site/products', '/products'),
@@ -66,40 +68,40 @@ redirect_uris = [
 ]
 external_uris = [
     ('/omero-blog', 'http://blog.openmicroscopy.org'),
-    ('/site/about/development-teams/glencoe-software', 'https://www.glencoesoftware.com/team.html'),
-    ('/site/community/scripts', 'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),
-    ('/site/support/bio-formats', 'https://docs.openmicroscopy.org/latest/bio-formats/'),
-    ('/site/support/bio-formats5', 'https://docs.openmicroscopy.org/latest/bio-formats5/'),
-    ('/site/support/bio-formats5.3', 'https://docs.openmicroscopy.org/latest/bio-formats5.3/'),
-    ('/site/support/bio-formats5.4', 'https://docs.openmicroscopy.org/latest/bio-formats5.4/'),
-    ('/site/support/bio-formats5.5', 'https://docs.openmicroscopy.org/latest/bio-formats5.5/'),
-    ('/site/support/omero', 'https://docs.openmicroscopy.org/latest/omero/'),
-    ('/site/support/omero5', 'https://docs.openmicroscopy.org/latest/omero5/'),
-    ('/site/support/omero5.0', 'https://docs.openmicroscopy.org/latest/omero5.0/'),
-    ('/site/support/omero5.1', 'https://docs.openmicroscopy.org/latest/omero5.1/'),
-    ('/site/support/omero5.2', 'https://docs.openmicroscopy.org/latest/omero5.2/'),
-    ('/site/support/omero5.3', 'https://docs.openmicroscopy.org/latest/omero5.3/'),
-    ('/site/support/ome-model', 'https://docs.openmicroscopy.org/latest/ome-model/'),
-    ('/site/support/file-formats', 'https://docs.openmicroscopy.org/latest/ome-model/'),
-    ('/site/support/file-formats/schemas/specifications/compliant-file-specification', 'https://docs.openmicroscopy.org/latest/ome-model/specifications/'),
-    ('/site/support/ome-tiff', 'https://docs.openmicroscopy.org/latest/ome-model/ome-tiff/'),
-    ('/site/support/ome-files-cpp', 'https://docs.openmicroscopy.org/latest/ome-files-cpp/'),
-    ('/site/support/contributing', 'https://docs.openmicroscopy.org/contributing/'),
+    ('/site/about/development-teams/glencoe-software', 'https://www.glencoesoftware.com/team.html'),# noqa
+    ('/site/community/scripts', 'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),# noqa
+    ('/site/support/bio-formats', 'https://docs.openmicroscopy.org/latest/bio-formats/'),# noqa
+    ('/site/support/bio-formats5', 'https://docs.openmicroscopy.org/latest/bio-formats5/'),# noqa
+    ('/site/support/bio-formats5.3', 'https://docs.openmicroscopy.org/latest/bio-formats5.3/'),# noqa
+    ('/site/support/bio-formats5.4', 'https://docs.openmicroscopy.org/latest/bio-formats5.4/'),# noqa
+    ('/site/support/bio-formats5.5', 'https://docs.openmicroscopy.org/latest/bio-formats5.5/'),# noqa
+    ('/site/support/omero', 'https://docs.openmicroscopy.org/latest/omero/'),# noqa
+    ('/site/support/omero5', 'https://docs.openmicroscopy.org/latest/omero5/'),# noqa
+    ('/site/support/omero5.0', 'https://docs.openmicroscopy.org/latest/omero5.0/'),# noqa
+    ('/site/support/omero5.1', 'https://docs.openmicroscopy.org/latest/omero5.1/'),# noqa
+    ('/site/support/omero5.2', 'https://docs.openmicroscopy.org/latest/omero5.2/'),# noqa
+    ('/site/support/omero5.3', 'https://docs.openmicroscopy.org/latest/omero5.3/'),# noqa
+    ('/site/support/ome-model', 'https://docs.openmicroscopy.org/latest/ome-model/'),# noqa
+    ('/site/support/file-formats', 'https://docs.openmicroscopy.org/latest/ome-model/'),# noqa
+    ('/site/support/file-formats/schemas/specifications/compliant-file-specification', 'https://docs.openmicroscopy.org/latest/ome-model/specifications/'),# noqa
+    ('/site/support/ome-tiff', 'https://docs.openmicroscopy.org/latest/ome-model/ome-tiff/'),# noqa
+    ('/site/support/ome-files-cpp', 'https://docs.openmicroscopy.org/latest/ome-files-cpp/'),# noqa
+    ('/site/support/contributing', 'https://docs.openmicroscopy.org/contributing/'),# noqa
     ('/site/support/previous', 'https://docs.openmicroscopy.org'),
-    ('/info/OMERO.insight', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),
-    ('/info/OMERO.importer', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),
-    ('/info/OMERO.editor', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),
-    ('/info/OMERO.web', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),
-    ('/info/OMERO.server', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),
-    ('/info/permissions', 'https://docs.openmicroscopy.org/latest/omero/sysadmins/server-permissions.html'),
+    ('/info/OMERO.insight', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),# noqa
+    ('/info/OMERO.importer', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),# noqa
+    ('/info/OMERO.editor', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),# noqa
+    ('/info/OMERO.web', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),# noqa
+    ('/info/OMERO.server', 'https://docs.openmicroscopy.org/latest/omero/users/index.html'),# noqa
+    ('/info/permissions', 'https://docs.openmicroscopy.org/latest/omero/sysadmins/server-permissions.html'),# noqa
     ('/info/demo', 'http://help.openmicroscopy.org/demo-server.html'),
     ('/info/lists', 'http://lists.openmicroscopy.org.uk/mailman/listinfo/'),
-    ('/info/videos', 'https://www.youtube.com/channel/UCyySB9ZzNi8aBGYqcxSrauQ'),
-    ('/info/downgrade', 'https://docs.openmicroscopy.org/latest/omero/developers/Model/XsltTransformations.html'),
-    ('/info/flimfit', 'http://flimfit.org'),
-    ('/info/scripts', 'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),
-    ('/info/bio-formats', 'https://docs.openmicroscopy.org/latest/bio-formats/'),
-    ('/info/slidebook', 'https://www.intelligent-imaging.com/technical-answers'),
+    ('/info/videos', 'https://www.youtube.com/channel/UCyySB9ZzNi8aBGYqcxSrauQ'),# noqa
+    ('/info/downgrade', 'https://docs.openmicroscopy.org/latest/omero/developers/Model/XsltTransformations.html'),# noqa
+    ('/info/flimfit', 'http://flimfit.org'),# noqa
+    ('/info/scripts', 'https://docs.openmicroscopy.org/latest/omero/developers/scripts/index.html'),# noqa
+    ('/info/bio-formats', 'https://docs.openmicroscopy.org/latest/bio-formats/'),# noqa
+    ('/info/slidebook', 'https://www.intelligent-imaging.com/technical-answers'),# noqa
 ]
 content_uris = [
     ('/community', 'This page was generated by phpBB'),

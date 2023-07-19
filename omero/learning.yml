@@ -6,11 +6,15 @@
 # - Migrate database with pg_dump, pg_restore.
 # - Upgrade database.
 #   Do run shape_color_argb_to_rgba.sql.
-#   UPDATE shape SET points = REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*', '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points LIKE 'points[%';
+#   UPDATE shape SET points =
+#   REGEXP_REPLACE(REGEXP_REPLACE(points, '[^\[]*\[([^\]]*).*',
+#  '\1'), ', ', ' ', 'g') WHERE discriminator = 'polygon' AND points
+#   LIKE 'points[%';
 # - bin/omero db password for root and public users.
 # - systemctl start omero-{server,web}
 
-- hosts: omero-learning
+- name: Learning Virtual Microscope playbook
+  hosts: omero-learning
   roles:
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -18,7 +22,7 @@
       lvm_lvmount: '/var/lib/pgsql'
       lvm_lvsize: 20G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.postgresql
       postgresql_databases:
@@ -34,7 +38,7 @@
       lvm_lvmount: '/OMERO'
       lvm_lvsize: 150G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -42,20 +46,20 @@
       lvm_lvmount: '/opt/omero'
       lvm_lvsize: 40G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.omero_server
       omero_server_python_addons:
         - "omero-py>={{ omero_py_release }}"
       omero_server_config_set:
-        omero.client.ui.menu.dropdown.colleagues.enabled: False
+        omero.client.ui.menu.dropdown.colleagues.enabled: false
         omero.client.ui.menu.dropdown.everyone.label: "All courses"
         omero.client.ui.menu.dropdown.leaders.label: "Courses:"
         omero.db.poolsize: 100
         omero.jvmcfg.percent.blitz: 50
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
-        omero.ldap.config: True
+        omero.ldap.config: true
         omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: "{{ omero_server_ldap_username }}"
         omero.ldap.password: "{{ omero_server_ldap_password | default('') }}"
@@ -66,20 +70,20 @@
         omero.mail.from: "{{ omero_server_mail_from }}"
         omero.mail.host: "{{ omero_server_mail_host }}"
         omero.policy.binary_access: "+read,+write,-image,-plate"
-        omero.security.ignore_case: True
+        omero.security.ignore_case: true
         omero.security.keyStore: "/etc/pki/java/cacerts"
         omero.security.trustStore: "/etc/pki/java/cacerts"
         omero.security.keyStorePassword: "changeit"
         omero.security.trustStorePassword: "changeit"
         omero.sessions.timeout: 3600000
-      omero_server_selfsigned_certificates: True
+      omero_server_selfsigned_certificates: true
 
     - role: ome.redis
 
     - role: ome.nginx
 
     - role: ome.omero_web
-      omero_web_setup_nginx: False
+      omero_web_setup_nginx: false
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "Virtual Microscope"]
@@ -90,10 +94,16 @@
             - webindex
           viewname: "webindex_custom"
         omero.web.ui.top_links:
-          - ["Virtual Microscope", "webindex", {"title": "Virtual Microscope"}]
-          - ["HELP", "https://help.openmicroscopy.org/virtual-microscope.html", {"title": "Help", "target": "new"}]
+          - - "Virtual Microscope"
+            - "webindex"
+            - {"title": "Virtual Microscope"}
+          - - "HELP"
+            - "https://help.openmicroscopy.org/virtual-microscope.html"
+            - {"title": "Help", "target": "new"}
         omero.web.ui.right_plugins:
-          - ["Acquisition", "webclient/data/includes/right_plugin.acquisition.js.html", "metadata_tab"]
+          - - "Acquisition"
+            - "webclient/data/includes/right_plugin.acquisition.js.html"
+            - "metadata_tab"
         omero.web.caches:
           default:
             BACKEND: django_redis.cache.RedisCache
@@ -104,17 +114,27 @@
           - "omero_iviewer"
           - "virtualmicroscope"
         omero.web.open_with:
-          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
-          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - - "Image viewer"
+            - "webgateway"
+            - supported_objects: ["image"]
+              script_url: "webclient/javascript/ome.openwith_viewer.js"
+          - - "omero_iviewer"
+            - "omero_iviewer_index"
+            - supported_objects: ["images", "dataset", "well"]
+              script_url: "omero_iviewer/openwith.js"
+              label: "OMERO.iviewer"
         omero.web.viewer.view: omero_iviewer.views.index
         omero.web.public.enabled: true
-        omero.web.public.password: "{{ omero_web_public_password | default('public') }}"
+        omero.web.public.password: >-
+          {{ omero_web_public_password | default('public') }}
         omero.web.public.url_filter: "/(webgateway|gallery)/"
-        omero.web.public.user: "{{ omero_web_public_user | default('public') }}"
+        omero.web.public.user: >-
+          {{ omero_web_public_user | default('public') }}
       omero_web_apps_packages:
         - omero-gallery=={{ omero_web_apps_release.omero_gallery }}
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
-        - omero-virtual-microscope=={{ omero_web_apps_release.omero_virtual_microscope }}
+        - "omero-virtual-microscope==\
+        {{ omero_web_apps_release.omero_virtual_microscope }}"
       omero_web_python_addons:
         - "django-redis==5.0.0"
         - "omero-py>={{ omero_py_release }}"
@@ -127,24 +147,25 @@
 
 
   tasks:
-    - name: find OMERO.server log configuration
-      become: yes
-      find:
+    - name: Find OMERO.server log configuration
+      become: true
+      ansible.builtin.find:
         paths: /opt/omero/server/OMERO.server/etc/
         patterns: "logback*.xml"
       register: logbacks
 
     - name: OMERO.server logs are compressed on rollover
-      become: yes
-      replace:
+      become: true
+      ansible.builtin.replace:
         path: "{{ item.path }}"
-        regexp: "(\\<fileNamePattern\\>\\$\\{omero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
+        regexp: "(\\<fileNamePattern\\>\\$\\{om\
+          ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
         replace: "\\1.gz\\2"
-        backup: yes
+        backup: true
       with_items: "{{ logbacks.files }}"
 
     - name: TLS certificate is installed for JVM
-      become: yes
+      become: true
       java_cert:
         cert_url: "{{ ldap_host }}"
         cert_port: 636
@@ -154,15 +175,15 @@
       notify: restart omero-server
 
     - name: OMERO.web configuration is installed
-      become: yes
+      become: true
       copy:
         src: "files/learning-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
 
     - name: OMERO.web starts on boot
-      become: yes
-      service:
+      become: true
+      ansible.builtin.service:
         name: "{{ item }}.service"
         enabled: true
       loop:

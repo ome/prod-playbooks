@@ -1,4 +1,5 @@
 ---
-- hosts: vlan-10ge-servers
+- name: Bootkub
+  hosts: vlan-10ge-servers
   roles:
-  - role: ome.network
+   - role: ome.network

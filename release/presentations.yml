@@ -1,10 +1,13 @@
 ---
-- hosts: idr0-slot3.openmicroscopy.org
+- name: Presentations playbook
+  hosts: idr0-slot3.openmicroscopy.org
   become: true
+# yamllint disable rule:latest
   tasks:
-    - name: update presentations
-      git:
+    - name: Update presentations
+      ansible.builtin.git:
         repo: https://github.com/ome/presentations
-        force: no
-        update: yes
+        force: false
+        update: true
         dest: "/uod/idr/www/downloads.openmicroscopy.org/presentations"
+# yamllint disable rule:latest

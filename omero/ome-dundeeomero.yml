@@ -1,10 +1,11 @@
 # Install OMERO.server and prepare the OME (UoD/SLS) prerequisites
 
-- hosts: ome-dundeeomero.openmicroscopy.org
+- name: Dundeeomero server aka nightshade
+  hosts: ome-dundeeomero.openmicroscopy.org
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
-      become: yes
-      yum:
+      become: true
+      ansible.builtin.yum:
         name: open-vm-tools
         state: present
       when: >
@@ -12,11 +13,12 @@
            and (ansible_virtualization_type == "VMware"))
            and not (molecule_test | default(False))
 
-    # Perhaps alter the role at https://github.com/openmicroscopy/ansible-role-lvm-partition/
+    # Perhaps alter the role at
+    # https://github.com/openmicroscopy/ansible-role-lvm-partition/
     # to make some of the variables non-required.
     - name: Resize root FS without altering mount options
       tags: lvm
-      become: yes
+      become: true
       lvol:
         lv: root
         vg: rhel
@@ -24,14 +26,16 @@
       when: "not (molecule_test | default(False))"
 
     - name: Install Make Movie script Prerequisite | MEncoder - Repo
-      become: yes
-      yum:
-        name:  http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
-        state: present
+      become: true
+      ansible.builtin.yum:
+        name: "http://li.nux.ro/download/nux/dextop/el7\
+          /x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm"
+        state: latest
 
-    - name: OMERO.figure server-side prerequisites, script prerequisites + web server for decoupled OMERO.web
-      become: yes
-      yum:
+    # web server is included for decoupled OMERO.web
+    - name: OMERO.figure server-side&script prerequisites & web server
+      become: true
+      ansible.builtin.yum:
         name: "{{ item }}"
         state: present
       with_items:
@@ -65,10 +69,10 @@
       postgresql_databases:
         - name: "{{ omero_server_dbname | default('omero') }}"
       postgresql_users:
-      - user: "{{ omero_server_dbuser | default('omero') }}"
-        password: "{{ omero_server_dbpassword | default('omero') }}"
-        databases:
-          - "{{ omero_server_dbname | default('omero') }}"
+        - user: "{{ omero_server_dbuser | default('omero') }}"
+          password: "{{ omero_server_dbpassword | default('omero') }}"
+          databases:
+            - "{{ omero_server_dbname | default('omero') }}"
 
 
     # Note - had to have these set to `install-mock` to progress role
@@ -98,33 +102,35 @@
 
 
   handlers:
-    - name: reload nginx
+    - name: Reload nginx
       listen: ssl certificate changed
       become: true
-      service:
+      ansible.builtin.service:
         name: nginx
         state: reloaded
 
   tasks:
 
-    - name: Create another temporary directory since OMERO doesn't limit sizes and fills up /tmp
-      become: yes
-      file:
+    # OMERO doesn't limit sizes and fills up /tmp
+    # thus we need to create another tmp
+    - name: Create another temporary directory
+      become: true
+      ansible.builtin.file:
         path: "{{ omero_server_systemd_environment.OMERO_TMPDIR }}"
         state: directory
         mode: 0700
         owner: "{{ omero_server_system_user }}"
 
     - name: NGINX - enable service / start on boot
-      become: yes
-      systemd:
+      become: true
+      ansible.builtin.systemd:
         name: nginx
-        enabled: yes
+        enabled: true
 
     # post 2.3 'dest' should be renamed 'path'
     - name: NGINX - Performance tuning - worker processes
-      become: yes
-      replace:
+      become: true
+      ansible.builtin.replace:
         dest: "/etc/nginx/nginx.conf"
         regexp: '^worker_processes\s+\d+;'
         replace: "worker_processes 1;"
@@ -132,10 +138,11 @@
         - restart nginx
 
     # post 2.3 'dest' should be renamed 'path'
-    # cf https://www.digitalocean.com/community/tutorials/how-to-optimize-nginx-configuration
+    # cf https://www.digitalocean.com/community/tutorials/how
+    # -to-optimize-nginx-configuration
     - name: NGINX - Performance tuning - worker connections
-      become: yes
-      replace:
+      become: true
+      ansible.builtin.replace:
         dest: "/etc/nginx/nginx.conf"
         regexp: 'worker_connections\s+\d+;'
         replace: "worker_connections 65000;"
@@ -143,15 +150,15 @@
         - restart nginx
 
     - name: NGINX - create nested includes directory
-      become: yes
-      file:
+      become: true
+      ansible.builtin.file:
         path: /etc/nginx/conf.d-nested-includes
         state: directory
         mode: 0755
 
     # post 2.3 'destfile' should be renamed 'path'
     - name: NGINX - Configuration
-      become: yes
+      become: true
       template:
         src: nginx-omero.conf.j2
         dest: /etc/nginx/conf.d/omero-web.conf
@@ -160,82 +167,104 @@
         - restart nginx
 
     - name: PostgreSQL Nightly Backups | Remove old cron job
-      become: yes
-      file:
+      become: true
+      ansible.builtin.file:
         path: /etc/cron.daily/nightly-pg_dump-omero.sh
         state: absent
 
     - name: Create a figure scripts directory
-      become: yes
-      file:
+      become: true
+      ansible.builtin.file:
         path: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts
         state: directory
         mode: 0755
-        recurse: yes
+        recurse: true
         owner: root
 
     - name: Download the Figure_To_Pdf.py script
-      become: yes
-      get_url:
-        url: https://raw.githubusercontent.com/ome/omero-figure/v{{ omero_figure_release }}/omero_figure/scripts/omero/figure_scripts/Figure_To_Pdf.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_To_Pdf.py
+      become: true
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/ome\
+          /omero-figure\
+          /v{{ omero_figure_release }}/omero_figure/scripts\
+          /omero/figure_scripts/Figure_To_Pdf.py"
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/figure_scripts/Figure_To_Pdf.py"
         mode: 0644
         owner: root
-        force: yes
+        force: true
 
     - name: Download the Dataset_Images_To_New_Figure.py script
-      become: yes
-      get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-figure/f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Dataset_Images_To_New_Figure.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Dataset_Images_To_New_Figure.py
+      become: true
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/ome\
+          /omero-guide-figure\
+          /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Dataset\
+          _Images_To_New_Figure.py"
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/figure_scripts/Dataset_Images_To_New_Figure.py"
         mode: 0644
         owner: root
-        force: yes
+        force: true
 
     - name: Download the Figure_Images_To_Dataset.py script
-      become: yes
-      get_url:
-        url: https://raw.githubusercontent.com/ome/omero-guide-figure/f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Figure_Images_To_Dataset.py
-        dest: /opt/omero/server/OMERO.server/lib/scripts/omero/figure_scripts/Figure_Images_To_Dataset.py
+      become: true
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/ome\
+          /omero-guide-figure\
+          /f45f733a16852ae8b3c52ec93aef480d26b8e9f9/scripts/Figure\
+          _Images_To_Dataset.py"
+        dest: "/opt/omero/server/OMERO.server/lib/scripts\
+          /omero/figure_scripts/Figure_Images_To_Dataset.py"
         mode: 0644
         owner: root
-        force: yes
+        force: true
 
   vars:
-    # For https://github.com/openmicroscopy/ansible-role-java, which is a dependency.
-    java_jdk_install: True
+    # For https://github.com/openmicroscopy/ansible-role-java
+    # which is a dependency.
+    java_jdk_install: true
 
     nginx_version: 1.18.0
     postgresql_version: "11"
     filesystem: "xfs"
-    omero_figure_release: "{{ omero_figure_release_override | default('5.1.0') }}"
+    omero_figure_release: >-
+      {{ omero_figure_release_override | default('5.1.0') }}
     omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
 
     omero_server_config_set_production:
       omero.db.poolsize: 60
-      omero.fs.repo.path: "%user%_%userId%/%thread%//%year%-%month%/%day%/%time%"
+      omero.fs.repo.path: >-
+        %user%_%userId%/%thread%//%year%-%month%/%day%/%time%
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
       omero.jvmcfg.system_memory: 17000
       omero.ldap.base: "{{ omero_server_ldap_base | default('example') }}"
       omero.ldap.config: true
-      omero.ldap.urls: "{{ omero_server_ldap_urls | default('ldap://example.org') }}"
+      omero.ldap.urls: >-
+        {{ omero_server_ldap_urls | default('ldap://example.org') }}
       omero.mail.config: true
-      omero.mail.from: "{{ omero_server_mail_from | default('omero@example.org') }}"
-      omero.mail.host: "{{ omero_server_mail_host | default('smtp.example.org') }}"
+      omero.mail.from: >-
+        {{ omero_server_mail_from | default('omero@example.org') }}
+      omero.mail.host: >-
+        {{ omero_server_mail_host | default('smtp.example.org') }}
       omero.ldap.new_user_group: "My Data"
       omero.search.batch: 100
       omero.security.password_provider: chainedPasswordProvider431
       omero.throttling.method_time.error: 60000
-      omero.Ice.Default.Host: "{{ omero_server_ice_default_host | default('127.0.0.1') }}"
-      Ice.Admin.Endpoints: "{{ omero_server_ice_admin_endpoints | default('tcp -h 127.0.0.1') }}"
+      omero.Ice.Default.Host: >-
+        {{ omero_server_ice_default_host | default('127.0.0.1') }}
+      Ice.Admin.Endpoints: >-
+        {{ omero_server_ice_admin_endpoints | default('tcp -h 127.0.0.1') }}
       omero.data.dir: "{{ omero_server_datadir | default('/OMERO') }}"
 
-    omero_server_selfsigned_certificates: True
+    omero_server_selfsigned_certificates: true
 
     # Production config can't be tested in molecule
-    omero_server_config_set: "{{ molecule_test | default(False) | ternary({}, omero_server_config_set_production) }}"
+    omero_server_config_set: >-
+      {{ molecule_test | default(False) |
+      ternary({}, omero_server_config_set_production) }}
     omero_server_python_addons:
       # For OMERO.figure script
       - "reportlab<3.6"

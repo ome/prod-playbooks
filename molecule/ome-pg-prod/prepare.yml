@@ -1,8 +1,9 @@
 # Workaround lack of cron on Docker
-- hosts: ome-pg-prod1.openmicroscopy.org
+- name: Prepare pg prod
+  hosts: ome-pg-prod1.openmicroscopy.org
   tasks:
-  - name: Install cron
-    become: yes
-    yum:
+   - name: Install cron
+     become: true
+     ansible.builtin.yum:
       name: cronie
       state: present

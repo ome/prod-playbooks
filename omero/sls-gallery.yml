@@ -8,7 +8,8 @@
 # - bin/omero db password for root user.
 # - systemctl start omero-{server,web}
 
-- hosts: omero-sls-gallery
+- name: Sls gallery
+  hosts: omero-sls-gallery
   roles:
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -16,7 +17,7 @@
       lvm_lvmount: '/var/lib/pgsql'
       lvm_lvsize: 8G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.postgresql
       postgresql_databases:
@@ -38,7 +39,7 @@
       lvm_lvmount: '/OMERO'
       lvm_lvsize: 80G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.lvm_partition
       lvm_vgname: VolGroup00
@@ -46,18 +47,18 @@
       lvm_lvmount: '/opt/omero'
       lvm_lvsize: 40G
       lvm_lvfilesystem: xfs
-      lvm_shrink: False
+      lvm_shrink: false
 
     - role: ome.omero_server
       omero_server_config_set:
-        omero.client.ui.menu.dropdown.colleagues.enabled: False
+        omero.client.ui.menu.dropdown.colleagues.enabled: false
         omero.client.ui.menu.dropdown.everyone.label: "All images"
         omero.client.ui.menu.dropdown.leaders.label: "Gallery:"
         omero.db.poolsize: 50
         omero.jvmcfg.percent.blitz: 50
         omero.jvmcfg.percent.indexer: 20
         omero.jvmcfg.percent.pixeldata: 30
-        omero.ldap.config: True
+        omero.ldap.config: true
         omero.ldap.base: "{{ omero_server_ldap_base }}"
         omero.ldap.username: "{{ omero_server_ldap_username }}"
         omero.ldap.user_filter: "{{ omero_server_ldap_user_filter }}"
@@ -70,15 +71,15 @@
         omero.mail.host: "{{ omero_server_mail_host }}"
         omero.pixeldata.max_plane_height: 5120
         omero.pixeldata.max_plane_width: 5120
-      omero_server_selfsigned_certificates: True
+      omero_server_selfsigned_certificates: true
 
     - role: ome.redis
 
     - role: ome.nginx
 
     - role: ome.omero_web
-      omero_web_setup_nginx: False
-      omero_web_systemd_start: True
+      omero_web_setup_nginx: false
+      omero_web_systemd_start: true
       omero_web_config_set:
         omero.web.server_list:
           - ["localhost", 4064, "SLS Gallery"]
@@ -92,9 +93,17 @@
           args:
             - userdata
         omero.web.ui.top_links:
-          - ["Image Gallery", "webindex", {"title": "Image Gallery"}]
-          - ["HELP", "https://help.openmicroscopy.org/web-client.html", {"title": "Help", "target": "new"}]
-          - ["SLS Homepage", "https://www.lifesci.dundee.ac.uk/", {"title": "SLS Homepage", "target": "new"}]
+          - - "Image Gallery"
+            - "webindex"
+            - title: "Image Gallery"
+          - - "HELP"
+            - "https://help.openmicroscopy.org/web-client.html"
+            - title: "Help"
+              target": "new"
+          - - "SLS Homepage"
+            - "https://www.lifesci.dundee.ac.uk/"
+            - title: "SLS Homepage"
+              target: "new"
         omero.web.caches:
           default:
             BACKEND: django_redis.cache.RedisCache
@@ -103,8 +112,15 @@
         omero.web.apps:
           - "omero_iviewer"
         omero.web.open_with:
-          - ["Image viewer", "webgateway", {"supported_objects": ["image"], "script_url": "webclient/javascript/ome.openwith_viewer.js"}]
-          - ["omero_iviewer", "omero_iviewer_index", {"supported_objects": ["images", "dataset", "well"], "script_url": "omero_iviewer/openwith.js", "label": "OMERO.iviewer"}]
+          - - "Image viewer"
+            - "webgateway"
+            - supported_objects: ["image"]
+              script_url: "webclient/javascript/ome.openwith_viewer.js"
+          - - "omero_iviewer"
+            - "omero_iviewer_index"
+            - supported_objects": ["images", "dataset", "well"]
+              script_url": "omero_iviewer/openwith.js"
+              label: "OMERO.iviewer"
         omero.web.viewer.view: omero_iviewer.views.index
       omero_web_apps_packages:
         - omero-iviewer=={{ omero_web_apps_release.omero_iviewer }}
@@ -113,32 +129,33 @@
         - "omero-py>={{ omero_py_release }}"
 
   tasks:
-    - name: find OMERO.server log configuration
-      become: yes
-      find:
+    - name: Find OMERO.server log configuration
+      become: true
+      ansible.builtin.find:
         paths: /opt/omero/server/OMERO.server/etc/
         patterns: "logback*.xml"
       register: logbacks
 
     - name: OMERO.server logs are compressed on rollover
-      become: yes
+      become: true
       replace:
         path: "{{ item.path }}"
-        regexp: "(\\<fileNamePattern\\>\\$\\{omero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
+        regexp: "(\\<fileNamePattern\\>\\$\\{om\
+          ero\\.logfile\\}\\.\\%i)(\\<\\/fileNamePattern\\>)"
         replace: "\\1.gz\\2"
-        backup: yes
+        backup: true
       with_items: "{{ logbacks.files }}"
 
     - name: OMERO.web configuration is installed
-      become: yes
+      become: true
       copy:
         src: "files/sls-gallery-omero-web.conf"
         dest: "/etc/nginx/conf.d/omero-web.conf"
       notify: restart nginx
 
     - name: OMERO.web starts on boot
-      become: yes
-      service:
+      become: true
+      ansible.builtin.service:
         name: "{{ item }}.service"
         enabled: true
       loop:

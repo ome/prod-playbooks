@@ -1,18 +1,25 @@
 ---
-- hosts: idr0-slot3.openmicroscopy.org
+- name: Public images
+  hosts: idr0-slot3.openmicroscopy.org
   become: true
   tasks:
-    - name: create symlinks for public images
-      file:
-        force: yes
+    - name: Create symlinks for public images
+      ansible.builtin.file:
+        force: true
         src: "../../../repos/curated/{{ item.key }}/public/"
-        dest: "/uod/idr/www/downloads.openmicroscopy.org/images/{{ item.value }}"
+        dest: >
+           "/uod/idr/www/downloads.
+           openmicroscopy.org/
+           images/{{ item.value }}"
         state: link
       with_dict: "{{ public_folders }}"
-    - name: check public images
-      file:
-        force: yes
+    - name: Check public images
+      ansible.builtin.file:
+        force: true
         src: "{{ item.src }}"
-        dest: "/uod/idr/www/downloads.openmicroscopy.org/images/{{ item.dest }}"
+        dest: >
+           "/uod/idr/www/downloads.
+           openmicroscopy.org/
+           images/{{ item.dest }}"
         state: link
       with_items: "{{ special_public_folders }}"

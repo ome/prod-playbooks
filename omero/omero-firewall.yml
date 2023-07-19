@@ -1,67 +1,68 @@
 # Setup up iptables firewall on OMERO servers
 
-- hosts: monitored
+- name: Firewall
+  hosts: monitored
 
   roles:
 
-  - role: ome.iptables_raw
+    - role: ome.iptables_raw
 
   tasks:
 
-  # Allow:
-  # - all established/related in/out
-  # - all internal localhost connections
-  # - ICMP echo (ping)
-  # - ssh incoming connections
-  - name: Iptables ssh and related
-    become: yes
-    iptables_raw_25:
-      name: ssh_and_established
-      keep_unmanaged: no
-      rules: |
-        -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-        -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-        -A INPUT -i lo -j ACCEPT
-        -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-        -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
-      state: present
-      # Highest priority
-      weight: 0
+    # Allow:
+    # - all established/related in/out
+    # - all internal localhost connections
+    # - ICMP echo (ping)
+    # - ssh incoming connections
+    - name: Iptables ssh and related
+      become: true
+      iptables_raw_25:
+        name: ssh_and_established
+        keep_unmanaged: false
+        rules: |
+          -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+          -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+          -A INPUT -i lo -j ACCEPT
+          -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+          -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+        state: present
+        # Highest priority
+        weight: 0
 
-  # Use a low priority REJECT rule so that clients can detect when
-  # they've been rejected
-  # The alternative of setting a default DROP policy will leave them
-  # hanging until they timeout, though this may be preferable for public
-  # servers:
-  # http://www.chiark.greenend.org.uk/~peterb/network/drop-vs-reject
-  - name: Iptables default
-    become: yes
-    iptables_raw_25:
-      name: default_rules
-      rules: |
-        -A INPUT -j REJECT
-        -A FORWARD -j REJECT
-        -A OUTPUT -j ACCEPT
-      state: present
-      # Lowest priority
-      weight: 99
+    # Use a low priority REJECT rule so that clients can detect when
+    # they've been rejected
+    # The alternative of setting a default DROP policy will leave them
+    # hanging until they timeout, though this may be preferable for public
+    # servers:
+    # http://www.chiark.greenend.org.uk/~peterb/network/drop-vs-reject
+    - name: Iptables default
+      become: true
+      iptables_raw_25:
+        name: default_rules
+        rules: |
+          -A INPUT -j REJECT
+          -A FORWARD -j REJECT
+          -A OUTPUT -j ACCEPT
+        state: present
+        # Lowest priority
+        weight: 99
 
-  # All other ports that allow incoming connections:
-  # - web
-  # - omero
-  # - GPFS
-  # - Check_MK
-  - name: Iptables OME ports
-    become: yes
-    iptables_raw_25:
-      name: ome_ports
-      rules: |
-        -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
-        -A INPUT -p tcp -m multiport --dports 4063,4064 -j ACCEPT
-        {% for s in gpfs_cluster_source | default([]) %}
-        -A INPUT -p tcp -m tcp --dport 1191 -s {{ s }} -j ACCEPT
-        {% endfor %}
-        {% if (checkmk_server_source  | default('')) %}
-        -A INPUT -p tcp -m tcp --dport 6556 -s {{ checkmk_server_source }} -j ACCEPT
-        {% endif %}
-      state: present
+    # All other ports that allow incoming connections:
+    # - web
+    # - omero
+    # - GPFS
+    # - Check_MK
+    - name: Iptables OME ports
+      become: true
+      iptables_raw_25:
+        name: ome_ports
+        rules: |
+          -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+          -A INPUT -p tcp -m multiport --dports 4063,4064 -j ACCEPT
+          {% for s in gpfs_cluster_source | default([]) %}
+          -A INPUT -p tcp -m tcp --dport 1191 -s {{ s }} -j ACCEPT
+          {% endfor %}
+          {% if (checkmk_server_source | default('')) %}
+          -A INPUT -p tcp -m tcp --dport 6556 -s {{ checkmk_server_source }} -j ACCEPT
+          {% endif %}
+        state: present
