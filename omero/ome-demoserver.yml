@@ -377,20 +377,16 @@
       password: {password}\n\n
       Use these login details as follows\n
       1. In your browser, go to demo.openmicroscopy.org and log in.\n
-      2. Download the OMERO.insight [1] desktop application to im
-      port your first data into OMERO.\n
-      3. Following the steps in the omero-guide [2], change the server ad
-      dress to\n
-      demo.openmicroscopy.org and connect\n
-      using the login details as above to import your data.\n
-      4. Use the walkthrough example [3] to get ideas about ho
-      w to start using OMERO.\n
+      2. Download the OMERO.insight [1] desktop application to import\n
+      your first data into OMERO.\n
+      3. Once OMERO.insight is started, following the steps in the\n omero-guide [1], change the server address to\n
+      demo.openmicroscopy.org\n
+      and connect using the login details as above to import your data.\n
+      4. Use the walkthrough example [1] to get further ideas about how
+      to start using OMERO.\n
       OME Team\n\n
-      [1] https://omero-guides.readthedocs.io/en/latest\
-      /upload/docs/import-desktop-client.html \n
-      [2] https://omero-guides.readthedocs.io/en/latest/upload/\
-      docs/import-desktop-client.html#step-by-step \n
-      [3] https://omero-guides.readthedocs.io/en/latest/example.html \n'
+      [1] In your browser, go to omero-guides.readthedocs.io/en/latest
+      and click on "OMERO walkthrough example" under "Getting started".
 
     postgresql_version: "11"
     filesystem: "xfs"
