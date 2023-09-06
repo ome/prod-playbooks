@@ -386,7 +386,7 @@
       to start using OMERO.\n
       OME Team\n\n
       [1] In your browser, go to omero-guides.readthedocs.io/en/latest
-      and click on "OMERO walkthrough example" under "Getting started".
+      and click on OMERO walkthrough example under Getting started.'
 
     postgresql_version: "11"
     filesystem: "xfs"
