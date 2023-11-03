@@ -192,8 +192,8 @@
 
   vars:
     postgresql_version: "13"
-    omero_server_release: 5.6.6
-    omero_web_release: 5.16.0
+    omero_server_release: 5.6.8
+    omero_web_release: 5.22.1
     omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
     omero_web_apps_release:
       omero_gallery: 3.4.2

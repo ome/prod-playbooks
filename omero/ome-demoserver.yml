@@ -332,15 +332,15 @@
 
   vars:
     omero_figure_release: >-
-      {{ omero_figure_release_override | default('5.1.0') }}
+      {{ omero_figure_release_override | default('6.0.1') }}
     omero_figure_script_release: >-
-      {{ omero_figure_script_release_override | default('v5.1.0') }}
+      {{ omero_figure_script_release_override | default('v6.0.1') }}
     omero_fpbioimage_release: >-
-      {{ omero_fpbioimage_release_override | default('0.4.0') }}
+      {{ omero_fpbioimage_release_override | default('0.4.1') }}
     omero_iviewer_release: >-
-      {{ omero_iviewer_release_override | default('0.12.0') }}
+      {{ omero_iviewer_release_override | default('0.13.0') }}
     omero_parade_release: >-
-      {{ omero_parade_release_override | default('0.2.3') }}
+      {{ omero_parade_release_override | default('0.2.4') }}
     omero_webtagging_autotag_release: >-
       {{ omero_webtagging_autotag_release_override | default('3.2.0') }}
     omero_webtagging_tagsearch_release: >-
@@ -349,9 +349,9 @@
       {{ omero_signup_release_override | default('0.3.2') }}
 
     omero_server_release: >-
-      {{ omero_server_release_override | default('5.6.6') }}
-    omero_web_release: "{{ omero_web_release_override | default('5.16.0') }}"
-    omero_py_release: "{{ omero_py_release_override | default('5.13.1') }}"
+      {{ omero_server_release_override | default('5.6.8') }}
+    omero_web_release: "{{ omero_web_release_override | default('5.22.1') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.15.0') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
     # which is a dependency.
     java_jdk_install: true
