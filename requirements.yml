@@ -1,107 +1,24 @@
 ---
-
-- name: ome.certbot
-  src: https://github.com/ome/ansible-role-certbot/archive/0.1.0.tar.gz
-  version: 0.1.0
-
-- src: ome.cli_utils
-  version: 1.1.1
-
-- src: ome.deploy_archive
-  version: 0.1.4
-
-- src: ome.docker
-  version: 3.1.1
-
-- src: ome.ice
-  version: 4.3.0
-
-- src: ome.java
-  version: 2.1.0
-
-- name: ome.iptables_raw
-  version: 0.3.1
-
-- src: ome.lvm_partition
-  version: 1.1.1
-
-- name: ome.network
-  version: 1.1.4
-
-- src: ome.nginx
-  version: 2.1.1
-
-- name: ome.nginx_proxy
-  version: 1.15.2
-
-- src: ome.nfs_mount
-  version: 1.3.0
-
 - src: ome.omero_common
-  version: 0.3.4
-
 - src: ome.basedeps
-  version: 1.2.0
-
-- name: ome.omero_prometheus_exporter
-  version: 0.3.6
-
-- name: ome.omero_server
-  version: 4.0.2
-
-- src: ome.omero_user
-  version: 0.3.0
-
-- name: ome.omero_web
-  version: 4.0.1
-
+- src: ome.java
 - src: ome.python3_virtualenv
-  version: 0.1.2
-
-- src: ome.omero_web_django_prometheus
-  version: 0.3.0
-
+- src: ome.ice
 - src: ome.postgresql
-  version: 5.2.0
-
-- src: ome.postgresql_backup
-  version: 0.2.1
-
 - src: ome.postgresql_client
-  version: 0.2.0
-
-- src: ome.prometheus
-  version: 0.5.1
-
-- src: ome.prometheus_jmx
-  version: 0.2.2
-
-- src: ome.prometheus_node
-  version: 0.2.2
-
-- src: ome.prometheus_postgres
-  version: 0.4.2
-
+- src: ome.deploy_archive
+- src: ome.omero_server
+- src: ome.omero_web
+- src: ome.nginx
 - src: ome.redis
-  version: 1.1.1
-
-- name: ome.selinux_utils
-  version: 1.0.3
-
-- src: ome.ssl_certificate
-  version: 0.4.0
-
-- src: ome.sudoers
-  version: 1.0.4
-
-- src: ome.system_monitor_agent
-  version: 0.1.1
-
-- src: ome.upgrade_distpackages
-  version: 1.1.3
-
+- src: ome.selinux_utils
 - src: ome.versioncontrol_utils
-  version: 1.0.2
-
-- src: idr.redmine_tracker
-  version: 0.1.0
+- src: ome.ssl_certificate
+- src: nfs_mount
+- src: nfs_share
+- src: iptables_raw
+- src: ome.cli_utils
+- src: ome.docker
+- src: ome.postgresql_backup
+- src: ome.omero_user
+- src: ome.lvm_partition

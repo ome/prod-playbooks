@@ -19,11 +19,11 @@ config append -- omero.web.open_with '["omero_iviewer", "omero_iviewer_index", {
 config set -- omero.web.viewer.view {{ omeroweb_default_viewer_override | default('omero_iviewer.views.index') }}
 
 # Autotag
-config append -- omero.web.apps '"omero_webtagging_autotag"'
-config append -- omero.web.ui.center_plugins '["Auto Tag", "omero_webtagging_autotag/auto_tag_init.js.html", "auto_tag_panel"]'
+config append -- omero.web.apps '"omero_autotag"'
+config append -- omero.web.ui.center_plugins '["Auto Tag", "omero_autotag/auto_tag_init.js.html", "auto_tag_panel"]'
 
 # tagsearch
-config append -- omero.web.apps '"omero_webtagging_tagsearch"'
+config append -- omero.web.apps '"omero_tagsearch"'
 config append -- omero.web.ui.top_links '["Tag Search", "tagsearch"]'
 
 # parade
