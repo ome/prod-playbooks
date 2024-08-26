@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  role_name: deploy_archive
+  author: ome-devel@lists.openmicroscopy.org.uk
+  description: Download and deploy an archive
+  company: Open Microscopy Environment
+  license: BSD
+  min_ansible_version: 2.4
+  platforms:
+    - name: EL
+      versions:
+        - 9
+    - name: Ubuntu
+      versions:
+        - jammy
+  namespace: ome
+  galaxy_tags: []

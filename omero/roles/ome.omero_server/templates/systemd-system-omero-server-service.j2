@@ -1,0 +1,36 @@
+[Unit]
+Description=OMERO.server
+# Requires: forces the dependency to be started
+# After: ensures this service starts after the dependency, but only if the
+# dependency is also started (PostgreSQL may be on a different server)
+After=postgresql-11.service
+After=postgresql-12.service
+After=postgresql-13.service
+After=postgresql-14.service
+After=network.service
+{% for value in omero_server_systemd_after %}After={{ value }}
+{% endfor %}
+{% for value in omero_server_systemd_requires %}Requires={{ value }}
+{% endfor %}
+
+[Service]
+User={{ omero_server_system_user }}
+UMask={{ omero_server_system_umask }}
+Type=forking
+PIDFile={{ omero_server_omerodir }}/var/master/master.pid
+Restart=no
+RestartSec=10
+# Allow up to 5 min for start/stop
+TimeoutSec=300
+{% for name in (omero_server_systemd_environment | sort) %}
+Environment={{ name }}={{ omero_server_systemd_environment[name] | quote }}
+{% endfor %}
+ExecStartPre={{ omero_server_config_update }}
+ExecStart={{ omero_server_omero_command }} admin start
+ExecStop={{ omero_server_omero_command }} admin stop
+{% if omero_server_systemd_limit_nofile %}
+LimitNOFILE={{ omero_server_systemd_limit_nofile }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

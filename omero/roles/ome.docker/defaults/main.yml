@@ -1,0 +1,48 @@
+---
+# defaults file for roles/docker
+
+# Docker version to be installed
+docker_version: ''
+
+# Set to True if using a custom storage configuration
+docker_use_custom_storage: false
+
+# Set to True if using a custom network configuration
+docker_use_custom_network: false
+
+# Filesystem to use for the Docker containers
+docker_basefs: xfs
+
+# Filesystem for the Docker volume
+docker_lvfilesystem: xfs
+
+# Docker 1.10+ attempts to find the MTU using Path MTU Discovery, but may
+# fail. This can be a problem on virtualised docker hosts. Set to True to
+# use the MTU from the `ansible_default_ipv4` variable.
+# - https://github.com/docker/docker/issues/22028
+# - https://github.com/docker/docker/issues/12565
+# TODO: Add an option to explicitly set the MTU in case auto-detection fails
+docker_use_ipv4_nic_mtu: false
+
+# Dictionary of additional docker options
+docker_additional_options: {}
+
+# Users who can run docker
+docker_groupmembers: []
+
+# Setup systemd services
+docker_systemd_setup: true
+
+# Override the releasever in the yum repo configuration
+docker_repo_force_releasever: '$releasever'
+
+
+######################################################################
+# Expert users only!
+######################################################################
+
+# Use a custom storage driver
+docker_storage_driver: ''
+
+# Enable debug mode on server
+docker_debug: false

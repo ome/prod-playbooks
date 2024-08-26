@@ -1,0 +1,22 @@
+---
+# tasks file for roles/java
+
+- name: system packages | install java jre (ubuntu)
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name: >-
+      openjdk-{{ java_backwards_compatibility_version.debian[item] |
+      default(item) }}-jre
+    state: present
+  with_items: "{{ java_versions }}"
+
+- name: system packages | install java jdk (ubuntu)
+  become: true
+  ansible.builtin.apt:
+    name: >-
+      openjdk-{{ java_backwards_compatibility_version.debian[item] |
+      default(item) }}-jdk
+    state: present
+  when: java_jdk_install
+  with_items: "{{ java_versions }}"

@@ -1,0 +1,28 @@
+---
+# Setup LVM partition
+
+- name: storage | create logical volume
+  become: true
+  lvol:
+    vg: "{{ lvm_vgname }}"
+    lv: "{{ lvm_lvname }}"
+    size: "{{ lvm_lvsize }}"
+    shrink: "{{ lvm_shrink | default(True) }}"
+    opts: "{{ lvm_lvopts | default(None) }}"
+
+- name: storage | filesystem
+  become: true
+  filesystem:
+    fstype: "{{ lvm_lvfilesystem }}"
+    dev: /dev/{{ lvm_vgname }}/{{ lvm_lvname }}
+    resizefs: true
+
+- name: storage | mount
+  become: true
+  mount:
+    name: "{{ lvm_lvmount }}"
+    src: /dev/{{ lvm_vgname }}/{{ lvm_lvname }}
+    dump: "1"
+    passno: "2"
+    fstype: "{{ lvm_lvfilesystem }}"
+    state: mounted

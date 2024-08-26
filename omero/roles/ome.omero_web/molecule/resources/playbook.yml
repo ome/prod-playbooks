@@ -1,0 +1,93 @@
+---
+# - name: Converge
+#   hosts: all
+
+#   pre_tasks:
+#     # To test the upgrade process without breaking the idempotence check
+#     # we need to add a flag so the first omero-web installation is
+#     # only run once
+#     - name: check whether omero-web has been installed at least once
+#       stat:
+#         path: /opt/omero/web/OMERO.web
+#       register: molecule_test_omero_web_installed_1
+
+#   roles:
+
+#     - role: ansible-role-omero-web
+#       omero_web_config_set:
+#         omero.web.server_list:
+#           - [localhost, 12345, molecule-test]
+#       omero_web_release: "5.3"
+#       when: not molecule_test_omero_web_installed_1.stat.exists
+
+#   tasks:
+#     - name: get omero-web version
+#       become: true
+#       become_user: omero-web
+#       command: /opt/omero/web/OMERO.web/bin/omero version
+#       register: molecule_test_omero_web_version
+#       changed_when: false
+
+#     - name: check version
+#       assert:
+#         that: molecule_test_omero_web_version.stdout.startswith('5.3.')
+#       when: not molecule_test_omero_web_installed_1.stat.exists
+
+#   vars:
+#     ice_python_wheel: "https://github.com/ome/zeroc-ice-py-centos7/releases/\
+#       download/0.1.0/zeroc_ice-3.6.4-cp27-cp27mu-linux_x86_64.whl"
+
+
+# Attempt to upgrade
+# omero_web_release is defined in molecule.yml host_vars so:
+# - omero-web: latest: upgraded
+# - omero-web-inactive: present: unchanged at 5.3
+- name: Converge upgrade
+  hosts: all
+  roles:
+    - role: ome.omero_web
+      omero_web_config_set:
+        omero.web.server_list:
+          - [localhost, 12345, molecule-test]
+
+      omero_web_apps_packages:
+        - omero-mapr
+      omero_web_apps_names:
+        - omero_mapr
+      omero_web_apps_top_links:
+        - label: OMERO
+          link:
+            viewname: webindex
+            query_string: {experimenter: -1}
+          attrs:
+            title: Image Data Repository
+        - label: Genes
+          link:
+            viewname: maprindex_gene
+            query_string: {experimenter: -1}
+          attrs:
+            title: Genes browser
+      omero_web_apps_config_append:
+        omero.web.mapr.config:
+          - menu: "gene"
+            config:
+              default:
+                - "Gene Symbol"
+              all:
+                - "Gene Symbol"
+                - "Gene Identifier"
+              ns:
+                - "openmicroscopy.org/mapr/gene"
+              label: "Gene"
+              case_sensitive: true
+          - menu: "genesupplementary"
+            config:
+              default: []
+              all: []
+              ns:
+                - "openmicroscopy.org/mapr/gene/supplementary"
+              label: "Gene supplementary"
+      omero_web_apps_config_set:
+        example.string: example value
+        example.boolean: true
+        example.integer: 2

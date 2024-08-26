@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: ome-devel@lists.openmicroscopy.org.uk
+  description: Import iptables_raw library
+  company: Open Microscopy Environment
+  license: BSD
+  min_ansible_version: 2.6
+  platforms:
+    - name: EL
+      versions:
+        - 9
+  namespace: ome
+  role_name: iptables_raw
+  galaxy_tags: []
+
+dependencies: []

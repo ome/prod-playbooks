@@ -1,0 +1,39 @@
+---
+# defaults file for roles/ssl-certificates
+
+# Server path to SSL public certificate
+ssl_certificate_public_path: /etc/ssl/localcerts/server.crt
+
+# Server path to SSL intermediate certificate(s)
+ssl_certificate_intermediate_path: /etc/ssl/localcerts/intermediate.crt
+
+# Server path to SSL bundled public and intermediate certificates
+ssl_certificate_bundled_path: /etc/ssl/localcerts/bundled.crt
+
+# Server path to SSL certificate key
+ssl_certificate_key_path: /etc/ssl/localcerts/server.key
+
+# Server path to SSL combined certificate and key, set to empty to disable
+ssl_certificate_combined_path: /etc/ssl/localcerts/combined.pem
+
+# Text content of the public certificate
+ssl_certificate_public_content: ''
+
+# Text content of the intermediate certificate(s)
+ssl_certificate_intermediate_content: ''
+
+# Text content of the certificate key
+ssl_certificate_key_content: ''
+
+# Create a self-signed certificate if necessary
+ssl_certificate_selfsigned_create: true
+
+# Certificate subject
+ssl_certificate_selfsigned_subject: |-
+  /C=UK/ST=Scotland/L=Dundee/O=OME/CN={{ ansible_fqdn }}
+
+# Certificate validity (days)
+ssl_certificate_selfsigned_days: 365
+
+# Whether or not to install OpenSSL
+ssl_certificate_install_openssl: true

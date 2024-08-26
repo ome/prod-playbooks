@@ -1,0 +1,15 @@
+
+module django 1.0;
+
+require {
+	type var_t;
+	type httpd_t;
+	type init_t;
+	class file { getattr ioctl open read };
+}
+
+#============= httpd_t ==============
+allow httpd_t var_t:file { getattr open read };
+
+#============= init_t ==============
+allow init_t var_t:file { ioctl open read };

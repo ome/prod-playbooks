@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: ome-devel@lists.openmicroscopy.org.uk
+  description: Install and configure OMERO.web
+  company: Open Microscopy Environment
+  license: BSD
+  min_ansible_version: 2.10
+  platforms:
+    - name: EL
+      versions:
+        - 9
+    - name: Ubuntu
+      versions:
+        - jammy
+  role_name: omero_web
+  namespace: ome
+  galaxy_tags: []

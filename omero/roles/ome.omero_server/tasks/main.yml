@@ -1,0 +1,16 @@
+---
+# tasks for omero-server
+
+- include: pre-tasks.yml
+
+- include: omero-user.yml
+
+- include: omero-datadir.yml
+  when: omero_server_datadir_manage
+
+- include: omero-configfiles.yml
+
+- include: omero-install.yml
+
+- include: omero-systemd.yml
+  when: omero_server_systemd_setup

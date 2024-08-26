@@ -1,0 +1,19 @@
+# Managed by Ansible
+/var/log/nginx/*.log {
+    {{ nginx_logrotate_interval }}
+    missingok
+    rotate {{ nginx_logrotate_backlog_size }}
+    compress
+    delaycompress
+    notifempty
+    create 640 nginx adm
+    sharedscripts
+    postrotate
+{% if ansible_os_family == 'RedHat' %}
+        [ -f /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`
+{% endif %}
+{% if ansible_os_family == 'Debian' %}
+        invoke-rc.d nginx rotate >/dev/null 2>&1
+{% endif %}
+    endscript
+}

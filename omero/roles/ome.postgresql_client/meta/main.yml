@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: ome-devel@lists.openmicroscopy.org.uk
+  description: Upstream PostgreSQL client
+  company: Open Microscopy Environment
+  license: BSD
+  min_ansible_version: '2.10'
+  platforms:
+    - name: EL
+      versions:
+        - 9
+    - name: Ubuntu
+      versions:
+        - jammy
+  namespace: ome
+  role_name: postgresql_client
+  galaxy_tags: ['postgresql', 'database']

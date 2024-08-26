@@ -1,0 +1,52 @@
+---
+# tasks file for ome.postgresql
+
+- block:
+    - name: postgres | set permissions on data directory
+      file:
+        owner: postgres
+        group: postgres
+        path: "{{ postgresql_dist_datadir }}"
+        state: directory
+        mode: 0700
+      when: postgresql_server_chown_datadir
+
+    - name: >-
+        postgres | initialise PostgreSQL cluster (skip if data directory
+        already exists)
+      command: "{{ postgresql_dist_setup }}"
+      args:
+        creates: "{{ postgresql_dist_datadir }}/PG_VERSION"
+
+      environment:
+        PGSETUP_INITDB_OPTIONS: >-
+          --encoding=UTF8 --locale=en_US.UTF-8 --auth-host=md5
+
+    - name: postgres | postgresql config file
+      template:
+        dest: >-
+          {{ postgresql_dist_confdir }}/postgresql.conf
+        src: "{{ postgresql_dist_conf_postgresql_src }}"
+        mode: 0644
+      notify:
+        - restart postgresql
+
+      become_user: "{{ postgresql_become_user }}"
+
+    - name: postgres | configure client authorisation
+      template:
+        dest: "{{ postgresql_dist_confdir }}/pg_hba.conf"
+        src: pg_hba-conf.j2
+        mode: 0640
+      notify:
+        - restart postgresql
+
+      become_user: "{{ postgresql_become_user }}"
+
+    - name: postgres | start service
+      service:
+        enabled: true
+        name: "{{ postgresql_dist_service }}"
+        state: started
+
+  become: true

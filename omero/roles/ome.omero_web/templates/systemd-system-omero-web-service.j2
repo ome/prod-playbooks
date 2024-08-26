@@ -1,0 +1,25 @@
+[Unit]
+Description=OMERO.web
+# Not mandatory, Nginx may be running on a different server
+#Requires=nginx.service
+After=network.service
+{% for value in omero_web_systemd_after %}After={{ value }}
+{% endfor %}
+{% for value in omero_web_systemd_requires %}Requires={{ value }}
+{% endfor %}
+
+[Service]
+User={{ omero_web_system_user }}
+Type=forking
+PIDFile={{ omero_web_omerodir }}/var/django.pid
+Restart=no
+RestartSec=10
+ExecStartPre={{ omero_web_config_update }}
+ExecStart={{ omero_web_omero_command }} web start
+ExecStop={{ omero_web_omero_command }} web stop
+{% if omero_web_systemd_limit_nofile %}
+LimitNOFILE={{ omero_web_systemd_limit_nofile }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

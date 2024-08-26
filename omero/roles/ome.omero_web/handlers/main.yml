@@ -1,0 +1,22 @@
+---
+# handlers for omero-web
+# Don't use omero-common handlers because systemd might be disabled.
+# This also avoids problems with ordering of handlers:
+# http://stackoverflow.com/a/35130254
+
+- name: omero-web rewrite omero-web configuration
+  become: true
+  become_user: "{{ omero_web_system_user }}"
+  command: "{{ omero_web_config_update }}"
+
+- name: omero-web restart omero-web
+  become: true
+  service:
+    name: omero-web
+    state: restarted
+  when: omero_web_systemd_setup and omero_web_systemd_start
+
+- name: omero-web Reload SELinux
+  become: true
+  command: load_policy
+  when: selinux_enabled

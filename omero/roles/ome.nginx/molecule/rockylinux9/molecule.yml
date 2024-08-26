@@ -1,0 +1,59 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
+platforms:
+  - name: nginx-default
+    image: eniocarboni/docker-rockylinux-systemd:9
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
+    groups:
+      - extra_options
+  - name: nginx-custom
+    image: eniocarboni/docker-rockylinux-systemd:9
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
+    groups:
+      - extra_options
+  - name: nginx-disabled
+    image: eniocarboni/docker-rockylinux-systemd:9
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
+    groups:
+        - extra_options
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../resources/playbook.yml
+    # prepare: prepare.yml
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      nginx-custom:
+        nginx_keep_default_configs: true
+        nginx_stable_repo: false
+        # Current mainline is 1.15.9
+        nginx_version: 1.20.2
+        nginx_logrotate_interval: weekly
+        nginx_logrotate_backlog_size: 5
+      nginx-disabled:
+        nginx_systemd_setup: false
+scenario:
+  name: rockylinux9
+verifier:
+  name: testinfra

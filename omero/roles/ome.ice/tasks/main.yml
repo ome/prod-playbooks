@@ -1,0 +1,28 @@
+---
+- import_tasks: pre_tasks.yml
+
+- import_tasks: redhat9.yml
+  when: >-
+    (ansible_os_family | lower == 'redhat') and
+    (ansible_distribution_major_version == '9')
+
+- import_tasks: debian.yml
+  when: ansible_os_family | lower == 'debian'
+
+- name: zeroc ice | Display all variables/facts known for a host
+  ansible.builtin.debug:
+    msg: System {{ inventory_hostname }} has {{ ice_binaries_symlink_dest }}
+
+
+- name: zeroc ice | symlink binaries
+  become: true
+  file:
+    force: true
+    path: "{{ ice_binaries_symlink_dest  }}/{{ item }}"
+    src: /opt/ice/bin/{{ item }}
+    state: link
+  when: 'ice_binaries_symlink_dest | length > 0'
+  with_items:
+    - glacier2router
+    - icegridadmin
+    - icegridnode

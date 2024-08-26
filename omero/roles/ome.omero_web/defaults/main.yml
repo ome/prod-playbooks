@@ -1,0 +1,139 @@
+---
+# defaults for omero-web
+
+omero_web_release: present
+
+# OMERO.web system user
+omero_web_system_user: omero-web
+
+# OMERO.web system user ID (If not defined one is chosen automatically)
+# omero_web_system_uid:
+
+# Setup systemd services
+omero_web_systemd_setup: true
+
+# Change the systemd limit for number of open files (default ignore)
+omero_web_systemd_limit_nofile:
+
+# Services which OMERO web needs to be running before it can start, such as
+# remote storage.
+omero_web_systemd_after: []
+
+# Services which OMERO web needs to be concurrently running.
+omero_web_systemd_requires: []
+
+# Configuration key-values to be set
+omero_web_config_set: {}
+
+# Install and configure Nginx
+omero_web_setup_nginx: true
+
+# Install required package to deploy redis session engine
+omero_web_setup_redis_session: false
+
+# List of additional Python packages to be installed into virtualenv
+omero_web_python_addons: []
+
+
+######################################################################
+# defaults from the old omero-web-apps
+######################################################################
+
+# The pip installable package
+omero_web_apps_packages: []
+
+# The name of the web application, used for configuration
+omero_web_apps_names: []
+
+# Top links
+omero_web_apps_top_links: []
+
+# UI metadata panes
+omero_web_apps_ui_metadata_panes: []
+
+# Other list value properties (dict, append)
+omero_web_apps_config_append: {}
+
+# Other key value properties (dict, set)
+omero_web_apps_config_set: {}
+
+# The basename of the configuration file
+omero_web_apps_config_name: omero-web-apps
+
+
+######################################################################
+# Expert users only!
+######################################################################
+
+omero_web_ice_version: "3.6"
+
+omero_web_python_requirements_ice_package:
+  RedHat:
+    9: "https://github.com/glencoesoftware/zeroc-ice-py-rhel9-x86_64/releases/download/\
+                      20230830/zeroc_ice-3.6.5-cp39-cp39-linux_x86_64.whl"
+  Debian:
+    22: "https://github.com/glencoesoftware/zeroc-ice-py-ubuntu2204-x86_64/releases/download/\
+                     20221004/zeroc_ice-3.6.5-cp310-cp310-linux_x86_64.whl"
+
+# List of python3 packages to install
+omero_web_python_requirements:
+  # TODO: make the use of our non-standard wheel optional
+  - "{{ omero_web_python_requirements_ice_package[ansible_os_family][
+        ansible_distribution_major_version | int ] |
+        default('zeroc-ice')}}"
+  # Let omero-web bring this in
+  # - omero-py=={{ _omero_py_version | default('5.6.dev4') }}
+  - "omero-web{{ (omero_web_release == 'present') |
+      ternary('', '==' + omero_web_release) }}"
+  - redis
+
+# Path to virtualenv
+omero_web_virtualenv_basedir: "{{ omero_web_basedir + '/venv3' }}"
+
+# OMERODIR
+omero_web_omerodir: "{{ omero_web_basedir }}/{{ omero_web_symlink }}"
+
+# How to run omero
+omero_web_omero_command: "{{ omero_web_omerodir + '/bin/omero' }}"
+
+# Config update command
+omero_web_config_update: >-
+  {{
+      omero_web_omero_command + ' load --glob ' + omero_web_basedir +
+      '/config/*.omero'
+  }}
+
+# DEVELOPMENT: If True clear the existing configuration before regenerating
+omero_web_always_reset_config: true
+
+# DEVELOPMENT: Automatically start systemd omero-web
+omero_web_systemd_start: true
+
+# Base directory for the web installation
+omero_web_basedir: "{{ omero_common_basedir }}/web"
+
+# Symlink to the currently installed OMERO.web
+omero_web_symlink: OMERO.web
+
+# Path of omego
+omero_web_omego: "{{ omero_common_basedir }}/omego/bin/omego"
+
+# Additional omego aguments passed to upgrade or install
+omero_web_omego_additional_args: ""
+
+# If True and web is already installed then upgrade to the version in
+# omero_web_release, otherwise don't upgrade an existing web.
+# This should not be needed if versions are correctly compared.
+omero_web_upgrade: true
+
+# DEVELOPMENT: Operator for comparing current-version against
+# omero_web_release, e.g. '!='. Default is to upgrade when
+# current-version < omero_web_release
+omero_web_checkupgrade_comparator: '<'
+
+omero_web_omego_options: >
+  --release {{ _omero_web_new_version }}
+  --sym {{ omero_web_symlink }}
+  --ice {{ omero_web_ice_version }}
+  -qq
+  {{ omero_web_omego_additional_args }}

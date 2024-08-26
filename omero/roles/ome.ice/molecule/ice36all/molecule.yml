@@ -1,0 +1,28 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: molecule/resources/requirements.yml
+driver:
+  name: docker
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
+platforms:
+  - name: ice36all
+    image: rockylinux:9
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    converge: ../resources/playbook.yml
+  inventory:
+    host_vars:
+      ice36all:
+        ice_binaries_symlink_dest: /usr/local/bin
+scenario:
+  name: ice36all
+verifier:
+  name: testinfra

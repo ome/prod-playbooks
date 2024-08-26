@@ -1,0 +1,11 @@
+---
+# defaults file for roles/nfs-mount
+
+# List of NFS shares
+nfs_share_mounts: []
+
+# Default NFS4 mount options
+nfs_mount_opts: defaults
+
+# Default NFS version (nfs for v3)
+nfs_version: nfs

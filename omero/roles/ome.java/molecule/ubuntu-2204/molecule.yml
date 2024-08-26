@@ -1,0 +1,41 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
+platforms:
+  - name: java-jre
+    image: ubuntu:22.04
+  - name: java-jdk
+    image: ubuntu:22.04
+  - name: java-jre11
+    image: ubuntu:22.04
+  - name: java-jdk11
+    image: ubuntu:22.04
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../resources/playbook.yml
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      java-jdk:
+        java_jdk_install: true
+      java-jre11:
+        java_versions:
+          - "11"
+      java-jdk11:
+        java_versions:
+          - "11"
+        java_jdk_install: true
+
+scenario:
+  name: ubuntu-2204
+verifier:
+  name: testinfra
+  directory: ../resources/tests/

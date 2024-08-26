@@ -1,0 +1,93 @@
+---
+# selinux
+- name: omero web | selinux booleans
+  become: true
+  seboolean:
+    name: "{{ item }}"
+    state: true
+    persistent: true
+  with_items:
+    - httpd_read_user_content
+    - httpd_enable_homedirs
+    - httpd_can_network_relay
+  when: selinux_enabled
+
+# Alternatively set httpd_can_network_connect=yes to allow all ports
+- name: omero web | selinux ports
+  become: true
+  seport:
+    ports: "4080"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: selinux_enabled
+
+- name: omero web  | register pp file
+  stat:
+    path: /tmp/django.pp
+  register: pp_file_name
+
+- name: omero web | copy te file
+  become: true
+  template:
+    dest: /tmp/django.te
+    force: true
+    src: django.te.j2
+    mode: 0644
+
+- name: omero web | install checkpolicy
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name:
+      - checkpolicy
+      - policycoreutils
+      - ipa-selinux
+      # - selinux-policy-targeted
+    state: present
+  when: ansible_os_family | lower == 'redhat'
+
+- name: omero web | install checkpolicy for ubuntu
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - checkpolicy
+      - policycoreutils
+      - semodule-utils
+      - selinux-basics
+    state: present
+  when: ansible_os_family | lower != 'redhat'
+
+- name: omero web | Compile into a policy module
+  become: true
+  command: "checkmodule -M -m -o /tmp/django.mod /tmp/django.te"
+  args:
+    creates: /tmp/django.mod
+  when: not pp_file_name.stat.exists
+
+- name: omero web  | register mod file
+  stat:
+    path: /tmp/django.mod
+  register: mod_file_name
+
+- name: omero web | Package the policy module
+  become: true
+  command: "semodule_package -o /tmp/django.pp -m /tmp/django.mod"
+  args:
+    creates: /tmp/mypolicy.pp
+
+  when: not pp_file_name.stat.exists
+
+- name: omero web | Load the policy module
+  become: true
+  command: "semodule -i /tmp/django.pp"
+  notify:
+    - omero-web Reload SELinux
+  when: mod_file_name.stat.exists
+
+- name: omero web | delete mod file
+  become: true
+  ansible.builtin.file:
+    path: /tmp/django.mod
+    state: absent

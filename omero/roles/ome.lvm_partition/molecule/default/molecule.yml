@@ -1,0 +1,24 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  yamllint .
+  ansible-lint
+  flake8
+platforms:
+  - name: instance
+    image: rockylinux:9
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+verifier:
+  name: testinfra
+scenario:
+  test_sequence:
+    - lint
+    - dependency
+    - cleanup
+    - syntax

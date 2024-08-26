@@ -1,0 +1,51 @@
+---
+# tasks file for roles/redis
+
+- name: Import a key for epel
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9
+  when: ansible_os_family == 'RedHat'
+
+- name: Setup dnf repository, epel
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name:
+      https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: install redis
+  become: true
+  ansible.builtin.dnf:
+    name: redis
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Install redis
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name: redis
+    state: present
+  when: ansible_os_family == 'Debian'
+
+# Note: Fails in --check mode with /etc/redis/redis.conf
+# does not exist
+- name: configure redis for RHEL
+  become: true
+  lineinfile:
+    dest: /etc/redis/redis.conf
+    line: "bind {{ redis_listen | default('127.0.0.1') }}"
+    regexp: "^bind\\s.*"
+    state: present
+  notify:
+    - restart redis
+
+- name: set redis to start on startup
+  become: true
+  service:
+    name: redis
+    state: started
+    enabled: true

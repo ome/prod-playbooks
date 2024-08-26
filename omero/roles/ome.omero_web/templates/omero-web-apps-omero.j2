@@ -1,0 +1,36 @@
+# {{ ansible_managed }}
+
+# add application
+{% for item in omero_web_apps_names %}
+config append -- omero.web.apps {{ item | to_json | quote }}
+{% endfor %}
+
+# add top links
+{% for item in omero_web_apps_top_links %}
+{%   if 'attrs' in item %}
+config append -- omero.web.ui.top_links {{ [item.label, item.link, item.attrs] | to_json | quote }}
+{%   else %}
+config append -- omero.web.ui.top_links {{ [item.label, item.link] | to_json | quote }}
+{%   endif %}
+{% endfor %}
+
+# ui metadata panes
+{% for item in omero_web_apps_ui_metadata_panes %}
+config append -- omero.web.ui.metadata_panes {{ item | to_json | quote }}
+{% endfor %}
+
+# Other list value properties (append)
+{% for key in omero_web_apps_config_append %}
+{%   for value in omero_web_apps_config_append[key] %}
+config append -- {{ key | quote }} {{ value | to_json | quote }}
+{%   endfor %}
+{% endfor %}
+
+# Other key value properties (set)
+{% for key in omero_web_apps_config_set %}
+config set -- {{ key | quote }} {{
+  ((omero_web_apps_config_set[key] | string) == omero_web_apps_config_set[key]) |
+  ternary(omero_web_apps_config_set[key], omero_web_apps_config_set[key] | to_json) |
+  quote
+}}
+{% endfor %}

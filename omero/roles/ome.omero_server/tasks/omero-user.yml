@@ -1,0 +1,31 @@
+---
+# omero system user
+
+- name: omero server | create system user
+  become: true
+  user:
+    name: "{{ omero_server_system_user }}"
+    home: "{{ omero_server_basedir }}"
+    createhome: false
+    state: present
+    system: true
+    uid: "{{ omero_server_system_uid | default(omit) }}"
+  when: omero_server_system_user_manage
+
+# TODO: Ideally everything should be read-only apart from the var directory
+- name: omero server | create omero directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ omero_server_system_user }}"
+    mode: 0755
+  with_items:
+    - "{{ omero_server_basedir }}"
+    - "{{ omero_server_basedir }}/config"
+
+- name: omero server | create managedrepo system group
+  become: true
+  group:
+    name: "{{ omero_server_system_managedrepo_group }}"
+    state: present

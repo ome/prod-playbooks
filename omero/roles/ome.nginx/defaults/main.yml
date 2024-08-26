@@ -1,0 +1,20 @@
+---
+# defaults file for roles/nginx
+
+# Not supported on Ubuntu
+nginx_version: ''
+
+# Rotate log files at this interval
+nginx_logrotate_interval: daily
+
+# Number of backlog files to keep
+nginx_logrotate_backlog_size: 366
+
+# Use stable or mainline?
+nginx_stable_repo: true
+
+# Keep default configurations under /etc/nginx
+nginx_keep_default_configs: false
+
+# Start/restart nginx using systemd
+nginx_systemd_setup: true

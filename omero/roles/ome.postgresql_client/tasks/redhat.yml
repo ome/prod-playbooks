@@ -1,0 +1,44 @@
+---
+
+- name: Import a key for postgres (x86_64)
+  become: true
+  ansible.builtin.rpm_key:
+    state: present
+    key:  https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL
+  when: ansible_facts.get('architecture') is search("x86_64")
+
+- name: Import a key for postgres (aarch64)
+  become: true
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-AARCH64-RHEL
+  when: ansible_facts.get('architecture') is search("aarch64")
+
+- name: Postgres | setup dnf repository for arch64
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name:
+      https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-aarch64/pgdg-redhat-repo-latest.noarch.rpm
+    state: present
+  when: ansible_facts.get('architecture') is search("aarch64")
+
+- name: Postgres | setup dnf repository for amd64
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name:
+      https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    state: present
+  when: ansible_facts.get('architecture') is search("x86_64")
+
+- name: Postgres | install client packages
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name: >-
+      postgresql{{ postgresql_version }}{{
+        (postgresql_package_version | length > 0) |
+        ternary('-' + postgresql_package_version, '')
+      }}
+    state: present

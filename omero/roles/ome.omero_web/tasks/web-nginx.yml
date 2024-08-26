@@ -1,0 +1,43 @@
+---
+# setup nginx
+
+# Flush handlers to ensure configuration is reloaded
+- name: omero web | flush systemd handlers
+  meta: flush_handlers
+
+- block:
+
+    - name: omero web | generate nginx config
+      become: true
+      become_user: "{{ omero_web_system_user }}"
+      command: "{{ omero_web_omero_command }} web config nginx"
+      register: _omero_web_config_nginx
+      # This should be safe to always run since nothing is written
+      # The subsequent copy task will handle changed/unchanged
+      changed_when: false
+      check_mode: false
+
+    - name: omero web | write nginx config
+      become: true
+      copy:
+        content: "{{ _omero_web_config_nginx.stdout }}"
+        dest: /etc/nginx/conf.d/omero-web.conf
+        mode: 0644
+      notify: restart nginx
+
+
+- name: omero web | nginx remove system defaults
+  become: true
+  replace:
+    backup: true
+    dest: /etc/nginx/nginx.conf
+    regexp: '80\s*default_server\s*;'
+    replace: '80; # default_server;'
+  notify: restart nginx
+
+- name: omero web | enable nginx
+  become: true
+  service:
+    enabled: true
+    name: nginx
+    state: started

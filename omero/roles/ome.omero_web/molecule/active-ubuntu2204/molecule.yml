@@ -1,0 +1,43 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: molecule/resources/requirements.yml
+driver:
+  name: docker
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
+platforms:
+  - name: omero-web-active-ubuntu2204
+    image: eniocarboni/docker-ubuntu-systemd:22.04
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
+    groups:
+      - extra_options
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    # TODO: Install curl in basedeps instead
+    prepare: prepare.yml
+    converge: ../resources/playbook.yml
+  inventory:
+    host_vars:
+      omero-web-active-ubuntu2204:
+  options:
+    v: true
+    diff: true
+scenario:
+  name: active-ubuntu2204
+  converge_sequence:
+    - converge
+verifier:
+  name: testinfra
+  directory: ../resources/tests/

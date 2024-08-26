@@ -1,0 +1,25 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  pre_tasks:
+    - name: Install unzip
+      package:
+        update_cache: true
+        name: unzip
+        state: present
+  roles:
+    - role: ome.deploy_archive
+      deploy_archive_dest_dir: /opt/deploy-archive-test
+      deploy_archive_src_url: >
+        https://github.com/IDR/idr.openmicroscopy.org/archive/IDR-0.5.0.zip
+      deploy_archive_sha256: >
+        c71033292a19f305f2372730733b18a4149ac4fbe23165a2156e4680883bab8b
+      deploy_archive_symlink: /opt/idr-web-src
+      deploy_archive_internal_root: idr.openmicroscopy.org-IDR-0.5.0
+      deploy_archive_notifies:
+        - deploy-archive test handler
+
+  handlers:
+    - name: deploy-archive test handler
+      shell: echo triggered >> /opt/deploy-archive-test/handler-triggered

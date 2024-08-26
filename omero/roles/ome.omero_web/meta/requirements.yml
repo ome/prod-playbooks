@@ -1,0 +1,8 @@
+---
+
+- src: ome.omero_common
+- src: ome.nginx
+- src: ome.python3_virtualenv
+- src: ome.selinux_utils
+- src: ome.redis
+- src: ome.basedeps

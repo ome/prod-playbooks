@@ -1,0 +1,9 @@
+---
+# defaults file for roles/java
+
+# List of Java versions to install
+java_versions:
+  - "8"
+
+# Install JDKs corresponding to JREs?
+java_jdk_install: false

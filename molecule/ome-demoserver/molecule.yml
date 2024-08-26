@@ -11,23 +11,23 @@ lint: |
     flake8
 platforms:
   - name: ome-demoserver
-    image: centos:7
+    image: eniocarboni/docker-rockylinux-systemd:9
     groups:
       - ome-demoservers
 provisioner:
   name: ansible
   playbooks:
-    converge: ../../site.yml
+    converge: ../../omero/ome-demoserver.yml
   lint:
     name: ansible-lint
 scenario:
   name: ome-demoserver
   test_sequence:
+    - dependency
     - destroy
     # dependency must come first so that ansible-lint will see a custom module
     # This might be fixed by https://github.com/ansible/molecule/pull/1739
     - dependency
-    - lint
     - syntax
 verifier:
   name: testinfra

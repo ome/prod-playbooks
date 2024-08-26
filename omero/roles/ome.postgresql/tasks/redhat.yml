@@ -1,0 +1,50 @@
+---
+# tasks file for ome.postgresql rocky
+
+- name: postgres | install server packages
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name: >-
+      {{ postgresql_dist_redhat.basename }}-server{{
+         postgresql_dist_redhat.version_suffix }}
+    state: present
+
+- name: postgres | install extension packages
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name: >-
+      {{ postgresql_dist_redhat.basename }}-contrib{{
+         postgresql_dist_redhat.version_suffix }}
+    state: present
+
+- name: postgres | install ansible prerequisites
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    # Needs to match the Ansible interpreter
+    name: >-
+      python{{
+        ansible_python_version is version('3.0.0', '<') | ternary('2', '3')
+      }}-psycopg2
+    state: present
+
+- name: get langpack for en
+  become: true
+  ansible.builtin.dnf:
+    update_cache: true
+    name: glibc-langpack-en
+    state: present
+
+- name: postgres | set redhat dist variables
+  set_fact:
+    postgresql_dist_datadir: "{{ postgresql_dist_redhat.datadir }}"
+    postgresql_dist_bindir: "{{ postgresql_dist_redhat.bindir }}"
+    postgresql_dist_confdir: "{{ postgresql_dist_redhat.confdir }}"
+    postgresql_dist_setup: >-
+      {{ postgresql_dist_redhat.bindir }}/{{ postgresql_dist_redhat.setupname }}
+      initdb
+    postgresql_dist_service: "{{ postgresql_dist_redhat.service }}"
+    postgresql_dist_conf_postgresql_src: >-
+      {{ postgresql_dist_redhat.conf_postgresql_src }}

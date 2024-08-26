@@ -1,0 +1,9 @@
+#!/bin/sh
+# {{ ansible_managed }}
+# Regenerate the omero-server configuration:
+
+set -e
+
+for f in {{ omero_server_basedir }}/config/*.omero; do
+    {{ omero_server_omero_command }} load "$f"
+done

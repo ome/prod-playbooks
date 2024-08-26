@@ -1,0 +1,6 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: ome.redis
+      redis_listen: 0.0.0.0

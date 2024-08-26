@@ -1,0 +1,36 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+    yamllint .
+    ansible-lint
+    flake8
+platforms:
+  - name: postgresql-backup
+    image: eniocarboni/docker-rockylinux-systemd:9
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
+  - name: postgresql-backupgz
+    image: eniocarboni/docker-rockylinux-systemd:9
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  inventory:
+    host_vars:
+      postgresql-backupgz:
+        postgresql_backup_compress: true
+scenario:
+  name: default
+verifier:
+  name: testinfra

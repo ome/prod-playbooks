@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: ome-devel@lists.openmicroscopy.org.uk
+  description: Install upstream Docker
+  company: Open Microscopy Environment
+  license: BSD
+  min_ansible_version: 2.10
+  platforms:
+    - name: EL
+      versions:
+        - 9
+  role_name: docker
+  namespace: ome
+  galaxy_tags: []

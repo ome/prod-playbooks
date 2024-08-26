@@ -1,0 +1,19 @@
+---
+
+
+basedeps_packages:
+  redhat:
+    - patch
+    - rsync
+    - tar
+    - unzip
+    - wget
+    - zip
+  debian:
+    - curl
+    - patch
+    - rsync
+    - tar
+    - unzip
+    - wget
+    - zip

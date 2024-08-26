@@ -1,0 +1,43 @@
+---
+# tasks file for deploy-archive
+
+- name: deploy archive | create directory
+  file:
+    path: "{{ deploy_archive_dest_dir }}"
+    state: directory
+    serole: _default
+    setype: _default
+    seuser: _default
+    mode: 0755
+
+- name: deploy archive | download
+  get_url:
+    url: "{{ deploy_archive_src_url }}"
+    checksum: >-
+      {{ (deploy_archive_sha256 | length > 0) |
+       ternary('sha256:' + deploy_archive_sha256, omit) }}
+    dest: "{{ deploy_archive_dest_dir }}/{{ deploy_archive_filename }}"
+
+- name: deploy archive | unarchive
+  unarchive:
+    src: "{{ deploy_archive_dest_dir }}/{{ deploy_archive_filename }}"
+    dest: "{{ deploy_archive_dest_dir }}"
+    group: root
+    owner: root
+    remote_src: true
+
+- name: deploy archive | create symlink parent directory
+  file:
+    path: "{{ deploy_archive_symlink | dirname }}"
+    state: directory
+    mode: 0755
+  when: deploy_archive_symlink | dirname | length > 0
+
+- name: deploy archive | symlink
+  file:
+    path: "{{ deploy_archive_symlink }}"
+    src: "{{ deploy_archive_dest_dir }}/{{ deploy_archive_internal_root }}"
+    force: true
+    state: link
+  when: deploy_archive_symlink | length > 0
+  notify: "{{ deploy_archive_notifies }}"
