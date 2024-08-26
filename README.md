@@ -1,6 +1,7 @@
 OME production services playbooks
 =================================
 
+**NOTE: We are in the process of migration of the playbooks in this repo to Rocky Linux 9/RHEL 9 OS but at the moment, they function only on CentOS 7 !!**
 These playbooks encapsulate the running of various production servers run by the OME team.
 If you are looking for examples of running your own production OMERO.server see
 
@@ -10,7 +11,7 @@ If you are looking for examples of running your own production OMERO.server see
 Details
 -------
 
-- Install `Ansible` and dependencies using the [ome-ansible-molecule package](https://pypi.org/project/ome-ansible-molecule/).
+- Install `Ansible` >2.10.
 - Install required roles: `ansible-galaxy install -r requirements.yml`
 - Run the [`site.yml` playbook](site.yml).
 
