@@ -30,9 +30,6 @@
     nginx_proxy_conf_http:
       - "client_max_body_size 2g"
     nginx_proxy_backends:
-      # Proxy for QA application
-      - location: /qa2
-        server: https://www-legacy.openmicroscopy.org/qa2
       - location: /static
         server: https://www-legacy.openmicroscopy.org
     nginx_proxy_redirect_map_locations:
@@ -60,12 +57,15 @@
       - match: default
         dest: /404.html
       - match: "~/omero-blog.*"
-        dest: http://blog.openmicroscopy.org
+        dest: https://blog.openmicroscopy.org
       - match: "~/site/?$"
         dest: /
       - match: "~/site/news/?$"
         dest: /announcements
 
+      # redirect qa2 to updated QA application
+      - match: "~/qa2/?$"
+        dest: https://qa.openmicroscopy.org
       # about
       - match: "~/site/about/?$"
         dest: /about
