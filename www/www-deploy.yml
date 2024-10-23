@@ -60,7 +60,7 @@
       - match: default
         dest: /404.html
       - match: "~/omero-blog.*"
-        dest: http://blog.openmicroscopy.org
+        dest: https://blog.openmicroscopy.org
       - match: "~/site/?$"
         dest: /
       - match: "~/site/news/?$"
