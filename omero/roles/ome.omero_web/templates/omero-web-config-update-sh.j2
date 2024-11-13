@@ -1,9 +1,0 @@
-#!/bin/sh
-# {{ ansible_managed }}
-# Regenerate the omero-web configuration
-
-set -e
-
-for f in {{ omero_web_basedir }}/config/*.omero; do
-    {{ omero_web_omero_command }} load "$f"
-done

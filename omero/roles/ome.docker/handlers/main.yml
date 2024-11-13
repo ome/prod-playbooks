@@ -1,9 +1,0 @@
----
-# Handlers for docker
-
-- name: restart docker
-  become: true
-  service:
-    name: docker
-    state: restarted
-  when: docker_systemd_setup

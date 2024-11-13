@@ -1,8 +1,0 @@
----
-# internal vars, may be changed at any point
-
-java_backwards_compatibility_version:
-  debian:
-    1.8.0: "8"
-  redhat:
-    "8": "1.8.0"
