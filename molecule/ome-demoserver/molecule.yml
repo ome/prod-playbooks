@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
   options:
-    role-file: ../../requirements.yml
+    role-file: molecule/resources/requirements.yml
 driver:
   name: docker
 lint: |
@@ -17,7 +17,7 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    converge: ../../ome-demoserver.yml
+    converge: ../resources/ome-demoserver.yml
   lint:
     name: ansible-lint
 scenario:
