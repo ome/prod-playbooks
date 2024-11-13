@@ -1,0 +1,24 @@
+---
+- role: ome.omero_common
+- role: ome.basedeps
+- role: ome.java
+- role: ome.python3_virtualenv
+- role: ome.ice
+- role: ome.postgresql
+- role: ome.postgresql_client
+- role: ome.deploy_archive
+- role: ome.omero_server
+- role: ome.omero_web
+- role: ome.nginx
+- role: ome.redis
+- role: ome.selinux_utils
+- role: ome.versioncontrol_utils
+- role: ome.ssl_certificate
+- role: nfs_mount
+- role: nfs_share
+- role: iptables_raw
+- role: ome.cli_utils
+- role: ome.docker
+- role: ome.postgresql_backup
+- role: ome.omero_user
+- role: ome.lvm_partition
