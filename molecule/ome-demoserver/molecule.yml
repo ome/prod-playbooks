@@ -25,7 +25,6 @@ scenario:
   test_sequence:
     - dependency
     - destroy
-    - converge
     # dependency must come first so that ansible-lint will see a custom module
     # This might be fixed by https://github.com/ansible/molecule/pull/1739
     - dependency
