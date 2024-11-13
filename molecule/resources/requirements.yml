@@ -4,7 +4,7 @@
 - role: ome.java
 - role: ome.python3_virtualenv
 - role: ome.ice
-- role: ome.postgresql
+- src: ome.postgresql
 - role: ome.postgresql_client
 - role: ome.deploy_archive
 - role: ome.omero_server
