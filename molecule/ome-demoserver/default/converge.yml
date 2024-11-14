@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include testko-role"
-      include_role:
-        name: ome.postgresql
