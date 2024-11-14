@@ -166,18 +166,18 @@
       notify:
         - restart omero-web
 
-    - name: OMERO.web config for signup app
-      become: true
-      template:
-        src: templates/omero-web-config-signup.j2
-        dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
-        # Contains sensitive info
-        owner: "root"
-        group: "omero-web"
-        mode: "0640"
-      notify:
-        - restart omero-web
-      no_log: true
+    # - name: OMERO.web config for signup app
+    #   become: true
+    #   template:
+    #     src: templates/omero-web-config-signup.j2
+    #     dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
+    #     # Contains sensitive info
+    #     owner: "root"
+    #     group: "omero-web"
+    #     mode: "0640"
+    #   notify:
+    #     - restart omero-web
+    #   no_log: true
 
     - name: PostgreSQL Nightly Backups | Remove old cron job
       become: true
