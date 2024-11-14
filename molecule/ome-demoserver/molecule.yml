@@ -41,6 +41,8 @@ provisioner:
         omero_server_dbpassword: omero
         omero_server_mail_from: example.com
         omero_server_mail_host: localhost
+        omero_server_rootpassword: omero
+        omero_signup_email_body: 'Thank you for signing up.'
   lint:
     name: ansible-lint
 scenario:
