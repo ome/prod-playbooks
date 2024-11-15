@@ -19,12 +19,16 @@ Details
 - Install required roles: `ansible-galaxy install -r requirements.yml`
 - Run the `ome-demoserver.yml` playbook:
 
-`cd omero`
-`ansible-playbook --ask-become --become -i $PATH/TO/INVENTORY ome-demoserver.yml -l $YOUR-HOST-ADDRESS-OR-IP --diff --check`
+```
+cd omero
+ansible-playbook --ask-become --become -i $PATH/TO/INVENTORY ome-demoserver.yml -l $YOUR-HOST-ADDRESS-OR-IP --diff
+```
 
 
 
 Testing
 -------
 
-We test the playbooks here on Rocky Linux 9 platform via [molecule](https://molecule.readthedocs.io/), see test scenario under [`molecule`](molecule). Please note that the main components of the playbooks, the roles, are being independently tested on both Rocky Linux 9 and Ubuntu 22.04. See e.g. [ome.omero_server role](https://github.com/ome/ansible-role-omero-server/tree/master/molecule).
+We test the playbooks here on Rocky Linux 9 platform via [Ansible Molecule](https://molecule.readthedocs.io/), see test scenarios under [`molecule`](molecule).
+
+The main components of the playbooks (roles) are being independently tested on both Rocky Linux 9 and Ubuntu 22.04. See e.g. [ome.omero_server role](https://github.com/ome/ansible-role-omero-server/tree/master/molecule).
