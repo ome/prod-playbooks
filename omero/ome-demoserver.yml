@@ -155,58 +155,58 @@
       notify:
         - restart omero-web
 
-    # - name: OMERO.web config for CORS
-    #   become: true
-    #   template:
-    #     src: templates/omero-web-config-for-cors.j2
-    #     dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
-    #     owner: "root"
-    #     group: "root"
-    #     mode: "u=rw,go=r"
-    #   notify:
-    #     - restart omero-web
+    - name: OMERO.web config for CORS
+      become: true
+      template:
+        src: templates/omero-web-config-for-cors.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
+        owner: "root"
+        group: "root"
+        mode: "u=rw,go=r"
+      notify:
+        - restart omero-web
 
-    # # - name: OMERO.web config for signup app
-    # #   become: true
-    # #   template:
-    # #     src: templates/omero-web-config-signup.j2
-    # #     dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
-    # #     # Contains sensitive info
-    # #     owner: "root"
-    # #     group: "omero-web"
-    # #     mode: "0640"
-    # #   notify:
-    # #     - restart omero-web
-    # #   no_log: true
+    - name: OMERO.web config for signup app
+      become: true
+      template:
+        src: templates/omero-web-config-signup.j2
+        dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
+        # Contains sensitive info
+        owner: "root"
+        group: "omero-web"
+        mode: "0640"
+      notify:
+        - restart omero-web
+      no_log: true
 
-    # - name: PostgreSQL Nightly Backups | Remove old cron job
-    #   become: true
-    #   ansible.builtin.file:
-    #     path: /etc/cron.daily/nightly-pg_dump-omero.sh
-    #     state: absent
+    - name: PostgreSQL Nightly Backups | Remove old cron job
+      become: true
+      ansible.builtin.file:
+        path: /etc/cron.daily/nightly-pg_dump-omero.sh
+        state: absent
 
-    # - name: Create a figure scripts directory
-    #   become: true
-    #   ansible.builtin.file:
-    #     path: "{{ omero_server_basedir }}/OMERO.server/lib/\
-    #       scripts/omero/figure_scripts"
-    #     state: directory
-    #     mode: 0755
-    #     recurse: true
-    #     owner: root
+    - name: Create a figure scripts directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ omero_server_basedir }}/OMERO.server/lib/\
+          scripts/omero/figure_scripts"
+        state: directory
+        mode: 0755
+        recurse: true
+        owner: root
 
-    # - name: Download the Figure_To_Pdf.py script
-    #   become: true
-    #   ansible.builtin.get_url:
-    #     url: "https://raw.githubusercontent.com/ome/omero-figure/\
-    #       {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
-    #       figure_scripts/Figure_To_Pdf.py"
-    #     dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
-    #       scripts/omero/figure_scripts/Figure_To_Pdf.py"
-    #     mode: 0755
-    #     owner: "omero-server"
-    #     group: "omero-server"
-    #     force: true
+    - name: Download the Figure_To_Pdf.py script
+      become: true
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/ome/omero-figure/\
+          {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
+          figure_scripts/Figure_To_Pdf.py"
+        dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
+          scripts/omero/figure_scripts/Figure_To_Pdf.py"
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: true
 
   vars:
     omero_figure_release: >-
