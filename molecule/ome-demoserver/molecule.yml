@@ -47,10 +47,9 @@ provisioner:
 scenario:
   name: ome-demoserver
   test_sequence:
+    # dependency must come first, otherwise the first "destroy" errors
     - dependency
     - destroy
-    # dependency must come first so that ansible-lint will see a custom module
-    # This might be fixed by https://github.com/ansible/molecule/pull/1739
     - dependency
     - syntax
     - create
@@ -59,6 +58,6 @@ scenario:
     # FIXME: Some tasks are not idempotent
     # - idempotence
     - verify
-    # - destroy
+    - destroy
 verifier:
   name: testinfra
