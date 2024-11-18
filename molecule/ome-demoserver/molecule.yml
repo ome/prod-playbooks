@@ -26,7 +26,7 @@ provisioner:
   name: ansible
   playbooks:
     prepare: ../prepare.yml
-    converge: ../../omero/ome-demoserver.yml
+    converge: ../../playbooks/ome-demoserver.yml
   options:
     v: true
     diff: true
