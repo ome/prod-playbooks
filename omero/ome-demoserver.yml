@@ -260,6 +260,9 @@
       3. Once OMERO.insight is started, following the steps in the\n omero-guide [1], change the server address to\n
       demo.openmicroscopy.org\n
       and connect using the login details as above to import your data.\n
+      If insight errors with "...Please check the server address..."\n
+      change the server address to:\n
+      wss://demo.openmicroscopy.org/omero-ws\n
       4. Use the walkthrough example [1] to get further ideas about how
       to start using OMERO.\n
       OME Team\n\n
