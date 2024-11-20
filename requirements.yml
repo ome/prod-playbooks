@@ -1,47 +1,70 @@
 ---
-- name: ome.omero_common
+
+- src: ome.omero_common
   version: 0.4.0
-- name: ome.basedeps
+
+- src: ome.basedeps
   version: 1.3.2
-- name: ome.java
+
+- src: ome.java
   version: 2.2.0
-- name: ome.python3_virtualenv
+
+- src: ome.python3_virtualenv
   version: 0.2.0
-- name: ome.ice
+
+- src: ome.ice
   version: 4.4.4
-- name: ome.postgresql
+
+- src: ome.postgresql
   version: 5.4.0
-- name: ome.postgresql_client
+
+- src: ome.postgresql_client
   version: 0.4.3
-- name: ome.deploy_archive
+
+- src: ome.deploy_archive
   version: 0.2.0
-- name: ome.omero_server
+
+- src: ome.omero_server
   version: 6.1.0
-- name: ome.omero_web
+
+- src: ome.omero_web
   version: 5.1.1
-- name: ome.nginx
+
+- src: ome.nginx
   version: 2.2.1
-- name: ome.redis
+
+- src: ome.redis
   version: 1.3.0
-- name: ome.selinux_utils
+
+- src: ome.selinux_utils
   version: 2.1.1
-- name: ome.versioncontrol_utils
+
+- src: ome.versioncontrol_utils
   version: 1.1.0
-- name: ome.ssl_certificate
+
+- src: ome.ssl_certificate
   version: 0.5.0
-- name: nfs_mount
+
+- src: nfs_mount
   version: 2.0.0
-- name: nfs_share
+
+- src: nfs_share
   version: 1.0.0
-- name: iptables_raw
+
+- src: iptables_raw
   version: 0.4.0
-- name: ome.cli_utils
+
+- src: ome.cli_utils
   version: 1.2.5
-- name: ome.docker
+
+- src: ome.docker
   version: 3.2.2
-- name: ome.postgresql_backup
+
+- src: ome.postgresql_backup
   version: 0.3.0
-- name: ome.omero_user
+
+- src: ome.omero_user
   version: 0.4.0
-- name: ome.lvm_partition
+
+- src: ome.lvm_partition
   version: 1.2.0
