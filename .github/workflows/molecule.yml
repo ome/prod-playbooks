@@ -8,11 +8,11 @@ on:
 jobs:
 
   list-scenarios:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.listscenarios.outputs.scenarios }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: listscenarios
         uses: ome/action-ansible-molecule-list-scenarios@main
 
@@ -20,22 +20,21 @@ jobs:
     name: Test
     needs:
       - list-scenarios
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       # Keep running so we can see if other tests pass
       fail-fast: false
       matrix:
         scenario: ${{fromJson(needs.list-scenarios.outputs.matrix)}}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.8'
+          python-version: '3.9'
       - name: Install Ansible & Molecule
         run: |
             pip install "ansible<8" "ansible-lint<6.13" flake8
             pip install "molecule<5" "ansible-compat<4"
             pip install molecule-plugins[docker] pytest-testinfra
-            pip3.8 install jmespath
       - name: Run molecule
         run: molecule test -s "${{ matrix.scenario }}"

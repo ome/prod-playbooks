@@ -11,23 +11,54 @@ lint: |
     flake8
 platforms:
   - name: ome-demoserver
-    image: centos:7
+    image: eniocarboni/docker-rockylinux-systemd:9
+    image_version: latest
+    command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
     groups:
+      - docker-hosts
+      - omero-py3
       - ome-demoservers
 provisioner:
   name: ansible
   playbooks:
-    converge: ../../site.yml
+    prepare: ../prepare.yml
+    converge: ../../playbooks/ome-demoserver.yml
+  options:
+    v: true
+    diff: true
+  inventory:
+    host_vars:
+      ome-demoserver:
+        postgresql_version: "16"
+        omero_server_selfsigned_certificates: true
+        omero_server_dbhost: localhost
+        omero_server_dbuser: demo
+        omero_server_dbname: omero
+        omero_server_dbpassword: omero
+        omero_server_mail_from: example.com
+        omero_server_mail_host: localhost
+        omero_server_rootpassword: omero
   lint:
     name: ansible-lint
 scenario:
   name: ome-demoserver
   test_sequence:
-    - destroy
-    # dependency must come first so that ansible-lint will see a custom module
-    # This might be fixed by https://github.com/ansible/molecule/pull/1739
+    # dependency must come first, otherwise the first "destroy" errors
     - dependency
-    - lint
+    - destroy
+    - dependency
     - syntax
+    - create
+    - prepare
+    - converge
+    # FIXME: Some tasks are not idempotent
+    # - idempotence
+    - verify
+    - destroy
 verifier:
   name: testinfra
+  directory: ../tests/
