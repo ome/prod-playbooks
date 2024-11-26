@@ -216,7 +216,7 @@
     omero_fpbioimage_release: >-
       {{ omero_fpbioimage_release_override | default('0.4.1') }}
     omero_iviewer_release: >-
-      {{ omero_iviewer_release_override | default('0.14.0') }}
+      {{ omero_iviewer_release_override | default('0.15.0') }}
     omero_parade_release: >-
       {{ omero_parade_release_override | default('0.2.4') }}
     omero_autotag_release: >-
