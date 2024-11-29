@@ -20,7 +20,7 @@ Details
 - Run the `ome-demoserver.yml` playbook:
 
 ```
-cd omero
+cd playbooks
 ansible-playbook --ask-become --become -i $PATH/TO/INVENTORY ome-demoserver.yml -l $YOUR-HOST-ADDRESS-OR-IP --diff
 ```
 
