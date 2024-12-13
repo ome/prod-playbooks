@@ -209,6 +209,7 @@
         force: true
 
   vars:
+    nginx_version: 1.26.2
     omero_figure_release: >-
       {{ omero_figure_release_override | default('7.2.0') }}
     omero_figure_script_release: >-
