@@ -193,7 +193,8 @@
         state: directory
         mode: 0755
         recurse: true
-        owner: root
+        owner: "omero-server"
+        group: "omero-server"
 
     - name: Download the Figure_To_Pdf.py script
       become: true
