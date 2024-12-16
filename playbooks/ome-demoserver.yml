@@ -210,9 +210,9 @@
 
   vars:
     omero_figure_release: >-
-      {{ omero_figure_release_override | default('7.1.0') }}
+      {{ omero_figure_release_override | default('7.2.0') }}
     omero_figure_script_release: >-
-      {{ omero_figure_script_release_override | default('v7.1.0') }}
+      {{ omero_figure_script_release_override | default('v7.2.0') }}
     omero_fpbioimage_release: >-
       {{ omero_fpbioimage_release_override | default('0.4.1') }}
     omero_iviewer_release: >-
