@@ -275,13 +275,13 @@
     filesystem: "xfs"
 
     omero_server_config_set:
-      omero.certificates.owner: "/C=UK/ST=Scotland/L=Dundee/O=OME"
       omero.client.icetransports: ssl,wss,tcp
+      omero.certificates.key: server.key
       omero.db.poolsize: 60
-      omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
-      omero.glacier2.IceSSL.DefaultDir: "{{ omero_server_basedir }}/selfsigned"
+      omero.glacier2.IceSSL.Ciphers: "HIGH:!DHE"
       omero.glacier2.IceSSL.CAs: server.pem
       omero.glacier2.IceSSL.CertFile: server.p12
+      omero.glacier2.IceSSL.DefaultDir: /etc/ssl/omero
       # This password doesn't need to be secret
       omero.glacier2.IceSSL.Password: secret
       omero.jvmcfg.percent.blitz: 50
