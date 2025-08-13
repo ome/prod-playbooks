@@ -307,7 +307,7 @@
       - markdown
       - "omero-py>={{ omero_py_release }}"
 
-    omero_server_selfsigned_certificates: true
+    omero_server_selfsigned_certificates: false
 
     omero_web_config_set:
       omero.mail.config: true
