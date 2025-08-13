@@ -52,7 +52,7 @@
         - "omero-py>={{ omero_py_release }}"
 
     - role: ome.omero_user
-      no_log: true
+      # no_log: true
       omero_user_system: omero-server
       omero_user_admin_user: root
       omero_user_admin_pass: "{{ omero_server_rootpassword }}"
