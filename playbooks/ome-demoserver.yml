@@ -15,6 +15,16 @@
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
 
+    - name: Check if server.key file exists
+      stat: 
+        path: /etc/ssl/omero/server.key
+      register: serverkey_file
+
+    - name: Set omero_certificates_key to server.key
+      set_fact:
+        omero_certificates_key_override: server.key 
+      when: serverkey_file.stat.exists
+
   roles:
 
     - role: ome.postgresql
@@ -208,20 +218,9 @@
         owner: "omero-server"
         group: "omero-server"
         force: true
-
-    - name: check if server.key file exists
-      stat: 
-        path: /etc/ssl/omero/server.key
-      register: serverkey_file
-
-    - name: Set omero_certificates_key to server.key
-      set_fact:
-        omero_certificates_key_override: server.key 
-      when: serverkey_file.stat.exists
-    
-  omero_server_selfsigned_certificates: true
-
+  
   vars:
+    omero_server_selfsigned_certificates: true
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
     icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificate else icessl_default_dir_noself }}"
