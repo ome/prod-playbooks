@@ -17,12 +17,12 @@
 
     - name: Check if server.key file exists
       stat: 
-        path: /etc/ssl/omero/server.key
+        path: "{{ icessl_default_dir_noself }}/server.key"
       register: serverkey_file
 
     - name: Set omero_certificates_key to server.key
       set_fact:
-        omero_certificates_key_override: server.key 
+        omero_certificates_key_override: server.key
       when: serverkey_file.stat.exists
 
   roles:
