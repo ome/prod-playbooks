@@ -223,7 +223,7 @@
     omero_server_selfsigned_certificates: true
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
-    icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificate else icessl_default_dir_noself }}"
+    icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificates else icessl_default_dir_noself }}"
     omero_certificates_owner:
     omero_certificates_key: >-
       {{ omero_certificates_key_override | default('') }}
