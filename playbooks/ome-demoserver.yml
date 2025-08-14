@@ -185,31 +185,49 @@
         path: /etc/cron.daily/nightly-pg_dump-omero.sh
         state: absent
 
-    - name: Create a figure scripts directory
-      become: true
-      ansible.builtin.file:
-        path: "{{ omero_server_basedir }}/OMERO.server/lib/\
-          scripts/omero/figure_scripts"
-        state: directory
-        mode: 0755
-        recurse: true
-        owner: "omero-server"
-        group: "omero-server"
+    # - name: Create a figure scripts directory
+    #   become: true
+    #   ansible.builtin.file:
+    #     path: "{{ omero_server_basedir }}/OMERO.server/lib/\
+    #       scripts/omero/figure_scripts"
+    #     state: directory
+    #     mode: 0755
+    #     recurse: true
+    #     owner: "omero-server"
+    #     group: "omero-server"
 
-    - name: Download the Figure_To_Pdf.py script
-      become: true
-      ansible.builtin.get_url:
-        url: "https://raw.githubusercontent.com/ome/omero-figure/\
-          {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
-          figure_scripts/Figure_To_Pdf.py"
-        dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
-          scripts/omero/figure_scripts/Figure_To_Pdf.py"
-        mode: 0755
-        owner: "omero-server"
-        group: "omero-server"
-        force: true
+    # - name: Download the Figure_To_Pdf.py script
+    #   become: true
+    #   ansible.builtin.get_url:
+    #     url: "https://raw.githubusercontent.com/ome/omero-figure/\
+    #       {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
+    #       figure_scripts/Figure_To_Pdf.py"
+    #     dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
+    #       scripts/omero/figure_scripts/Figure_To_Pdf.py"
+    #     mode: 0755
+    #     owner: "omero-server"
+    #     group: "omero-server"
+    #     force: true
+
+    - name: check if server.key file exists
+      stat: 
+        path: /etc/ssl/omero/server.key
+      register: serverkey_file
+
+    - name: Set omero_certificates_key to server.key
+      set_fact:
+        omero_certificates_key_override: server.key 
+      when: serverkey_file.stat.exists
+    
+  omero_server_selfsigned_certificates: false
 
   vars:
+    icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
+    icessl_default_dir_noself: "/etc/ssl/omero"
+    icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificate else icessl_default_dir_noself }}"
+    omero_certificates_owner:
+    omero_certificates_key: >-
+      {{ omero_certificates_key_override | default('') }}
     nginx_version: 1.26.2
     omero_figure_release: >-
       {{ omero_figure_release_override | default('7.2.1') }}
@@ -276,12 +294,12 @@
 
     omero_server_config_set:
       omero.client.icetransports: ssl,wss,tcp
-      omero.certificates.key: server.key
+      omero.certificates.key: "{{ omero_certificates_key }}"
       omero.db.poolsize: 60
       omero.glacier2.IceSSL.Ciphers: "HIGH:!DHE"
       omero.glacier2.IceSSL.CAs: server.pem
       omero.glacier2.IceSSL.CertFile: server.p12
-      omero.glacier2.IceSSL.DefaultDir: /etc/ssl/omero
+      omero.glacier2.IceSSL.DefaultDir: "{{ icessl_default_dir }}"
       # This password doesn't need to be secret
       omero.glacier2.IceSSL.Password: secret
       omero.jvmcfg.percent.blitz: 50
@@ -306,8 +324,6 @@
       - "reportlab<3.6"
       - markdown
       - "omero-py>={{ omero_py_release }}"
-
-    omero_server_selfsigned_certificates: false
 
     omero_web_config_set:
       omero.mail.config: true
