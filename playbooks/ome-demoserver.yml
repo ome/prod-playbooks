@@ -185,29 +185,29 @@
         path: /etc/cron.daily/nightly-pg_dump-omero.sh
         state: absent
 
-    # - name: Create a figure scripts directory
-    #   become: true
-    #   ansible.builtin.file:
-    #     path: "{{ omero_server_basedir }}/OMERO.server/lib/\
-    #       scripts/omero/figure_scripts"
-    #     state: directory
-    #     mode: 0755
-    #     recurse: true
-    #     owner: "omero-server"
-    #     group: "omero-server"
+    - name: Create a figure scripts directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ omero_server_basedir }}/OMERO.server/lib/\
+          scripts/omero/figure_scripts"
+        state: directory
+        mode: 0755
+        recurse: true
+        owner: "omero-server"
+        group: "omero-server"
 
-    # - name: Download the Figure_To_Pdf.py script
-    #   become: true
-    #   ansible.builtin.get_url:
-    #     url: "https://raw.githubusercontent.com/ome/omero-figure/\
-    #       {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
-    #       figure_scripts/Figure_To_Pdf.py"
-    #     dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
-    #       scripts/omero/figure_scripts/Figure_To_Pdf.py"
-    #     mode: 0755
-    #     owner: "omero-server"
-    #     group: "omero-server"
-    #     force: true
+    - name: Download the Figure_To_Pdf.py script
+      become: true
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/ome/omero-figure/\
+          {{ omero_figure_script_release }}/omero_figure/scripts/omero/\
+          figure_scripts/Figure_To_Pdf.py"
+        dest: "{{ omero_server_basedir }}/OMERO.server/lib/\
+          scripts/omero/figure_scripts/Figure_To_Pdf.py"
+        mode: 0755
+        owner: "omero-server"
+        group: "omero-server"
+        force: true
 
     - name: check if server.key file exists
       stat: 
