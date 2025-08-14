@@ -219,7 +219,7 @@
         omero_certificates_key_override: server.key 
       when: serverkey_file.stat.exists
     
-  omero_server_selfsigned_certificates: false
+  omero_server_selfsigned_certificates: true
 
   vars:
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
