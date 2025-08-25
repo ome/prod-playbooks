@@ -301,6 +301,8 @@
       omero.glacier2.IceSSL.DefaultDir: "{{ icessl_default_dir }}"
       # This password doesn't need to be secret
       omero.glacier2.IceSSL.Password: secret
+      omero.glacier2.IceSSL.ProtocolVersionMax: TLS1_3
+      omero.glacier2.IceSSL.Protocols: TLS1_2,TLS1_3
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
