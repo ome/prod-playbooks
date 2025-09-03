@@ -4,7 +4,7 @@
 # also pass `--extra-vars upgrade_webapps=True`
 
 - name: Demo server playbook
-  hosts: ome-demoservers
+  hosts: ome-demoservers-test
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: true
@@ -31,13 +31,13 @@
       # no_log: true
       postgresql_databases:
       - name: omero
-        owner: demo
+        owner: omero-x
       postgresql_users:
       - user: "{{ omero_server_dbuser | default('omero') }}"
         password: "{{ omero_server_dbpassword | default('omero') }}"
         databases: []
 
-    - role: ome.omero_server
+    - role: omero_server
       # Defaults overridden in private configuration
       # omero_server_dbuser:
       # omero_server_dbpassword:
@@ -61,23 +61,23 @@
         - "omero-signup=={{ omero_signup_release }}"
         - "omero-py>={{ omero_py_release }}"
 
-    - role: ome.omero_user
-      no_log: true
-      omero_user_system: omero-server
-      omero_user_admin_user: root
-      omero_user_admin_pass: "{{ omero_server_rootpassword }}"
-      omero_group_create:
-        - name: public
-          type: read-only
-        - name: "My Data"
-          type: private
-      omero_user_create:
-        - login: "{{ secret_omero_web_public_user | default('public') }}"
-          firstname: Public
-          lastname: User
-          password: >-
-            {{ secret_omero_web_public_password | default('public') }}
-          groups: "--group-name public"
+    # - role: ome.omero_user
+    #   no_log: true
+    #   omero_user_system: omero-server
+    #   omero_user_admin_user: root
+    #   omero_user_admin_pass: "{{ omero_server_rootpassword }}"
+    #   omero_group_create:
+    #     - name: public
+    #       type: read-only
+    #     - name: "My Data"
+    #       type: private
+    #   omero_user_create:
+    #     - login: "{{ secret_omero_web_public_user | default('public') }}"
+    #       firstname: Public
+    #       lastname: User
+    #       password: >-
+    #         {{ secret_omero_web_public_password | default('public') }}
+    #       groups: "--group-name public"
 
     - role: ome.ssl_certificate
       tags: ssl
@@ -220,7 +220,7 @@
         force: true
   
   vars:
-    omero_server_selfsigned_certificates: true
+    omero_server_selfsigned_certificates: false
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
     icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificates else icessl_default_dir_noself }}"
@@ -246,7 +246,7 @@
       {{ omero_signup_release_override | default('0.3.3') }}
 
     omero_server_release: >-
-      {{ omero_server_release_override | default('5.6.14') }}
+      {{ omero_server_release_override | default('5.6.16') }}
     omero_web_release: "{{ omero_web_release_override | default('5.29.2') }}"
     omero_py_release: "{{ omero_py_release_override | default('5.21.0') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
