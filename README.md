@@ -24,6 +24,13 @@ cd playbooks
 ansible-playbook --ask-become --become -i $PATH/TO/INVENTORY ome-demoserver.yml -l $YOUR-HOST-ADDRESS-OR-IP --diff
 ```
 
+Note: After first successful run of the playbook, it can be of advantage to skip some roles, e.g. the `ome.ssl_certificate` role. You can use the provided tag for it:
+
+```
+cd playbooks
+ansible-playbook --ask-become --become -i $PATH/TO/INVENTORY ome-demoserver.yml -l $YOUR-HOST-ADDRESS-OR-IP --diff --skip-tags "ssl"
+```
+
 
 
 Testing
