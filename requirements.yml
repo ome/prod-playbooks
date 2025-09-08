@@ -9,8 +9,11 @@
 - src: ome.java
   version: 2.2.0
 
-- src: ome.python3_virtualenv
-  version: 0.2.0
+# - src: ome.python3_virtualenv
+#   version: 0.2.0
+- name: python3_virtualenv
+  src: https://github.com/khaledk2/ansible-role-python3-virtualenv
+  version: update_ansible_python
 
 - src: ome.ice
   version: 4.4.4
@@ -24,14 +27,17 @@
 - src: ome.deploy_archive
   version: 0.2.0
 
-# - src: ome.omero_server
-#   version: 6.1.0
+- src: ome.omero_server
+  version: 6.1.0
 - name: omero_server
-  src: https://github.com/sbesson/ansible-role-omero-server
-  version: no_update_cache
+  src: https://github.com/pwalczysko/ansible-role-omero-server
+  version: python-vers
 
-- src: ome.omero_web
-  version: 5.1.1
+# - src: ome.omero_web
+#   version: 5.1.1
+- name: omero_web
+  src: https://github.com/ome/ansible-role-omero-web
+  version: master
 
 - src: ome.nginx
   version: 2.2.1
