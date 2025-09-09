@@ -322,7 +322,7 @@
       - "omero-metadata=={{ omero_metadata_release }}"
       - "omero-demo-cleanup==0.2.1"
       # For OMERO.figure script
-      - "reportlab<3.6"
+      - "reportlab"
       - markdown
       - "omero-py>={{ omero_py_release }}"
 
