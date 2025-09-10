@@ -27,8 +27,8 @@
 - src: ome.deploy_archive
   version: 0.2.0
 
-- src: ome.omero_server
-  version: 6.1.0
+# - src: ome.omero_server
+#   version: 6.1.0
 - name: omero_server
   src: https://github.com/pwalczysko/ansible-role-omero-server
   version: python-vers
@@ -36,8 +36,8 @@
 # - src: ome.omero_web
 #   version: 5.1.1
 - name: omero_web
-  src: https://github.com/ome/ansible-role-omero-web
-  version: master
+  src: https://github.com/pwalczysko/ansible-role-omero-web
+  version: p312
 
 - src: ome.nginx
   version: 2.2.1

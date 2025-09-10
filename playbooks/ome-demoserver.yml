@@ -29,6 +29,7 @@
 
     - role: ome.postgresql
       # no_log: true
+      tags: ssl
       postgresql_databases:
       - name: omero
         owner: omero-x
@@ -38,6 +39,7 @@
         databases: []
 
     - role: omero_server
+      tags: ssl
       # Defaults overridden in private configuration
       # omero_server_dbuser:
       # omero_server_dbpassword:
@@ -46,6 +48,7 @@
       omero_server_systemd_limit_nofile: 16384
 
     - role: ome.nginx
+      tags: ssl
 
     - role: omero_web
       # Defaults overridden in private configuration
@@ -227,7 +230,7 @@
     omero_certificates_owner:
     omero_certificates_key: >-
       {{ omero_certificates_key_override | default('') }}
-    nginx_version: 1.26.2
+    nginx_version: 1.29.1
     omero_figure_release: >-
       {{ omero_figure_release_override | default('7.2.1') }}
     omero_figure_script_release: >-
