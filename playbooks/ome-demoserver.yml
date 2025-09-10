@@ -29,17 +29,15 @@
 
     - role: ome.postgresql
       # no_log: true
-      tags: ssl
       postgresql_databases:
       - name: omero
-        owner: omero-x
+        owner: demo
       postgresql_users:
       - user: "{{ omero_server_dbuser | default('omero') }}"
         password: "{{ omero_server_dbpassword | default('omero') }}"
         databases: []
 
-    - role: omero_server
-      # tags: ssl
+    - role: ome.omero_server
       # Defaults overridden in private configuration
       # omero_server_dbuser:
       # omero_server_dbpassword:
