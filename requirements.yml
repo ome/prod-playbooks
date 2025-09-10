@@ -78,7 +78,7 @@
 # - src: ome.omero_user
 #   version: 0.4.0
 - name: omero_user
-  src: https://github.com/pwalczysko/ansible-role-omero_user
+  src: https://github.com/pwalczysko/ansible-role-omero-user
   version: include
 
 - src: ome.lvm_partition
