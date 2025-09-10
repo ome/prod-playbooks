@@ -39,8 +39,11 @@
   src: https://github.com/pwalczysko/ansible-role-omero-web
   version: p312
 
-- src: ome.nginx
-  version: 2.2.1
+# - src: ome.nginx
+#   version: 2.2.1
+- name: nginx
+  src: https://github.com/pwalczysko/ansible-role-nginx
+  version: nginx-repo
 
 - src: ome.redis
   version: 1.3.0
