@@ -45,7 +45,7 @@
       omero_server_dbname: omero
       omero_server_systemd_limit_nofile: 16384
 
-    - role: ome.nginx
+    - role: nginx
       # tags: ssl
 
     - role: omero_web
