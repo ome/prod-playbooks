@@ -37,7 +37,7 @@
         password: "{{ omero_server_dbpassword | default('omero') }}"
         databases: []
 
-    - role: ome.omero_server
+    - role: omero_server
       # Defaults overridden in private configuration
       # omero_server_dbuser:
       # omero_server_dbpassword:
