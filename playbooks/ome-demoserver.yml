@@ -4,7 +4,7 @@
 # also pass `--extra-vars upgrade_webapps=True`
 
 - name: Demo server playbook
-  hosts: ome-demoservers-test
+  hosts: ome-demoservers
   pre_tasks:
     - name: Install open-vm-tools if system is a VMware vm
       become: true
@@ -39,7 +39,7 @@
         databases: []
 
     - role: omero_server
-      tags: ssl
+      # tags: ssl
       # Defaults overridden in private configuration
       # omero_server_dbuser:
       # omero_server_dbpassword:
@@ -48,7 +48,7 @@
       omero_server_systemd_limit_nofile: 16384
 
     - role: ome.nginx
-      tags: ssl
+      # tags: ssl
 
     - role: omero_web
       # Defaults overridden in private configuration
@@ -64,23 +64,23 @@
         - "omero-signup=={{ omero_signup_release }}"
         - "omero-py>={{ omero_py_release }}"
 
-    # - role: ome.omero_user
-    #   no_log: true
-    #   omero_user_system: omero-server
-    #   omero_user_admin_user: root
-    #   omero_user_admin_pass: "{{ omero_server_rootpassword }}"
-    #   omero_group_create:
-    #     - name: public
-    #       type: read-only
-    #     - name: "My Data"
-    #       type: private
-    #   omero_user_create:
-    #     - login: "{{ secret_omero_web_public_user | default('public') }}"
-    #       firstname: Public
-    #       lastname: User
-    #       password: >-
-    #         {{ secret_omero_web_public_password | default('public') }}
-    #       groups: "--group-name public"
+    - role: ome.omero_user
+      no_log: true
+      omero_user_system: omero-server
+      omero_user_admin_user: root
+      omero_user_admin_pass: "{{ omero_server_rootpassword }}"
+      omero_group_create:
+        - name: public
+          type: read-only
+        - name: "My Data"
+          type: private
+      omero_user_create:
+        - login: "{{ secret_omero_web_public_user | default('public') }}"
+          firstname: Public
+          lastname: User
+          password: >-
+            {{ secret_omero_web_public_password | default('public') }}
+          groups: "--group-name public"
 
     - role: ome.ssl_certificate
       tags: ssl
