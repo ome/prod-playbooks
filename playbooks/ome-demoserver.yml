@@ -62,7 +62,7 @@
         - "omero-signup=={{ omero_signup_release }}"
         - "omero-py>={{ omero_py_release }}"
 
-    - role: ome.omero_user
+    - role: omero_user
       no_log: true
       omero_user_system: omero-server
       omero_user_admin_user: root
