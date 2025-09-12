@@ -15,6 +15,16 @@
            ((ansible_virtualization_type is defined)
            and (ansible_virtualization_type == "VMware"))
 
+    - name: Check if server.key file exists
+      stat: 
+        path: "{{ icessl_default_dir_noself }}/server.key"
+      register: serverkey_file
+
+    - name: Set omero_certificates_key to server.key
+      set_fact:
+        omero_certificates_key_override: server.key
+      when: serverkey_file.stat.exists
+
   roles:
 
     - role: ome.postgresql
@@ -208,9 +218,16 @@
         owner: "omero-server"
         group: "omero-server"
         force: true
-
+  
   vars:
-    nginx_version: 1.26.2
+    omero_server_selfsigned_certificates: true
+    icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
+    icessl_default_dir_noself: "/etc/ssl/omero"
+    icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificates else icessl_default_dir_noself }}"
+    omero_certificates_owner:
+    omero_certificates_key: >-
+      {{ omero_certificates_key_override | default('') }}
+    nginx_version: 1.28.0
     omero_figure_release: >-
       {{ omero_figure_release_override | default('7.2.1') }}
     omero_figure_script_release: >-
@@ -218,20 +235,20 @@
     omero_fpbioimage_release: >-
       {{ omero_fpbioimage_release_override | default('0.4.1') }}
     omero_iviewer_release: >-
-      {{ omero_iviewer_release_override | default('0.15.0') }}
+      {{ omero_iviewer_release_override | default('0.16.0') }}
     omero_parade_release: >-
       {{ omero_parade_release_override | default('0.2.4') }}
     omero_autotag_release: >-
-      {{ omero_autotag_release_override | default('4.0.1') }}
+      {{ omero_autotag_release_override | default('4.1.0') }}
     omero_tagsearch_release: >-
-      {{ omero_tagsearch_release_override | default('4.2.0') }}
+      {{ omero_tagsearch_release_override | default('4.3.0') }}
     omero_signup_release: >-
       {{ omero_signup_release_override | default('0.3.3') }}
 
     omero_server_release: >-
-      {{ omero_server_release_override | default('5.6.14') }}
-    omero_web_release: "{{ omero_web_release_override | default('5.28.0') }}"
-    omero_py_release: "{{ omero_py_release_override | default('5.19.5') }}"
+      {{ omero_server_release_override | default('5.6.16') }}
+    omero_web_release: "{{ omero_web_release_override | default('5.29.2') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.21.0') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
     # which is a dependency.
     java_jdk_install: true
@@ -275,15 +292,17 @@
     filesystem: "xfs"
 
     omero_server_config_set:
-      omero.certificates.owner: "/C=UK/ST=Scotland/L=Dundee/O=OME"
       omero.client.icetransports: ssl,wss,tcp
+      omero.certificates.key: "{{ omero_certificates_key }}"
       omero.db.poolsize: 60
-      omero.glacier2.IceSSL.Ciphers: "ADH:HIGH"
-      omero.glacier2.IceSSL.DefaultDir: "{{ omero_server_basedir }}/selfsigned"
+      omero.glacier2.IceSSL.Ciphers: "HIGH:!DHE"
       omero.glacier2.IceSSL.CAs: server.pem
       omero.glacier2.IceSSL.CertFile: server.p12
+      omero.glacier2.IceSSL.DefaultDir: "{{ icessl_default_dir }}"
       # This password doesn't need to be secret
       omero.glacier2.IceSSL.Password: secret
+      omero.glacier2.IceSSL.ProtocolVersionMax: TLS1_3
+      omero.glacier2.IceSSL.Protocols: TLS1_2,TLS1_3
       omero.jvmcfg.percent.blitz: 50
       omero.jvmcfg.percent.indexer: 20
       omero.jvmcfg.percent.pixeldata: 20
@@ -306,8 +325,6 @@
       - "reportlab<3.6"
       - markdown
       - "omero-py>={{ omero_py_release }}"
-
-    omero_server_selfsigned_certificates: true
 
     omero_web_config_set:
       omero.mail.config: true
