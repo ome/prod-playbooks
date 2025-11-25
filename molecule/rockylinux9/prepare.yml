@@ -7,6 +7,5 @@
     - name: Install cron
       become: true
       ansible.builtin.dnf:
-        update_cache: true
         name: cronie
         state: present

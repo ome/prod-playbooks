@@ -10,7 +10,7 @@ lint: |
     ansible-lint
     flake8
 platforms:
-  - name: ome-demoserver
+  - name: demoserver-rockylinux9
     image: eniocarboni/docker-rockylinux-systemd:9
     image_version: latest
     command: /sbin/init
@@ -25,14 +25,14 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    prepare: ../prepare.yml
+    prepare: prepare.yml
     converge: ../../playbooks/ome-demoserver.yml
   options:
     v: true
     diff: true
   inventory:
     host_vars:
-      ome-demoserver:
+      demoserver-rockylinux9:
         postgresql_version: "16"
         omero_server_selfsigned_certificates: true
         omero_server_dbhost: localhost
@@ -45,7 +45,7 @@ provisioner:
   lint:
     name: ansible-lint
 scenario:
-  name: ome-demoserver
+  name: rockylinux9
   test_sequence:
     # dependency must come first, otherwise the first "destroy" errors
     - dependency

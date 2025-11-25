@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+
+  # If testing in Docker cron won't be installed
+  pre_tasks:
+    - name: Install cron
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 86400
+        name: cron
+        state: present

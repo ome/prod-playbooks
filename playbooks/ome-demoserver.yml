@@ -28,7 +28,7 @@
   roles:
 
     - role: ome.postgresql
-      # no_log: true
+      no_log: true
       postgresql_databases:
       - name: omero
         owner: demo
@@ -220,6 +220,7 @@
         force: true
   
   vars:
+    # python_version: "3.12"
     omero_server_selfsigned_certificates: true
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
@@ -322,7 +323,7 @@
       - "omero-metadata=={{ omero_metadata_release }}"
       - "omero-demo-cleanup==0.2.1"
       # For OMERO.figure script
-      - "reportlab<3.6"
+      - "reportlab"
       - markdown
       - "omero-py>={{ omero_py_release }}"
 
