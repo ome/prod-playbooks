@@ -45,13 +45,13 @@
 - src: ome.ssl_certificate
   version: 0.6.0
 
-- src: nfs_mount
+- src: ome.nfs_mount
   version: 1.5.0
 
-- src: nfs_share
+- src: ome.nfs_share
   version: 1.2.0
 
-- src: iptables_raw
+- src: ome.iptables_raw
   version: 0.5.0
 
 - src: ome.cli_utils
