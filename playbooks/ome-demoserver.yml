@@ -28,7 +28,7 @@
   roles:
 
     - role: ome.postgresql
-      # no_log: true
+      no_log: true
       postgresql_databases:
       - name: omero
         owner: demo
@@ -99,7 +99,7 @@
 
     - name: Allow nginx to connect to omero-web
       become: yes
-      command: setsebool -P httpd_can_network_connect on
+      ansible.builtin.command: setsebool -P httpd_can_network_connect on
 
     - name: NGINX - Performance tuning - worker processes
       become: true
@@ -128,7 +128,7 @@
 
     - name: NGINX - SSL Configuration
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-confdnestedincludes-ssl-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/ssl.conf
         mode: 0644
@@ -137,7 +137,7 @@
 
     - name: NGINX - OMERO websockets
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-confdnestedincludes-omerows-conf.j2
         dest: /etc/nginx/conf.d-nested-includes/omerows.conf
         mode: 0644
@@ -146,7 +146,7 @@
 
     - name: NGINX - websocket proxy support
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/nginx-confd-websockets-conf.j2
         dest: /etc/nginx/conf.d/websockets.conf
         mode: 0644
@@ -155,7 +155,7 @@
 
     - name: Config for OMERO.web plugins
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/omero-web-config-for-webapps.j2
         dest: >-
           {{ omero_web_basedir }}/config/omero-web-config-for-webapps.omero
@@ -167,7 +167,7 @@
 
     - name: OMERO.web config for CORS
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/omero-web-config-for-cors.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-for-cors.omero"
         owner: "root"
@@ -178,7 +178,7 @@
 
     - name: OMERO.web config for signup app
       become: true
-      template:
+      ansible.builtin.template:
         src: templates/omero-web-config-signup.j2
         dest: "{{ omero_web_basedir }}/config/omero-web-config-signup.omero"
         # Contains sensitive info
@@ -220,6 +220,7 @@
         force: true
   
   vars:
+    # python_version: "3.12"
     omero_server_selfsigned_certificates: true
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
@@ -247,8 +248,8 @@
 
     omero_server_release: >-
       {{ omero_server_release_override | default('5.6.16') }}
-    omero_web_release: "{{ omero_web_release_override | default('5.29.2') }}"
-    omero_py_release: "{{ omero_py_release_override | default('5.21.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.29.3') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.21.3') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
     # which is a dependency.
     java_jdk_install: true
@@ -322,7 +323,7 @@
       - "omero-metadata=={{ omero_metadata_release }}"
       - "omero-demo-cleanup==0.2.1"
       # For OMERO.figure script
-      - "reportlab<3.6"
+      - "reportlab"
       - markdown
       - "omero-py>={{ omero_py_release }}"
 
