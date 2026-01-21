@@ -242,7 +242,7 @@
       {{ omero_certificates_key_override | default('') }}
     nginx_version: 1.28.0
     omero_figure_release: >-
-      {{ omero_figure_release_override | default('7.3.0') }}
+      {{ omero_figure_release_override | default('7.3.1') }}
     omero_fpbioimage_release: >-
       {{ omero_fpbioimage_release_override | default('0.4.1') }}
     omero_iviewer_release: >-
