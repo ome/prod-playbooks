@@ -233,7 +233,8 @@
   
   vars:
     # python_version: "3.12"
-    omero_server_selfsigned_certificates: true
+    omero_server_selfsigned_certificates: >-
+      {{ (lookup('env', 'RUNNING_IN_MOLECULE') == "true") | default(false) }}
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
     icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificates else icessl_default_dir_noself }}"
