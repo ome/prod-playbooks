@@ -3,11 +3,21 @@
   hosts: all
 
   # If testing in Docker cron won't be installed
+  # dirmngr is necessary for java install in Ubuntu
   pre_tasks:
     - name: Install cron
       become: true
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 86400
-        name: cron
+        name:
+          - cron
+          - dirmngr
         state: present
+
+   # Necessary for java install on ubuntu systemd docker images
+    - name: system packages | Ensure the man directory exists
+      ansible.builtin.file:
+        path: /usr/share/man/man1
+        state: directory
+        mode: '0755'
