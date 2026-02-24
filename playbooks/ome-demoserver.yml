@@ -232,11 +232,21 @@
         force: true
   
   vars:
-    # python_version: "3.12"
+    # "3.12" is default python_version
+    # "3.11" is also supported.
+    python_version: "3.12"
+    # Certificates are often not selfsigned when
+    # running in production systems
+    # but must be selfsigned in molecule
+    # RINNING_IN_MOLECULE indicates the running env.
     omero_server_selfsigned_certificates: >-
       {{ (lookup('env', 'RUNNING_IN_MOLECULE') == "true") | default(false) }}
     icessl_default_dir_self: "{{ omero_server_basedir }}/selfsigned"
     icessl_default_dir_noself: "/etc/ssl/omero"
+    # Production system certificates tend to be
+    # in a different dir than selfsigned certs.
+    # "icessl_default_dir_noself" determines the
+    # cert directory in case the certs are not selfsigned.
     icessl_default_dir: "{{ icessl_default_dir_self if omero_server_selfsigned_certificates else icessl_default_dir_noself }}"
     omero_certificates_owner:
     omero_certificates_key: >-

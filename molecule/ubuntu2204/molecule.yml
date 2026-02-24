@@ -24,6 +24,8 @@ platforms:
       - ome-demoservers
 provisioner:
   name: ansible
+  # Helper variable to decide between
+  # run in molecule and outside molecule in playbook
   env:
     RUNNING_IN_MOLECULE: "true"
   playbooks:
