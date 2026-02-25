@@ -67,7 +67,7 @@
         # This is to force minimal Django version - optional
         - "Django>=5.2.10"
         # necessary as omero.web.caches configured with redis
-        - "django-redis==5.3.0"
+        - "django-redis>=6"
 
     - role: ome.omero_user
       no_log: true
