@@ -253,11 +253,11 @@
       {{ omero_certificates_key_override | default('') }}
     nginx_version: 1.28.0
     omero_figure_release: >-
-      {{ omero_figure_release_override | default('7.3.1') }}
+      {{ omero_figure_release_override | default('7.4.1') }}
     omero_fpbioimage_release: >-
       {{ omero_fpbioimage_release_override | default('0.4.1') }}
     omero_iviewer_release: >-
-      {{ omero_iviewer_release_override | default('0.16.0') }}
+      {{ omero_iviewer_release_override | default('0.18.0') }}
     omero_parade_release: >-
       {{ omero_parade_release_override | default('0.2.4') }}
     omero_autotag_release: >-
@@ -268,9 +268,9 @@
       {{ omero_signup_release_override | default('0.3.3') }}
 
     omero_server_release: >-
-      {{ omero_server_release_override | default('5.6.17') }}
-    omero_web_release: "{{ omero_web_release_override | default('5.31.0') }}"
-    omero_py_release: "{{ omero_py_release_override | default('5.22.0') }}"
+      {{ omero_server_release_override | default('5.6.18') }}
+    omero_web_release: "{{ omero_web_release_override | default('5.33.0') }}"
+    omero_py_release: "{{ omero_py_release_override | default('5.23.0') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
     # which is a dependency.
     java_jdk_install: true
