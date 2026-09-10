@@ -269,7 +269,7 @@
 
     omero_server_release: >-
       {{ omero_server_release_override | default('5.6.18') }}
-    omero_web_release: "{{ omero_web_release_override | default('5.33.0') }}"
+    omero_web_release: "{{ omero_web_release_override | default('5.33.1') }}"
     omero_py_release: "{{ omero_py_release_override | default('5.23.0') }}"
     # For https://github.com/openmicroscopy/ansible-role-java,
     # which is a dependency.
