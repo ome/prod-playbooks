@@ -10,13 +10,13 @@
   version: 2.3.0
 
 - src: ome.python3_virtualenv
-  version: 0.3.0
+  version: 0.4.2
 
 - src: ome.ice
   version: 4.5.1
 
 - src: ome.postgresql
-  version: 5.5.2
+  version: 5.5.4
 
 - src: ome.postgresql_client
   version: 0.5.3
