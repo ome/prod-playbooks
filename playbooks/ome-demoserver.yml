@@ -251,7 +251,7 @@
     omero_certificates_owner:
     omero_certificates_key: >-
       {{ omero_certificates_key_override | default('') }}
-    nginx_version: 1.28.0
+    nginx_version: 1.30.6
     omero_figure_release: >-
       {{ omero_figure_release_override | default('7.4.1') }}
     omero_fpbioimage_release: >-
